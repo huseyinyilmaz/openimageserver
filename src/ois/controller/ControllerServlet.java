@@ -87,7 +87,8 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			}
 			//TODO make sure that this works
-			getServletContext().getRequestDispatcher("/main?page=" + CSPageType.MAIN.toString()).forward(req, res);
+			//getServletContext().getRequestDispatcher("/main?page=" + CSPageType.MAIN.toString()).forward(req, res);
+			getServletContext().getRequestDispatcher("/main.jsp").forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);
