@@ -15,12 +15,6 @@
 
 </head>
 <body>
-	<c:forEach var="album" items="${albums.albums}">
-		name =${album.name}
-	</c:forEach>
-	this is main jsp
-
-
 <div class="main">
 	<%@ include file="header.jsp" %>
 	<div class="body">

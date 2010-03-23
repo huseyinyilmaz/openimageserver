@@ -37,6 +37,7 @@ public class ControllerServlet extends HttpServlet {
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
+	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 				throws ServletException, IOException {
 		try {
@@ -68,6 +69,12 @@ public class ControllerServlet extends HttpServlet {
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
 		ControllerManager.createAlbum(name, description);
+		log.info("Album '" + name + "' was created");
+	}
+	
+	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		Long id = Long.valueOf(req.getParameter(CSParamType.ITEM.toString()));
+		
 	}
 	
 	/* (non-Javadoc)
@@ -78,11 +85,16 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			CSActionType action = CSActionType.fromString(req.getParameter(CSParamType.ACTION.toString()));
+			
 			if (action == null)
 				throw new IllegalArgumentException("'action' paramether does not an expected value.");
+			log.info("Got action type " + action.toString());
 			switch(action){
 			case CREATE_ALBUM:
 				createAlbum(req,res);
+				break;
+			case DELETE_ALBUM:
+				deleteAlbum(req,res);
 				break;
 			}
 			//TODO make sure that this works
