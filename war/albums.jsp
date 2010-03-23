@@ -1,10 +1,10 @@
 
 <%@page import="ois.controller.CSParamType"%>
 <%@page import="ois.controller.CSActionType"%>
-
+here
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
-		<tr><td> <a href="/main?page=main&item=${album.key}">${album.name}</a>
+		<tr><td> <a href="/main?page=main&item=${album.key}">${album.name}</a></td></tr>
 	</c:forEach>
 	<tr>
 	<td>
