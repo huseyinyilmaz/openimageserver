@@ -29,10 +29,9 @@ public class ControllerServlet extends HttpServlet {
 		List<Album> albums = ControllerManager.getAlbums();
 		albums.add(0, new Album("All",-1));
 		albums.add(0, new Album("None",0));
-		
 		req.setAttribute("albums",new AlbumsBean(albums));
+
 		getServletContext().getRequestDispatcher("/main.jsp").forward(req, res); 
-		
 	}
 	
 	/* (non-Javadoc)
@@ -87,8 +86,7 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			}
 			//TODO make sure that this works
-			//getServletContext().getRequestDispatcher("/main?page=" + CSPageType.MAIN.toString()).forward(req, res);
-			getServletContext().getRequestDispatcher("/main.jsp").forward(req, res);
+			getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);
