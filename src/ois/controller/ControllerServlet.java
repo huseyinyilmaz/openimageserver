@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ois.controller.impl.ControllerManagerImpl;
+import ois.ApplicationManager;
 import ois.exceptions.PersistanceManagerException;
 
 
@@ -27,7 +27,7 @@ public class ControllerServlet extends HttpServlet {
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
     	
-		List<Album> albums = ControllerManagerImpl.getAlbums();
+		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
 		albums.add(0, new Album("All",-1));
 		albums.add(0, new Album("None",0));
 		req.setAttribute("albums",new AlbumsBean(albums));
@@ -69,13 +69,13 @@ public class ControllerServlet extends HttpServlet {
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		ControllerManagerImpl.createAlbum(name, description);
+		ApplicationManager.getControllerManager().createAlbum(name, description);
 		log.info("Album '" + name + "' was created");
 	}
 	
 	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		Long id = Long.valueOf(req.getParameter(CSParamType.ITEM.toString()));
-		
+		ApplicationManager.getControllerManager().deleteAlbum(id);
 	}
 	
 	/* (non-Javadoc)

@@ -7,9 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ois.controller.ControllerManager;
+import ois.ApplicationManager;
 import ois.controller.Image;
-import ois.controller.impl.ControllerManagerImpl;
 
 @SuppressWarnings("serial")
 public class ImageGet extends HttpServlet {
@@ -28,8 +27,9 @@ public class ImageGet extends HttpServlet {
     	res.addDateHeader("Date",  new Date("Tue, 09 Mar 2010 22:09:48 GMT").getTime() );
     	*/
     	
-    	if ( uri.startsWith(ControllerManager.IMAGE_URI_PREFIX) )
-    		uri = uri.substring(ControllerManager.IMAGE_URI_PREFIX.length());
+    	//TODO Image_uri_prefix i degistirdin dogru degistirilip degistirilmaediginden emin ol.
+    	if ( uri.startsWith(ApplicationManager.IMAGE_URI_PREFIX) )
+    		uri = uri.substring(ApplicationManager.IMAGE_URI_PREFIX.length());
     	else{
     		//TODO throw an exception
     	}
@@ -44,7 +44,7 @@ public class ImageGet extends HttpServlet {
     		location = null;
     	}
 
-    	Image file = ControllerManagerImpl.getImage(location,name);
+    	Image file = ApplicationManager.getControllerManager().getImage(location,name);
     	if(file != null){
     		res.setContentType(file.getType());
     		res.getOutputStream().write(file.getData());

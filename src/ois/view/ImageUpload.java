@@ -1,8 +1,5 @@
 package ois.view;
 
-import ois.controller.Image;
-import ois.controller.impl.ControllerManagerImpl;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -12,11 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ois.ApplicationManager;
+import ois.controller.Image;
+
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-//import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.io.IOUtils;
 @SuppressWarnings("serial")
 public class ImageUpload extends HttpServlet {
@@ -47,7 +46,7 @@ public class ImageUpload extends HttpServlet {
                       ", type = " + item.getContentType() +
                       ", length = " + byteArray.length);
           Image img = new Image(item.getName(), location, byteArray,item.getContentType());
-          ControllerManagerImpl.saveImage(img);
+          ApplicationManager.getControllerManager().saveImage(img);
         }
       }
       res.sendRedirect("/images/upload.jsp");
