@@ -28,8 +28,8 @@ public class ControllerServlet extends HttpServlet {
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
     	
 		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
-		albums.add(0, new Album("All",-1));
-		albums.add(0, new Album("None",0));
+		albums.add(0, new Album(-1,"All"));
+		albums.add(0, new Album(0,"None"));
 		req.setAttribute("albums",new AlbumsBean(albums));
 
 		getServletContext().getRequestDispatcher("/main.jsp").forward(req, res); 
@@ -85,6 +85,8 @@ public class ControllerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		try {
+			if (req.getQueryString() != null )
+				doGet(req,res);
 			CSActionType action = CSActionType.fromString(req.getParameter(CSParamType.ACTION.toString()));
 			if (action == null)
 				throw new IllegalArgumentException("'action' paramether does not an expected value.");
@@ -98,7 +100,8 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			}
 			//TODO make sure that this works
-			getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
+			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
+			//getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);

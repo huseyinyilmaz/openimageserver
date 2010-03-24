@@ -5,12 +5,14 @@ here
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
 		<tr>
-			<td> <a href="/main?page=main&item=${album.key}" id="album${album.key}">${album.name}</a></td>
+			<td> <a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a></td>
 			<td> 	
 				<form action="/main" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
 					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}">
-					<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">
+					<c:if test="${album.key>0}">
+						<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">
+					</c:if>
 				</form>
 			</td>
 		</tr>

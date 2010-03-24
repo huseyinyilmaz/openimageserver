@@ -1,4 +1,10 @@
-<!-- Indices written at Wed, 24 Mar 2010 08:00:14 UTC -->
+<!-- Indices written at Wed, 24 Mar 2010 22:15:48 UTC -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="ImageFile" ancestor="true" source="auto">
+        <property name="images_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

@@ -15,7 +15,7 @@ import ois.model.PMF;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
-
+	private PersistenceManager pm;
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
@@ -91,7 +91,8 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveAlbum(ois.model.AlbumFile)
 	 */
 	public void saveAlbum(AlbumFile album) throws PersistanceManagerException{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		if (pm == null)
+			pm = PMF.get().getPersistenceManager();
 		try {
             pm.makePersistent(album);
         }catch(Exception e){
@@ -99,6 +100,7 @@ public class ModelManagerImpl implements ModelManager {
         	throw pme;
         } finally {
             pm.close();
+            pm = null;
         }
         log.info("new album was successfully saved. name = " + album.getName() +
         		", location = " + album.getDescription());
@@ -108,7 +110,9 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
 	public AlbumFile getAlbum(long id) throws PersistanceManagerException{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//persistent manager is begin hold in this object. so if we do changes on object,
+		//we will use same pm object
+		pm = PMF.get().getPersistenceManager();
 		return pm.getObjectById(AlbumFile.class, id);
 	}
 
@@ -116,7 +120,6 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#deleteAlbum(ois.model.AlbumFile)
 	 */
 	public void deleteAlbum(AlbumFile album) throws PersistanceManagerException {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
         	pm.deletePersistent(album);
         }catch(Exception e){
@@ -124,6 +127,7 @@ public class ModelManagerImpl implements ModelManager {
         	throw pme;
         } finally {
             pm.close();
+            pm = null;
         }
 	}
 

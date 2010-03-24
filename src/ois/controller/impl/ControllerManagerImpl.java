@@ -56,7 +56,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	public List<Album> getAlbums(){
 		List<Album> albums = new ArrayList<Album>();
 		for(AlbumFile album: modelManager.getAlbums()){
-			albums.add( new Album(album.getName(),album.getKey().getId()) );
+			albums.add( new Album(album.getKey().getId(),album.getName(),album.getDescription(),album.getCreationDate()));
 		}
 		return albums;
 	}
