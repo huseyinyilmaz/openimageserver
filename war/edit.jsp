@@ -5,7 +5,7 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 
-<%@page import="ois.controller.ControllerManager"%>
+<%@page import="ois.controller.impl.ControllerManagerImpl"%>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

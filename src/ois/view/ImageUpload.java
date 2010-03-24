@@ -1,7 +1,7 @@
 package ois.view;
 
-import ois.controller.ControllerManager;
 import ois.controller.Image;
+import ois.controller.impl.ControllerManagerImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ public class ImageUpload extends HttpServlet {
                       ", type = " + item.getContentType() +
                       ", length = " + byteArray.length);
           Image img = new Image(item.getName(), location, byteArray,item.getContentType());
-          ControllerManager.saveImage(img);
+          ControllerManagerImpl.saveImage(img);
         }
       }
       res.sendRedirect("/images/upload.jsp");

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ois.controller.ControllerManager;
 import ois.controller.Image;
+import ois.controller.impl.ControllerManagerImpl;
 
 @SuppressWarnings("serial")
 public class ImageGet extends HttpServlet {
@@ -43,7 +44,7 @@ public class ImageGet extends HttpServlet {
     		location = null;
     	}
 
-    	Image file = ControllerManager.getImage(location,name);
+    	Image file = ControllerManagerImpl.getImage(location,name);
     	if(file != null){
     		res.setContentType(file.getType());
     		res.getOutputStream().write(file.getData());

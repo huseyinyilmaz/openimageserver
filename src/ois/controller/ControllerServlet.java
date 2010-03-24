@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ois.controller.impl.ControllerManagerImpl;
 import ois.exceptions.PersistanceManagerException;
 
 
@@ -26,7 +27,7 @@ public class ControllerServlet extends HttpServlet {
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
     	
-		List<Album> albums = ControllerManager.getAlbums();
+		List<Album> albums = ControllerManagerImpl.getAlbums();
 		albums.add(0, new Album("All",-1));
 		albums.add(0, new Album("None",0));
 		req.setAttribute("albums",new AlbumsBean(albums));
@@ -68,7 +69,7 @@ public class ControllerServlet extends HttpServlet {
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		ControllerManager.createAlbum(name, description);
+		ControllerManagerImpl.createAlbum(name, description);
 		log.info("Album '" + name + "' was created");
 	}
 	
@@ -85,7 +86,6 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			CSActionType action = CSActionType.fromString(req.getParameter(CSParamType.ACTION.toString()));
-			
 			if (action == null)
 				throw new IllegalArgumentException("'action' paramether does not an expected value.");
 			log.info("Got action type " + action.toString());
