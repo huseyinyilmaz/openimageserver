@@ -23,3 +23,6 @@ table.albums{
 	background-color: yellow;
 	text-align: left;
 }
+td.album{
+	width: auto;
+}
