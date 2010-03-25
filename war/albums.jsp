@@ -1,6 +1,8 @@
 
 <%@page import="ois.controller.CSParamType"%>
 <%@page import="ois.controller.CSActionType"%>
+<%@page import="ois.controller.CSPageType"%>
+
 here
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
@@ -9,7 +11,7 @@ here
 			
 			<td> 	
 				<c:if test="${album.key>0}">
-					<!--<a href="/main?<%=CSParamType.ACTION.toString()%>=<%=CSActionType.DELETE_ALBUM.toString()%>&<%=CSParamType.ITEM.toString()%>=${album.key}" title="delete ${album.name}">x</a>-->
+					<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${album.key}" title="delete ${album.name}">edit</a>
 					<form action="/main" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
 					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}">
@@ -21,14 +23,7 @@ here
 	</c:forEach>
 	<tr>
 	<td colspan="2">
-	<form action="/main" method="post">
-	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_ALBUM.toString()%>">
-	Create a new album<br></br>
-	name:<input type="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName"><br></br>
-	description:<br></br>
-	<input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="createAlbumDescription"><br></br>
-	<input type="submit" title="Create a new Album/" value="Create" id="createAlbumSubmitButton"> 
-	</form>
+		<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>" title="Create a new album">Create a new album</a>
 	</td>
 	</tr>
 </table>

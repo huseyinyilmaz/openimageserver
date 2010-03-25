@@ -34,7 +34,29 @@ public class ControllerServlet extends HttpServlet {
 
 		getServletContext().getRequestDispatcher("/main.jsp").forward(req, res); 
 	}
-	
+
+	/**
+	 * Initialize album edit page
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws IOException 
+	 * @throws ServletException 
+	 * @throws PersistanceManagerException 
+	 */
+	private void initAlbumEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+
+		Album album;
+		String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
+		if (albumIdStr == null){
+			album = new Album();
+		}else{
+			long albumId = Long.parseLong(albumIdStr);
+			album = ApplicationManager.getControllerManager().getAlbum(albumId);
+		}
+		req.setAttribute("album",album);
+		getServletContext().getRequestDispatcher("/editAlbum.jsp").forward(req, res); 
+	}
+
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -51,6 +73,10 @@ public class ControllerServlet extends HttpServlet {
 			case MAIN:
 				initMain(req,res);
 				break;
+			case ALBUM_EDIT:
+				initAlbumEdit(req,res);
+				break;
+				
 			}
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

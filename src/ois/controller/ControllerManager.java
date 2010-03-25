@@ -19,4 +19,7 @@ public interface ControllerManager {
 	public abstract void deleteAlbum(long id)
 			throws PersistanceManagerException;
 
+	public abstract Album getAlbum(long id)
+			throws PersistanceManagerException;
+	
 }

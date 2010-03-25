@@ -2,7 +2,8 @@ package ois.controller;
 
 public enum CSPageType {
 	MAIN("main"),
-	IMAGE("image");
+	IMAGE("image"),
+	ALBUM_EDIT("albumEdit");
 	
 	private String value;
 	

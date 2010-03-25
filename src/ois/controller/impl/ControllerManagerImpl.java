@@ -66,7 +66,9 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#createAlbum(java.lang.String, java.lang.String)
 	 */
 	public void createAlbum(String name, String description) throws PersistanceManagerException{
-		if(!Pattern.matches("\\w",name))
+		
+		//TODO check if the name is unique
+		if(!Pattern.matches("\\w+",name))
 			throw new IllegalArgumentException("name can only be consist of digits , letters or _ characters");
 		AlbumFile album = new AlbumFile(name,description);
 		modelManager.saveAlbum(album);
@@ -84,6 +86,16 @@ public class ControllerManagerImpl implements ControllerManager{
 		if (albumFile == null)
 			throw new IllegalArgumentException("Album with id '" + id +" could not be found");
 		modelManager.deleteAlbum(albumFile);
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see ois.controller.ControllerManager#getAlbum(long)
+	 */
+	public Album getAlbum(long id) throws PersistanceManagerException {
+		AlbumFile albumFile = modelManager.getAlbum(id);
+		return new Album(albumFile.getKey().getId(),albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
+		
 	}
 
 }
