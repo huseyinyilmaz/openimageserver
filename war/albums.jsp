@@ -5,7 +5,7 @@ here
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
 		<tr>
-			<td><a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a></td>
+			<td class="album"><a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a></td>
 			
 			<td> 	
 				<c:if test="${album.key>0}">

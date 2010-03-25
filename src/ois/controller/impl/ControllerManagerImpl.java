@@ -3,6 +3,7 @@ package ois.controller.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import ois.controller.Album;
 import ois.controller.ControllerManager;
@@ -65,6 +66,8 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#createAlbum(java.lang.String, java.lang.String)
 	 */
 	public void createAlbum(String name, String description) throws PersistanceManagerException{
+		if(!Pattern.matches("\\w",name))
+			throw new IllegalArgumentException("name can only be consist of digits , letters or _ characters");
 		AlbumFile album = new AlbumFile(name,description);
 		modelManager.saveAlbum(album);
 	}

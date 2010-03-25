@@ -22,7 +22,8 @@ div.body{
 table.albums{
 	background-color: yellow;
 	text-align: left;
+	width: auto;
 }
 td.album{
-	width: auto;
+	width: 100%;
 }
