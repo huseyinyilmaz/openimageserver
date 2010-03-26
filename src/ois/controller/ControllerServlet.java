@@ -92,12 +92,37 @@ public class ControllerServlet extends HttpServlet {
 	 */
 	private void createAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		String name = req.getParameter(CSParamType.NAME.toString());
+		//TODO move this to name check
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
 		ApplicationManager.getControllerManager().createAlbum(name, description);
 		log.info("Album '" + name + "' was created");
 	}
+
+	
+	
+	/**
+	 * modifys an existing album.
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws PersistanceManagerException 
+	 */
+	private void editAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String name = req.getParameter(CSParamType.NAME.toString());
+		//TODO move this to name check
+		if (name == null)
+			throw new IllegalArgumentException("name cannot be null");
+		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
+		long id = Long.parseLong(req.getParameter(CSParamType.ITEM.toString()));
+		Album album = new Album();
+		album.setKey(id);
+		album.setName(name);
+		album.setDescription(description);
+		ApplicationManager.getControllerManager().saveAlbum(album);
+		log.info("Album '" + name + "' was saved");
+	}
+
 	
 	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		Long id = Long.valueOf(req.getParameter(CSParamType.ITEM.toString()));
@@ -121,6 +146,10 @@ public class ControllerServlet extends HttpServlet {
 			case CREATE_ALBUM:
 				createAlbum(req,res);
 				break;
+			case EDIT_ALBUM:
+				editAlbum(req,res);
+				break;
+
 			case DELETE_ALBUM:
 				deleteAlbum(req,res);
 				break;

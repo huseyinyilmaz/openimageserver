@@ -22,4 +22,8 @@ public interface ControllerManager {
 	public abstract Album getAlbum(long id)
 			throws PersistanceManagerException;
 	
+	public abstract void saveAlbum(Album album)
+			throws PersistanceManagerException;
+
+	
 }

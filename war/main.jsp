@@ -12,7 +12,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Image Administration Page</title>
 	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
-
 </head>
 <body>
 <div class="main">

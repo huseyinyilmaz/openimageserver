@@ -98,4 +98,13 @@ public class ControllerManagerImpl implements ControllerManager{
 		
 	}
 
+	@Override
+	public void saveAlbum(Album album) throws PersistanceManagerException {
+		AlbumFile albumFile = modelManager.getAlbum(album.getKey());
+		albumFile.setName(album.getName());
+		albumFile.setDescription(album.getDescription());
+		modelManager.saveAlbum(albumFile);
+		
+	}
+
 }

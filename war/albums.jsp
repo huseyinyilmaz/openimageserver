@@ -2,8 +2,6 @@
 <%@page import="ois.controller.CSParamType"%>
 <%@page import="ois.controller.CSActionType"%>
 <%@page import="ois.controller.CSPageType"%>
-
-here
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
 		<tr>
