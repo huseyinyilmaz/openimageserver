@@ -1,35 +1,35 @@
 package ois.controller;
 
 public class Image {
-	private String location;
+	private String album;
     private String name;
     private byte[] data;
     private String type;
 	/**
      * Generate new image file with given
 	 * @param name
-	 * @param location
+	 * @param album
 	 * @param data
 	 */
 	public Image(String name, String location, byte[] data,String type) {
 		super();
 		this.name = name;
-		this.location = location;
+		this.album = location;
 		this.data = data;
 		this.type = type;
 	}
 	//Getters and setters
     /**
-	 * @return the location
+	 * @return the album
 	 */
-	public String getLocation() {
-		return location;
+	public String getAlbum() {
+		return album;
 	}
 	/**
-	 * @param location the location to set
+	 * @param album the album to set
 	 */
-	public void setLocation(String location) {
-		this.location = location;
+	public void setAlbum(String album) {
+		this.album = album;
 	}
 	/**
 	 * @return the name

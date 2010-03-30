@@ -35,6 +35,14 @@ public class ImageData{
 	@Persistent
 	private Date creationDate;
 
+    @Persistent
+    private int width;
+    @Persistent
+    private int height;
+    @Persistent
+    private boolean enhanced;
+
+    
 	
 	//-------------Getters and setters--------------------------
     
@@ -100,5 +108,50 @@ public class ImageData{
 		return imageFile;
 	}
 
-	
+	/**
+	 * Getter for this object's image width
+	 * @return the width
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * @param width the width to set
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	/**
+	 * Getter for this object's image height
+	 * @return the height
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	/**
+	 * @return the enhanced
+	 */
+	public boolean isEnhanced() {
+		return enhanced;
+	}
+
+	/**
+	 * Setter for this object's enhanced status.
+	 * (Enhanced or not enhanced)
+	 * @param enhanced the enhanced to set
+	 */
+	public void setEnhanced(boolean enhanced) {
+		this.enhanced = enhanced;
+	}
+
 }

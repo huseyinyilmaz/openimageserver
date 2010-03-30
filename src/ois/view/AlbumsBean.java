@@ -1,8 +1,15 @@
-package ois.controller;
+package ois.view;
 
 import java.util.List;
 
+import ois.controller.Album;
+
 public class AlbumsBean {
+	
+	/**
+	 * This list is uses controller album since it has
+	 * same info with view album.
+	 */
 	private List<Album> albums;
 
 	public List<Album> getAlbums() {

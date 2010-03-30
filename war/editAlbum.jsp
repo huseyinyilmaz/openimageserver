@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
 <%@ page errorPage="/errorPage.jsp" %>
-<%@ page import="ois.controller.CSParamType"%>
-<%@ page import="ois.controller.CSActionType"%>
+<%@ page import="ois.view.CSParamType"%>
+<%@ page import="ois.view.CSActionType"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 

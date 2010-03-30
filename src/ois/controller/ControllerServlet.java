@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
 import ois.exceptions.PersistanceManagerException;
+import ois.view.AlbumsBean;
+import ois.view.CSActionType;
+import ois.view.CSPageType;
+import ois.view.CSParamType;
 
 
 @SuppressWarnings("serial")
@@ -26,12 +30,20 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-    	
+    	/**
+    	 * Get album id.
+    	 * if album id is selected we have to send image infos to client
+    	 */
+		String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
+		
+		
 		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
 		albums.add(0, new Album(-1,"All"));
 		albums.add(0, new Album(0,"None"));
 		req.setAttribute("albums",new AlbumsBean(albums));
 
+		
+		
 		getServletContext().getRequestDispatcher("/main.jsp").forward(req, res); 
 	}
 
@@ -124,6 +136,12 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	
+	/**
+	 * deletes given album
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws PersistanceManagerException
+	 */
 	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		Long id = Long.valueOf(req.getParameter(CSParamType.ITEM.toString()));
 		ApplicationManager.getControllerManager().deleteAlbum(id);

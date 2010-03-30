@@ -1,4 +1,4 @@
-package ois.controller;
+package ois.view;
 
 public enum CSActionType {
 	CREATE_ALBUM("createAlbum"),

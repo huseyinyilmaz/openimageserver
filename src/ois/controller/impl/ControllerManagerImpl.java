@@ -24,11 +24,11 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#saveImage(ois.controller.Image)
 	 */
 	public void saveImage(Image img) throws PersistanceManagerException{
-		if(img.getLocation().trim().equals(""))
+		if(img.getAlbum().trim().equals(""))
 			throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
 		ImageFile file = new ImageFile();
 		file.setName(img.getName());
-		file.setLocation(img.getLocation());
+		file.setLocation(img.getAlbum());
 
 		ImageData data = new ImageData();
 		data.setData(new Blob(img.getData()));

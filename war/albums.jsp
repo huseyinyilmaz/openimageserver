@@ -1,7 +1,7 @@
 
-<%@page import="ois.controller.CSParamType"%>
-<%@page import="ois.controller.CSActionType"%>
-<%@page import="ois.controller.CSPageType"%>
+<%@page import="ois.view.CSParamType"%>
+<%@page import="ois.view.CSActionType"%>
+<%@page import="ois.view.CSPageType"%>
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
 		<tr>

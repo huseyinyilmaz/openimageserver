@@ -25,7 +25,7 @@ public class AlbumFile {
     private List<ImageFile> images = new LinkedList<ImageFile>();
 	@Persistent
 	private Date creationDate;
-	
+
 	public AlbumFile(){
 		images = new LinkedList<ImageFile>();
 		creationDate = new Date();
