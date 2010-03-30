@@ -23,5 +23,7 @@ public interface ModelManager {
 	public abstract void deleteAlbum(AlbumFile album)
 			throws PersistanceManagerException;
 
+	public abstract String getImageLink(long id,String extension);
+	
 	
 }

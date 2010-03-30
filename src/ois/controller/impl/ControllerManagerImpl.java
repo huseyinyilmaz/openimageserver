@@ -13,6 +13,8 @@ import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
 import ois.model.ModelManager;
+import ois.view.ImageLink;
+import ois.view.ImageLinksBean;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -46,7 +48,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		ImageFile bf = modelManager.getImage(location, name);
 		Image file = null;
 		if(bf != null)
-			//file = new Image(bf.getName(),bf.getLocation(),bf.getImageData().get(0).getData().getBytes(),bf.getImageData().get(0).getType().toString());
+			//file = new ImageLink(bf.getName(),bf.getLocation(),bf.getImageData().get(0).getData().getBytes(),bf.getImageData().get(0).getType().toString());
 			file = null;//TODO remove this
 		return file;
 	}
@@ -98,13 +100,34 @@ public class ControllerManagerImpl implements ControllerManager{
 		
 	}
 
-	@Override
+	
+	/* (non-Javadoc)
+	 * @see ois.controller.ControllerManager#saveAlbum(ois.controller.Album)
+	 */
 	public void saveAlbum(Album album) throws PersistanceManagerException {
 		AlbumFile albumFile = modelManager.getAlbum(album.getKey());
 		albumFile.setName(album.getName());
 		albumFile.setDescription(album.getDescription());
 		modelManager.saveAlbum(albumFile);
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see ois.controller.ControllerManager#getImageLinks(long)
+	 */
+	public ImageLinksBean getImageLinks(long id) throws PersistanceManagerException {
+		AlbumFile albumFile = modelManager.getAlbum(id);
+		ImageLinksBean images = new ImageLinksBean();
+		images.setImages(new ArrayList<ImageLink>());
+		for(ImageFile imageFile : albumFile.getImages()){
+			ImageLink image = new ImageLink();
+			image.setCreationDate(imageFile.getCreationDate());
+			image.setDescription(imageFile.getDescription());
+			image.setId(imageFile.getKey().getId());
+			image.setName(image.getName());
+			image.setImageAddress(modelManager.getImageLink(image.getId(),imageFile.getType().getExtension()));
+		}
+		return images;
 	}
 
 }

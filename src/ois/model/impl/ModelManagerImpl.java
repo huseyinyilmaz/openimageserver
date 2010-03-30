@@ -132,6 +132,14 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see ois.model.ModelManager#getImageLink(long, java.lang.String)
+	 */
+	public String getImageLink(long id,String extension) {
+		return "/images/" + id + "." + extension;
+	}
+
+	
 	
 	
 }

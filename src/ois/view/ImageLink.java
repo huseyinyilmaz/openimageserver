@@ -2,7 +2,7 @@ package ois.view;
 
 import java.util.Date;
 
-public class Image {
+public class ImageLink {
 	private long	id;
     private String 	name;
     private String 	imageAddress;

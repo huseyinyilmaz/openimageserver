@@ -25,10 +25,17 @@ public class ImageFile {
     private ArrayList<ImageData> imageData = new ArrayList<ImageData>();
 	@Persistent
 	private AlbumFile album;
-	
 	@Persistent
 	private Date creationDate;
-/*
+    @Persistent
+    private String description;
+	@Persistent
+	private ImageFileType type;
+	
+
+
+
+	/*
 	public ImageFile(){
 		imageData = new ArrayList<ImageData>();
 	}
@@ -101,6 +108,34 @@ public class ImageFile {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	/**
+	 * @return the type
+	 */
+	public ImageFileType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(ImageFileType type) {
+		this.type = type;
 	}
 
 	

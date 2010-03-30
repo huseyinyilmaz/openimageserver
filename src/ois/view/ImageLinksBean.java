@@ -2,35 +2,35 @@ package ois.view;
 
 import java.util.List;
 
-public class ImagesBean {
+public class ImageLinksBean {
 	/**
 	 * This list is uses controller album since it has
 	 * same info with view album.
 	 */
-	private List<Image> images;
+	private List<ImageLink> images;
 
 	/**
 	 * @return the images
 	 */
-	public List<Image> getImages() {
+	public List<ImageLink> getImages() {
 		return images;
 	}
 
 	/**
 	 * @param images the images to set
 	 */
-	public void setImages(List<Image> images) {
+	public void setImages(List<ImageLink> images) {
 		this.images = images;
 	}
 
-	public ImagesBean() {
+	public ImageLinksBean() {
 		super();
 	}
 
 	/**
 	 * @param images
 	 */
-	public ImagesBean(List<Image> images) {
+	public ImageLinksBean(List<ImageLink> images) {
 		this.images = images;
 	}
 	

@@ -26,10 +26,10 @@ public class ImageData{
     private Key key;
 	@Persistent
     private Blob data;
-	/*
+	
 	@Persistent
 	private ImageFileType type;
-	*/
+	
 	@Persistent
     private ImageFile imageFile;
 	@Persistent
@@ -62,20 +62,20 @@ public class ImageData{
 	 * Getter for this object's type
 	 * @return type of this object
 	 */
-/*
+
 	public ImageFileType getType() {
 		return type;
 	}
-*/	
+	
 	/**
 	 * Setter for this object's type
 	 * @param type type that will be assigned to this object
 	 */
-/*
+
 	public void setType(ImageFileType type) {
 		this.type = type;
 	}
-*/
+
 	/**
 	 * Getter for key of this object.
 	 * @return Datastore Key of this object

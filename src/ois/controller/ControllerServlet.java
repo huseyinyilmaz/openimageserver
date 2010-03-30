@@ -15,6 +15,7 @@ import ois.view.AlbumsBean;
 import ois.view.CSActionType;
 import ois.view.CSPageType;
 import ois.view.CSParamType;
+import ois.view.ImageLinksBean;
 
 
 @SuppressWarnings("serial")
@@ -28,13 +29,17 @@ public class ControllerServlet extends HttpServlet {
 	 * @param res current response object
 	 * @throws IOException 
 	 * @throws ServletException 
+	 * @throws PersistanceManagerException 
+	 * @throws NumberFormatException 
 	 */
-	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, NumberFormatException, PersistanceManagerException{
     	/**
     	 * Get album id.
     	 * if album id is selected we have to send image infos to client
     	 */
 		String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
+		
+		ImageLinksBean imageLinks = ApplicationManager.getControllerManager().getImageLinks(Long.valueOf(albumIdStr));
 		
 		
 		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
