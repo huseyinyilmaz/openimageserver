@@ -14,7 +14,6 @@ import ois.model.ImageData;
 import ois.model.ImageFile;
 import ois.model.ModelManager;
 import ois.view.ImageLink;
-import ois.view.ImageLinksBean;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -115,17 +114,20 @@ public class ControllerManagerImpl implements ControllerManager{
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#getImageLinks(long)
 	 */
-	public ImageLinksBean getImageLinks(long id) throws PersistanceManagerException {
+	public List<ImageLink> getImageLinks(long id) throws PersistanceManagerException {
+		//XXX if id is 0 return an empty list if id is 1 return all image links.
 		AlbumFile albumFile = modelManager.getAlbum(id);
-		ImageLinksBean images = new ImageLinksBean();
-		images.setImages(new ArrayList<ImageLink>());
-		for(ImageFile imageFile : albumFile.getImages()){
+		List<ImageLink> images = new ArrayList<ImageLink>();
+		for( ImageFile imageFile : albumFile.getImages() ){
+			//create an image and set properties
 			ImageLink image = new ImageLink();
 			image.setCreationDate(imageFile.getCreationDate());
 			image.setDescription(imageFile.getDescription());
 			image.setId(imageFile.getKey().getId());
 			image.setName(image.getName());
 			image.setImageAddress(modelManager.getImageLink(image.getId(),imageFile.getType().getExtension()));
+			//add image to image list.
+			images.add(image);
 		}
 		return images;
 	}

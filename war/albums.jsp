@@ -1,27 +1,32 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page isELIgnored="false"%>
+<%@ page errorPage="/errorPage.jsp" %>
 
-<%@page import="ois.view.CSParamType"%>
-<%@page import="ois.view.CSActionType"%>
-<%@page import="ois.view.CSPageType"%>
-<table class="albums">
-	<c:forEach var="album" items="${albums.albums}">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<jsp:useBean id="albums" class="ois.view.AlbumsBean" scope="request"></jsp:useBean>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Image Administration Page</title>
+	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
+</head>
+<body>
+<div class="main">
+	<%@ include file="header.jsp" %>
+	<div class="body">
+		<table>
 		<tr>
-			<td class="album"><a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a></td>
-			
-			<td> 	
-				<c:if test="${album.key>0}">
-					<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${album.key}" title="delete ${album.name}">edit</a>
-					<form action="/main" method="post">
-					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
-					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}">
-					<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">
-					</form>
-				</c:if>
-			</td>
+			<td><%@ include file="moduleAlbums.jsp" %></td>
+			<td><%@ include file="moduleImages.jsp" %></td>
 		</tr>
-	</c:forEach>
-	<tr>
-	<td colspan="2">
-		<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>" title="Create a new album">Create a new album</a>
-	</td>
-	</tr>
-</table>
+		</table>
+	</div> 
+</div>
+
+
+
+</body>
+</html>

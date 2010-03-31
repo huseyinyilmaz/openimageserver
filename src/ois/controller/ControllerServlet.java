@@ -15,8 +15,7 @@ import ois.view.AlbumsBean;
 import ois.view.CSActionType;
 import ois.view.CSPageType;
 import ois.view.CSParamType;
-import ois.view.ImageLinksBean;
-
+import ois.view.ImageLink;
 
 @SuppressWarnings("serial")
 public class ControllerServlet extends HttpServlet {
@@ -33,19 +32,33 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws NumberFormatException 
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, NumberFormatException, PersistanceManagerException{
-    	/**
-    	 * Get album id.
-    	 * if album id is selected we have to send image infos to client
-    	 */
-		String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
+    	
+		AlbumsBean albumsBean = new AlbumsBean(); 
 		
-		ImageLinksBean imageLinks = ApplicationManager.getControllerManager().getImageLinks(Long.valueOf(albumIdStr));
+    	// Get album id.
+    	// if album id is selected we have to send image infos to client
+    	String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
+		long albumId = 0;//if no album is selected value has to be 0
+		if(albumIdStr != null)
+			try{
+				albumId = Long.valueOf(albumIdStr);
+			}catch(NumberFormatException e){
+				throw new IllegalArgumentException(albumIdStr +" is not a valid id. Id has to be a number",e);
+			}
+			
+    	
+    	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumId);
 		
 		
 		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
 		albums.add(0, new Album(-1,"All"));
 		albums.add(0, new Album(0,"None"));
-		req.setAttribute("albums",new AlbumsBean(albums));
+		
+		albumsBean.setAlbums(albums);
+		albumsBean.setImages(imageLinks);
+		albumsBean.setCurrentAlbum(albumId);
+		
+		req.setAttribute("albums",albumsBean);
 
 		
 		
@@ -177,8 +190,7 @@ public class ControllerServlet extends HttpServlet {
 				deleteAlbum(req,res);
 				break;
 			}
-			//TODO make sure that this works
-			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
+			res.sendRedirect("/albums?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 			//getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

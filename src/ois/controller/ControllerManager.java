@@ -3,7 +3,7 @@ package ois.controller;
 import java.util.List;
 
 import ois.exceptions.PersistanceManagerException;
-import ois.view.ImageLinksBean;
+import ois.view.ImageLink;
 
 public interface ControllerManager {
 
@@ -27,12 +27,14 @@ public interface ControllerManager {
 			throws PersistanceManagerException;
 
 	/**
-	 * Getter for image links that given album has.
+	 * Getter for image links that given album has. 
+	 * If id is 0 that returns an empty list.
+	 * If id is -1 that returns all the imagelinks in system.
 	 * @param id Id of album that is owner of the returned images
 	 * @return Image links that given album has
 	 * @throws PersistanceManagerException
 	 */
-	public abstract ImageLinksBean getImageLinks(long id)
+	public abstract List<ImageLink> getImageLinks(long id)
 	throws PersistanceManagerException;
 	
 }
