@@ -5,10 +5,11 @@
 <table class="albums">
 	<c:forEach var="album" items="${albums.albums}">
 		<tr>
-			<td class="album"><a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a></td>
-			
+			<c:if test="${album.id==albums.currentAlbumId}">
+			<td class="album"><a href="/main?page=main&item=${album.id}" id="${album.id}" title="${album.description}">${album.name}</a></td>
+			</c:if>
 			<td> 	
-				<c:if test="${album.key>0}">
+				<c:if test="${album.id>0}">
 					<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${album.key}" title="delete ${album.name}">edit</a>
 					<form action="/main" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">

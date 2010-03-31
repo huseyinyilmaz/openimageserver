@@ -56,13 +56,13 @@ public class ControllerServlet extends HttpServlet {
 		
 		albumsBean.setAlbums(albums);
 		albumsBean.setImages(imageLinks);
-		albumsBean.setCurrentAlbum(albumId);
+		albumsBean.setCurrentAlbumId(albumId);
 		
 		req.setAttribute("albums",albumsBean);
 
 		
 		
-		getServletContext().getRequestDispatcher("/main.jsp").forward(req, res); 
+		getServletContext().getRequestDispatcher("/albums.jsp").forward(req, res); 
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class ControllerServlet extends HttpServlet {
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
 		long id = Long.parseLong(req.getParameter(CSParamType.ITEM.toString()));
 		Album album = new Album();
-		album.setKey(id);
+		album.setId(id);
 		album.setName(name);
 		album.setDescription(description);
 		ApplicationManager.getControllerManager().saveAlbum(album);
@@ -190,7 +190,7 @@ public class ControllerServlet extends HttpServlet {
 				deleteAlbum(req,res);
 				break;
 			}
-			res.sendRedirect("/albums?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
+			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 			//getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

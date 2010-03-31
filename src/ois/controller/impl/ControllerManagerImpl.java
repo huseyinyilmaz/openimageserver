@@ -1,6 +1,7 @@
 package ois.controller.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -104,7 +105,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#saveAlbum(ois.controller.Album)
 	 */
 	public void saveAlbum(Album album) throws PersistanceManagerException {
-		AlbumFile albumFile = modelManager.getAlbum(album.getKey());
+		AlbumFile albumFile = modelManager.getAlbum(album.getId());
 		albumFile.setName(album.getName());
 		albumFile.setDescription(album.getDescription());
 		modelManager.saveAlbum(albumFile);
@@ -115,10 +116,22 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#getImageLinks(long)
 	 */
 	public List<ImageLink> getImageLinks(long id) throws PersistanceManagerException {
-		//XXX if id is 0 return an empty list if id is 1 return all image links.
-		AlbumFile albumFile = modelManager.getAlbum(id);
+		//if Id is 0 this means we don't return any image link
+		//we just return an empty list.
+		if(id == 0)
+			return Collections.emptyList();
+		//list that will hold result image links
 		List<ImageLink> images = new ArrayList<ImageLink>();
-		for( ImageFile imageFile : albumFile.getImages() ){
+
+		Iterable<ImageFile> imageFiles;
+		if(id==-1)
+			//get all the images in db
+			imageFiles = modelManager.getImages();
+		else
+			//get images only given album contains
+			imageFiles = modelManager.getAlbum(id).getImages();
+		
+		for( ImageFile imageFile : imageFiles ){
 			//create an image and set properties
 			ImageLink image = new ImageLink();
 			image.setCreationDate(imageFile.getCreationDate());

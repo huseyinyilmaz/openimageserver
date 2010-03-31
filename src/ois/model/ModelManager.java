@@ -25,5 +25,6 @@ public interface ModelManager {
 
 	public abstract String getImageLink(long id,String extension);
 	
+	public abstract Iterable<ImageFile> getImages();
 	
 }

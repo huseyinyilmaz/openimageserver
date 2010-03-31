@@ -20,7 +20,7 @@ public class AlbumsBean {
 
 	private List<ImageLink> imageLinks;
 
-	private long currentAlbum;
+	private long currentAlbumId;
 
 	/**
 	 * Creates an empty albums bean
@@ -46,13 +46,13 @@ public class AlbumsBean {
 	 * Creates a new albums bean with given albums ,selected album and list of image links
 	 * @param albums  List of albums that this bean will hold.
 	 * @param imageLinks List of image links that this bean will hold
-	 * @param currentAlbum owner of images that image link is hold. this parameter has to be id of the owner album.
+	 * @param currentAlbumId owner of images that image link is hold. this parameter has to be id of the owner album.
 	 */
 	public AlbumsBean(List<Album> albums, List<ImageLink> imageLinks,
-			long currentAlbum) {
+			long currentAlbumId) {
 		this.albums = albums;
 		this.imageLinks = imageLinks;
-		this.currentAlbum = currentAlbum;
+		this.currentAlbumId = currentAlbumId;
 	}
 
 
@@ -80,17 +80,17 @@ public class AlbumsBean {
 	}
 
 	/**
-	 * @return the currentAlbum
+	 * @return the currentAlbumId
 	 */
-	public long getCurrentAlbum() {
-		return currentAlbum;
+	public long getCurrentAlbumId() {
+		return currentAlbumId;
 	}
 
 	/**
-	 * @param currentAlbum the currentAlbum to set
+	 * @param currentAlbumId the currentAlbumId to set
 	 */
-	public void setCurrentAlbum(long currentAlbum) {
-		this.currentAlbum = currentAlbum;
+	public void setCurrentAlbumId(long currentAlbumId) {
+		this.currentAlbumId = currentAlbumId;
 	}
 
 

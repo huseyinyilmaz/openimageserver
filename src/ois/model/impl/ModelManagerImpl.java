@@ -139,6 +139,16 @@ public class ModelManagerImpl implements ModelManager {
 		return "/images/" + id + "." + extension;
 	}
 
+	/* (non-Javadoc)
+	 * @see ois.model.ModelManager#getImages()
+	 */
+	@Override
+	public Iterable<ImageFile> getImages() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Iterable<ImageFile> images = pm.getExtent(ImageFile.class);
+		return images;
+	}
+
 	
 	
 	
