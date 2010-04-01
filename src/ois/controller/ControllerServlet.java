@@ -32,7 +32,7 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws NumberFormatException 
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, NumberFormatException, PersistanceManagerException{
-    	
+    	log.info("Initializing main album page");
 		AlbumsBean albumsBean = new AlbumsBean(); 
 		
     	// Get album id.
@@ -45,17 +45,15 @@ public class ControllerServlet extends HttpServlet {
 			}catch(NumberFormatException e){
 				throw new IllegalArgumentException(albumIdStr +" is not a valid id. Id has to be a number",e);
 			}
-			
-    	
+		log.info("Album Id to initialize = " + albumId);
     	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumId);
-		
-		
-		List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
+    	log.info("Image Links was came back forom contoller link size = " + albumId);
+    	List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
 		albums.add(0, new Album(-1,"All"));
 		albums.add(0, new Album(0,"None"));
 		
 		albumsBean.setAlbums(albums);
-		albumsBean.setImages(imageLinks);
+		albumsBean.setImageLinks(imageLinks);
 		albumsBean.setCurrentAlbumId(albumId);
 		
 		req.setAttribute("albums",albumsBean);
@@ -84,7 +82,7 @@ public class ControllerServlet extends HttpServlet {
 			album = ApplicationManager.getControllerManager().getAlbum(albumId);
 		}
 		req.setAttribute("album",album);
-		getServletContext().getRequestDispatcher("/editAlbum.jsp").forward(req, res); 
+		getServletContext().getRequestDispatcher("/albumEdit.jsp").forward(req, res); 
 	}
 
 	/* (non-Javadoc)
@@ -191,7 +189,6 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			}
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
-			//getServletContext().getRequestDispatcher("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()).forward(req, res);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);

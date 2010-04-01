@@ -68,15 +68,15 @@ public class AlbumsBean {
 	/**
 	 * @return the images
 	 */
-	public List<ImageLink> getImages() {
+	public List<ImageLink> getImageLinks() {
 		return imageLinks;
 	}
 
 	/**
 	 * @param images the images to set
 	 */
-	public void setImages(List<ImageLink> images) {
-		this.imageLinks = images;
+	public void setImageLinks(List<ImageLink> imageLinks) {
+		this.imageLinks = imageLinks;
 	}
 
 	/**
@@ -91,6 +91,10 @@ public class AlbumsBean {
 	 */
 	public void setCurrentAlbumId(long currentAlbumId) {
 		this.currentAlbumId = currentAlbumId;
+	}
+	
+	public boolean getImageLinksEmpty(){
+		return imageLinks.isEmpty();
 	}
 
 

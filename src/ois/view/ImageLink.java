@@ -5,7 +5,7 @@ import java.util.Date;
 public class ImageLink {
 	private long	id;
     private String 	name;
-    private String 	imageAddress;
+    private String 	link;
     private String 	description;
     private Date	creationDate;
 
@@ -34,16 +34,16 @@ public class ImageLink {
 		this.name = name;
 	}
 	/**
-	 * @return the imageAddress
+	 * @return the link
 	 */
-	public String getImageAddress() {
-		return imageAddress;
+	public String getLink() {
+		return link;
 	}
 	/**
-	 * @param imageAddress the imageAddress to set
+	 * @param link the link to set
 	 */
-	public void setImageAddress(String imageAddress) {
-		this.imageAddress = imageAddress;
+	public void setLink(String link) {
+		this.link = link;
 	}
 	/**
 	 * @return the description

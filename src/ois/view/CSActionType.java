@@ -3,7 +3,10 @@ package ois.view;
 public enum CSActionType {
 	CREATE_ALBUM("createAlbum"),
 	EDIT_ALBUM("editAlbum"),
-	DELETE_ALBUM("deleteAlbum");
+	DELETE_ALBUM("deleteAlbum"),
+	CREATE_IMAGE("createImage"),
+	EDIT_IMAGE("editImage"),
+	DELETE_IMAGE("deleteImage");
 	
 	private String value;
 	

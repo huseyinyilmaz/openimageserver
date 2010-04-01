@@ -22,8 +22,8 @@
 
 	<form action="/main" method="post">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 
-value="<c:choose><c:when test="${album.key==0}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
-	<c:if test="${album.key!=0}"><input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}"></input></c:if>
+value="<c:choose><c:when test="${album.id==0}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
+	<c:if test="${album.id!=0}"><input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.id}"></input></c:if>
 	Album info<br></br>
 	name:<input type="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName" value="${album.name}"><br></br>
 	description:<br></br>

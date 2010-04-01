@@ -138,7 +138,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			image.setDescription(imageFile.getDescription());
 			image.setId(imageFile.getKey().getId());
 			image.setName(image.getName());
-			image.setImageAddress(modelManager.getImageLink(image.getId(),imageFile.getType().getExtension()));
+			image.setLink(modelManager.getImageLink(image.getId(),imageFile.getType().getExtension()));
 			//add image to image list.
 			images.add(image);
 		}
