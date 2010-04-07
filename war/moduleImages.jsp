@@ -1,3 +1,7 @@
+<%@page import="ois.view.CSParamType"%>
+<%@page import="ois.view.CSActionType"%>
+<%@page import="ois.view.CSPageType"%>
+
 <div>
 	<c:choose>
 		<c:when test="${albums.currentAlbumId==0}">
@@ -8,7 +12,9 @@
 				<img src="${image.link}"></img>
 			</c:forEach>
 			<br></br>
-			burda da create image olacak.
-		</c:otherwise>
+			<a href="/main?"></a>
+			<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.IMAGE_CREATE.toString()%>&<%=CSParamType.ITEM.toString()%>=${albums.currentAlbumId}" title="Create a new Image in album ${album.name}">Create an album</a>
+			
+					</c:otherwise>
 	</c:choose>
 </div>

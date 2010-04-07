@@ -15,7 +15,7 @@
 </head>
 <body>
 <div class="main">
-	<%@ include file="header.jsp" %>
+	<%@ include file="moduleHeader.jsp" %>
 	<div class="body">
 		<table>
 		<tr>

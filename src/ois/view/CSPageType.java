@@ -3,7 +3,8 @@ package ois.view;
 public enum CSPageType {
 	MAIN("main"),
 	IMAGE("image"),
-	ALBUM_EDIT("albumEdit");
+	ALBUM_EDIT("albumEdit"),
+	IMAGE_CREATE("imageCreate");
 	
 	private String value;
 	

@@ -85,6 +85,25 @@ public class ControllerServlet extends HttpServlet {
 		getServletContext().getRequestDispatcher("/albumEdit.jsp").forward(req, res); 
 	}
 
+	
+	/**
+	 * Initialize image create page
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws ServletException
+	 * @throws IOException
+	 * @throws PersistanceManagerException
+	 */
+	private void initImageCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+		long albumId = Long.parseLong( req.getParameter(CSParamType.ITEM.toString()) );
+		Album album = new Album();
+		album.setId(albumId);
+		
+		req.setAttribute("album",album);
+		log.info("Image create page is being opened for album " + Long.toString( album.getId()) );
+		getServletContext().getRequestDispatcher("/imageCreate.jsp").forward(req, res);
+	}
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -95,6 +114,7 @@ public class ControllerServlet extends HttpServlet {
 			CSPageType page = CSPageType.fromString(req.getParameter(CSParamType.PAGE.toString()));
 			if (page == null)
 				throw new IllegalArgumentException("'page' paramether does not an expected value. call page with query string ?"+CSParamType.PAGE.toString()+"="+CSPageType.MAIN.toString());
+			log.info("Got page type " + page);
 			switch (page){
 			case IMAGE:
 				break;
@@ -103,6 +123,9 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case ALBUM_EDIT:
 				initAlbumEdit(req,res);
+				break;
+			case IMAGE_CREATE:
+				initImageCreate(req,res);
 				break;
 				
 			}

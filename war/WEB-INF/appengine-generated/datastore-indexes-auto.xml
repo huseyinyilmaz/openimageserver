@@ -1,8 +1,8 @@
-<!-- Indices written at Thu, 1 Apr 2010 07:02:05 UTC -->
+<!-- Indices written at Wed, 7 Apr 2010 06:42:14 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 5 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="ImageFile" ancestor="true" source="auto">
         <property name="images_INTEGER_IDX" direction="asc"/>
     </datastore-index>
