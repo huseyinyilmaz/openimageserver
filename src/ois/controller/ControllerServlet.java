@@ -1,6 +1,7 @@
 package ois.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -8,6 +9,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 
 import ois.ApplicationManager;
 import ois.exceptions.PersistanceManagerException;
@@ -176,7 +184,60 @@ public class ControllerServlet extends HttpServlet {
 
 	
 	/**
-	 * deletes given album
+	 * creates a new imagefile and creates original image data
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws PersistanceManagerException
+	 * @throws ServletException 
+	 */
+	private void createImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException{
+		//Exception uploadException;
+	    try {
+	      Image img = new Image();
+	      ServletFileUpload upload = new ServletFileUpload();
+	      res.setContentType("text/plain");
+
+	      FileItemIterator iterator = upload.getItemIterator(req);
+	      while (iterator.hasNext()) {
+	        FileItemStream item = iterator.next();
+	        InputStream stream = item.openStream();
+	        if (item.isFormField()) {
+	        	String fieldValue = Streams.asString(stream);
+	        	log.info("Got a form field: " + item.getFieldName() + 
+	        		  	", value = " +fieldValue);
+	        	//TODO imageName ve Description fieldlerini paramether type enumerationina ekle. burda ve jsp de degistir bu degerleri.
+	        	if (item.getFieldName() == "imageName")
+	        		img.setName(fieldValue);
+	        	else if(item.getFieldName() == "imageDescription")
+	        		img.setDescription(fieldValue);
+	        	else if(item.getFieldName() == CSParamType.ITEM.toString())
+	        		img.setAlbum(Long.parseLong(fieldValue));
+	        } else {
+	        	byte[] byteArray = IOUtils.toByteArray(stream);
+	            log.info("Got an uploaded file: " + item.getFieldName() +
+	                      ", name = " + item.getName() +
+	                      ", type = " + item.getContentType() +
+	                      ", length = " + byteArray.length);
+	          img.setData(byteArray);
+	          img.setType(item.getContentType());
+	          ApplicationManager.getControllerManager().createImage(img);
+	        }
+	      }
+	      res.sendRedirect("/images/upload.jsp");
+	    } catch (FileUploadException ex) {
+	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
+	    	//TODO write also a message here
+	    	throw new ServletException(ex);
+	    }catch (IOException ex) {
+			log.warning("An exception was caught. Exception = " + ex.getMessage());
+			//TODO write also a message here
+			throw new ServletException(ex);
+		}
+	    
+	}
+	
+	/**
+	 * Deletes given album
 	 * @param req current request object
 	 * @param res current response object
 	 * @throws PersistanceManagerException
@@ -206,11 +267,15 @@ public class ControllerServlet extends HttpServlet {
 			case EDIT_ALBUM:
 				editAlbum(req,res);
 				break;
-
 			case DELETE_ALBUM:
 				deleteAlbum(req,res);
 				break;
+			case CREATE_IMAGE:
+				createImage(req,res);
+				//TODO bu islemden sonra uzerinde bulunulan albumun sayfasina donulmeli.
+				break;
 			}
+
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

@@ -46,7 +46,7 @@ public class ImageUpload extends HttpServlet {
                       ", type = " + item.getContentType() +
                       ", length = " + byteArray.length);
           Image img = new Image(item.getName(), location, byteArray,item.getContentType());
-          ApplicationManager.getControllerManager().saveImage(img);
+          ApplicationManager.getControllerManager().createImage(img);
         }
       }
       res.sendRedirect("/images/upload.jsp");

@@ -7,7 +7,7 @@ import ois.view.ImageLink;
 
 public interface ControllerManager {
 
-	public abstract void saveImage(Image img)
+	public abstract void createImage(Image img)
 			throws PersistanceManagerException;
 
 	public abstract Image getImage(String location, String name);

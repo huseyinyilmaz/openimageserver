@@ -1,20 +1,30 @@
 package ois.controller;
 
 public class Image {
-	private String album;
+	private long album;
     private String name;
     private byte[] data;
     private String type;
+	private String description;
+    
+
 	/**
-     * Generate new image file with given
+     * Creates an empty image
+     */
+    public Image(){
+    	super();
+    }
+    
+    /**
+     * Generate new image file with given parameters
 	 * @param name
 	 * @param album
 	 * @param data
 	 */
-	public Image(String name, String location, byte[] data,String type) {
+	public Image(String name, long album, byte[] data,String type) {
 		super();
 		this.name = name;
-		this.album = location;
+		this.album = album;
 		this.data = data;
 		this.type = type;
 	}
@@ -22,13 +32,13 @@ public class Image {
     /**
 	 * @return the album
 	 */
-	public String getAlbum() {
+	public long getAlbum() {
 		return album;
 	}
 	/**
 	 * @param album the album to set
 	 */
-	public void setAlbum(String album) {
+	public void setAlbum(long album) {
 		this.album = album;
 	}
 	/**
@@ -67,6 +77,18 @@ public class Image {
 	public void setType(String type) {
 		this.type = type;
 	}
+    /**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }
