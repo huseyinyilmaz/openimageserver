@@ -191,7 +191,6 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void createImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException{
-		//Exception uploadException;
 	    try {
 	      Image img = new Image();
 	      ServletFileUpload upload = new ServletFileUpload();
@@ -206,11 +205,11 @@ public class ControllerServlet extends HttpServlet {
 	        	log.info("Got a form field: " + item.getFieldName() + 
 	        		  	", value = " +fieldValue);
 	        	//TODO imageName ve Description fieldlerini paramether type enumerationina ekle. burda ve jsp de degistir bu degerleri.
-	        	if (item.getFieldName() == "imageName")
+	        	if (item.getFieldName() == CSParamType.NAME.toString())
 	        		img.setName(fieldValue);
-	        	else if(item.getFieldName() == "imageDescription")
+	        	else if(item.getFieldName() == CSParamType.DESCRIPTION.toString())
 	        		img.setDescription(fieldValue);
-	        	else if(item.getFieldName() == CSParamType.ITEM.toString())
+	        	else if(item.getFieldName() == CSParamType.ITEM.toString())//ITEM field hods album id
 	        		img.setAlbum(Long.parseLong(fieldValue));
 	        } else {
 	        	byte[] byteArray = IOUtils.toByteArray(stream);
@@ -256,9 +255,10 @@ public class ControllerServlet extends HttpServlet {
 		try {
 			if (req.getQueryString() != null )
 				doGet(req,res);
-			CSActionType action = CSActionType.fromString(req.getParameter(CSParamType.ACTION.toString()));
+			String actionStr = req.getParameter(CSParamType.ACTION.toString());
+			CSActionType action = CSActionType.fromString(actionStr);
 			if (action == null)
-				throw new IllegalArgumentException("'action' paramether does not an expected value.");
+				throw new IllegalArgumentException("'action' paramether does not have an expected value. action =" + actionStr );
 			log.info("Got action type " + action.toString());
 			switch(action){
 			case CREATE_ALBUM:
@@ -272,6 +272,7 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case CREATE_IMAGE:
 				createImage(req,res);
+				//XXX bu islem multipart data ile yapildigi icin problem cikiyor. bunu ayri servlette yap
 				//TODO bu islemden sonra uzerinde bulunulan albumun sayfasina donulmeli.
 				break;
 			}

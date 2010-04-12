@@ -45,7 +45,7 @@ public class ImageUpload extends HttpServlet {
                       ", name = " + item.getName() +
                       ", type = " + item.getContentType() +
                       ", length = " + byteArray.length);
-          Image img = new Image(item.getName(), location, byteArray,item.getContentType());
+          Image img = null;//new Image(item.getName(), location, byteArray,item.getContentType());
           ApplicationManager.getControllerManager().createImage(img);
         }
       }

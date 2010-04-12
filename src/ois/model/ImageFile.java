@@ -18,11 +18,9 @@ public class ImageFile {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
     @Persistent
-    private String location;
-    @Persistent
     private String name;
     @Persistent(mappedBy = "imageFile")
-    private ArrayList<ImageData> imageData = new ArrayList<ImageData>();
+    private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
 	@Persistent
 	private AlbumFile album;
 	@Persistent
@@ -34,12 +32,10 @@ public class ImageFile {
 	
 
 
-
-	/*
+	//Creates an empty Image File
 	public ImageFile(){
-		imageData = new ArrayList<ImageData>();
 	}
-	*/
+
 	//-------------Getters and setters--------------------------
 	/**
 	 * @return the creationDate
@@ -67,19 +63,6 @@ public class ImageFile {
 	 */
 	public void setAlbum(AlbumFile album) {
 		this.album = album;
-	}
-	/**
-	 * Getter for this object's location
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
-	/**
-	 * @param location the location to set
-	 */
-	public void setLocation(String location) {
-		this.location = location;
 	}
 	/**
 	 * Getter for this object's data object

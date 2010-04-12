@@ -26,5 +26,7 @@ public interface ModelManager {
 	public abstract String getImageLink(long id,String extension);
 	
 	public abstract Iterable<ImageFile> getImages();
-	
+
+	public abstract void createImage(ImageFile file)
+			throws PersistanceManagerException;
 }

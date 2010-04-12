@@ -21,7 +21,7 @@
 <%@ include file="moduleHeader.jsp"%>
 <div class="main">
 	<form action="/main" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>">
+		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${album.id}"></input>
 	<table>
 	<tr>
@@ -29,18 +29,18 @@
 	</tr>
 	<tr>
 		<td>name:</td>
-		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="imageName" value="${album.name}"></td>
+		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="<%=CSParamType.NAME.toString()%>"></td>
 	</tr>
 	<tr>
 		<td>description:</td>
 	</tr>
 	<tr>
 	
-		<td colspan="2"><input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="imageDescription" value="${album.description}"></td>
+		<td colspan="2"><input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="<%=CSParamType.DESCRIPTION.toString()%>"></td>
 	</tr>
 
 	<tr>
-		<td colspan="2"><input type="file" name="<%=CSParamType.FILE.toString()%>" id="file"></td>
+		<td colspan="2"><input type="file" name="<%=CSParamType.FILE.toString()%>" id="<%=CSParamType.FILE.toString()%>"></td>
 	</tr>
 	<tr>
 		<td></td>

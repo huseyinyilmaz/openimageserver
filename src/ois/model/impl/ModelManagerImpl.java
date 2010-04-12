@@ -20,20 +20,7 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImage(ImageFile file) throws PersistanceManagerException{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		try {
-			pm.makePersistent(file.getImageData().get(0));
-            pm.makePersistent(file);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
-        																		", location = " + file.getLocation(),e);
-        	throw pme;
-        } finally {
-            pm.close();
-        }
-        log.info("new image was successfully saved. name = " + file.getName() +
-        		", location = " + file.getLocation());
+		//TODO impelment here
 	}
 	
 	/* (non-Javadoc)
@@ -147,6 +134,27 @@ public class ModelManagerImpl implements ModelManager {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Iterable<ImageFile> images = pm.getExtent(ImageFile.class);
 		return images;
+	}
+
+	@Override
+	public void createImage(ImageFile file) throws PersistanceManagerException {
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+
+		try {
+			pm.makePersistent(file.getImageData().get(0));
+            pm.makePersistent(file);
+        }catch(Exception e){
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
+        																		", album = " + file.getAlbum().getName(),e);
+        	throw pme;
+        } finally {
+            pm.close();
+        }
+        log.info("new image was successfully created. name = " + file.getName() +
+        		", album = " + file.getAlbum().getName());
+		
+		
 	}
 
 	

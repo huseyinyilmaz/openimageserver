@@ -30,15 +30,15 @@ public class ControllerManagerImpl implements ControllerManager{
 		//	throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
 		ImageFile file = new ImageFile();
 		file.setName(img.getName());
-		file.setAlbum(img.getAlbum());
-
+		file.setAlbum( modelManager.getAlbum(img.getAlbum()) );
+		//Create Image Object
 		ImageData data = new ImageData();
 		data.setData(new Blob(img.getData()));
-		//data.setType(ois.model.ImageFileType.fromString(img.getType());
+		data.setType( ois.model.ImageFileType.fromString(img.getType()) );
 		file.getImageData().add(data);
 		log.info("new image was successfully redirected to ModelManagerImpl. name = " + file.getName() +
-        		", location = " + file.getLocation());
-		modelManager.saveImage(file);
+        		", album = " + file.getAlbum().getName());
+		modelManager.createImage(file);
 	}
 	
 	/* (non-Javadoc)
