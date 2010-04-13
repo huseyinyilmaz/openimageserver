@@ -20,7 +20,7 @@
 <body>
 <%@ include file="moduleHeader.jsp"%>
 <div class="main">
-	<form action="/main" method="post" enctype="multipart/form-data">
+	<form action="/imageupload" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${album.id}"></input>
 	<table>

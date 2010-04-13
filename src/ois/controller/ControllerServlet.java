@@ -55,7 +55,7 @@ public class ControllerServlet extends HttpServlet {
 			}
 		log.info("Album Id to initialize = " + albumId);
     	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumId);
-    	log.info("Image Links was came back forom contoller link size = " + albumId);
+    	log.info("Image Links was came back from contoller link size = " + albumId);
     	List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
 		albums.add(0, new Album(-1,"All"));
 		albums.add(0, new Album(0,"None"));
@@ -191,7 +191,8 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void createImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException{
-	    try {
+	    //TODO this was carried to different servlet. this method and its action type has to be removed
+		try {
 	      Image img = new Image();
 	      ServletFileUpload upload = new ServletFileUpload();
 	      res.setContentType("text/plain");
