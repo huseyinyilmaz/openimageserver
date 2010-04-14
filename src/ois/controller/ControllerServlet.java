@@ -273,7 +273,6 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case CREATE_IMAGE:
 				createImage(req,res);
-				//XXX bu islem multipart data ile yapildigi icin problem cikiyor. bunu ayri servlette yap
 				//TODO bu islemden sonra uzerinde bulunulan albumun sayfasina donulmeli.
 				break;
 			}

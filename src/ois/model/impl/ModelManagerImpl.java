@@ -139,12 +139,12 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	public void createImage(ImageFile file) throws PersistanceManagerException {
 
-		//album is pulld by this object so we cannot use different one here
+		//album is pulled by this object so we cannot use different one here
 		if(pm == null)
 			pm = PMF.get().getPersistenceManager();
 
 		try {
-			pm.makePersistent(file.getImageData().get(0));
+			//pm.makePersistent(file.getImageData().get(0));
             pm.makePersistent(file);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
