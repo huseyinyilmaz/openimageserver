@@ -21,7 +21,7 @@ public class AlbumFile {
     private String name;
     @Persistent
     private String description;
-    @Persistent(mappedBy = "album")
+    @Persistent(mappedBy = "album") 
     private List<ImageFile> images = new LinkedList<ImageFile>();
 	@Persistent
 	private Date creationDate;

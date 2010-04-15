@@ -42,7 +42,12 @@ public class ImageData{
     @Persistent
     private boolean enhanced;
 
-    
+    public ImageData(){}//to make image data serializable
+    public ImageData (ImageFile imageFile,Blob data,ImageFileType type){
+    	this.imageFile = imageFile;
+    	this.data = data;
+    	this.type = type;
+    }
 	
 	//-------------Getters and setters--------------------------
     

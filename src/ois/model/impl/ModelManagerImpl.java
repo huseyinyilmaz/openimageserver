@@ -144,8 +144,8 @@ public class ModelManagerImpl implements ModelManager {
 			pm = PMF.get().getPersistenceManager();
 
 		try {
-			//pm.makePersistent(file.getImageData().get(0));
-            pm.makePersistent(file);
+			//pm.makePersistent(file);
+			pm.makePersistent(file.getImageData().get(0));
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
         																		", album = " + file.getAlbum().getName(),e);
