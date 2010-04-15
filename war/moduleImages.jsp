@@ -13,7 +13,7 @@
 			</c:forEach>
 			<br></br>
 			<a href="/main?"></a>
-			<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.IMAGE_CREATE.toString()%>&<%=CSParamType.ITEM.toString()%>=${albums.currentAlbumId}" title="Create a new Image in album ${album.name}">Create an album</a>
+			<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.IMAGE_CREATE.toString()%>&<%=CSParamType.ITEM.toString()%>=${albums.currentAlbumId}" title="Create a new Image in album ${album.name}">Create an image</a>
 			
 					</c:otherwise>
 	</c:choose>

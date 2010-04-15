@@ -15,12 +15,24 @@ import ois.model.PMF;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
-	private PersistenceManager pm;
+	public PersistenceManager pm;
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
-	public void saveImage(ImageFile file) throws PersistanceManagerException{
-		//TODO impelment here
+	public void saveImageFile(ImageFile imageFile) throws PersistanceManagerException{
+		if (pm == null)
+			pm = PMF.get().getPersistenceManager();
+		try {
+            pm.makePersistent(imageFile);
+        }catch(Exception e){
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + imageFile.getName() , e);
+        	throw pme;
+        } finally {
+            pm.close();
+            pm = null;
+        }
+        log.info("new album was successfully saved. name = " + imageFile.getName() +
+        		", description = " + imageFile.getDescription());
 	}
 	
 	/* (non-Javadoc)
@@ -82,6 +94,8 @@ public class ModelManagerImpl implements ModelManager {
 			pm = PMF.get().getPersistenceManager();
 		try {
             pm.makePersistent(album);
+            if (album.getImages().size()>0)
+            	pm.makePersistent(album.getImages().get(0));
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);
         	throw pme;
@@ -101,6 +115,16 @@ public class ModelManagerImpl implements ModelManager {
 		//we will use same pm object
 		pm = PMF.get().getPersistenceManager();
 		return pm.getObjectById(AlbumFile.class, id);
+	}
+
+	/* (non-Javadoc)
+	 * @see ois.model.ModelManager#getAlbum(long)
+	 */
+	public ImageFile getImageFile(long id) throws PersistanceManagerException{
+		//persistent manager is begin hold in this object. so if we do changes on object,
+		//we will use same pm object
+		pm = PMF.get().getPersistenceManager();
+		return pm.getObjectById(ImageFile.class, id);
 	}
 
 	/* (non-Javadoc)
@@ -144,8 +168,9 @@ public class ModelManagerImpl implements ModelManager {
 			pm = PMF.get().getPersistenceManager();
 
 		try {
-			//pm.makePersistent(file);
-			pm.makePersistent(file.getImageData().get(0));
+			pm.makePersistent(file);
+			//pm.currentTransaction().commit();
+			//pm.makePersistent(file.getImageData().get(0));
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
         																		", album = " + file.getAlbum().getName(),e);

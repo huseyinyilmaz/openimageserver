@@ -10,7 +10,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -32,14 +31,8 @@ public class ImageFile {
 	private ImageFileType type;
 	
 
-
-	public ImageFile(){}//to make ImageFile serializable
 	//Creates an empty Image File
-	public ImageFile(Blob data , ImageFileType type){
-		this.type = type;
-		ImageData d = new ImageData(this,data,type);
-		this.imageData.add(d);
-	}
+	public ImageFile(){}//to make ImageFile serializable
 
 	//-------------Getters and setters--------------------------
 	/**

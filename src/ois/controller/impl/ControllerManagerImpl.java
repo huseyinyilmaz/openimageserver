@@ -28,16 +28,24 @@ public class ControllerManagerImpl implements ControllerManager{
 	public void createImage(Image img) throws PersistanceManagerException{
 		//if(img.getAlbum().trim().equals(""))
 		//	throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
-		ImageFile file = new ImageFile(new Blob(img.getData()),ois.model.ImageFileType.fromString(img.getType()));
-		file.setName(img.getName());
 		AlbumFile album = modelManager.getAlbum(img.getAlbum());
+		ImageFile file = new ImageFile();
+		file.setName(img.getName());
 		//create album-image connection
 		file.setAlbum(album);
 		album.getImages().add(file);
 		
 		log.info("new image was successfully redirected to ModelManagerImpl. name = " + file.getName() +
         		", album = " + file.getAlbum().getName());
-		modelManager.createImage(file);
+		//modelManager.createImage(file);
+		//modelManager.saveAlbum(album);
+		long id = file.getKey().getId();
+		//file = modelManager.getImageFile(id);
+		ImageData data = new ImageData(file,new Blob(img.getData()),ois.model.ImageFileType.fromString(img.getType()));
+		file.getImageData().add(data);
+		modelManager.saveAlbum(album);
+
+		//modelManager.saveImageFile(file);
 	}
 	
 	/* (non-Javadoc)

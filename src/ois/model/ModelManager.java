@@ -4,7 +4,7 @@ import ois.exceptions.PersistanceManagerException;
 
 public interface ModelManager {
 
-	public abstract void saveImage(ImageFile file)
+	public abstract void saveImageFile(ImageFile file)
 			throws PersistanceManagerException;
 
 	public abstract Iterable<AlbumFile> getAlbums();
@@ -28,5 +28,8 @@ public interface ModelManager {
 	public abstract Iterable<ImageFile> getImages();
 
 	public abstract void createImage(ImageFile file)
+			throws PersistanceManagerException;
+	
+	public ImageFile getImageFile(long id)
 			throws PersistanceManagerException;
 }
