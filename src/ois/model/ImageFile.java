@@ -23,11 +23,9 @@ public class ImageFile {
     @Persistent(mappedBy = "imageFile")
     @Element(dependent = "true") 
     private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
-	/*
     @Persistent
 	private AlbumFile album;
-	*/
-    @Persistent
+ 	@Persistent
     private long albumId;
 
 	@Persistent
@@ -119,5 +117,10 @@ public class ImageFile {
 	public ImageFileType getType() {
 		return type;
 	}
-	
+	/**
+	 * @return the album
+	 */
+	public AlbumFile getAlbum() {
+		return album;
+	}
 }

@@ -1,6 +1,8 @@
 package ois.model;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -19,8 +21,8 @@ public class AlbumFile {
     private String name;
     @Persistent
     private String description;
-    //@Persistent//(mappedBy = "album") 
-    //private List<ImageFile> images = new LinkedList<ImageFile>();
+    @Persistent(mappedBy = "album") 
+    private List<ImageFile> images = new LinkedList<ImageFile>();
 	@Persistent
 	private Date creationDate = new Date();
 
@@ -76,10 +78,9 @@ public class AlbumFile {
 	 * Getter for this object's image list
 	 * @return the image list
 	 */
-	/*
 	public List<ImageFile> getImages() {
 		return images;
-	}*/
+	}
 
 
 }

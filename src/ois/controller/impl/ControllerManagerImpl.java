@@ -50,18 +50,6 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 	
 	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#getImage(java.lang.String, java.lang.String)
-	 */
-	public Image getImage(String location , String name){
-		ImageFile bf = modelManager.getImage(location, name);
-		Image file = null;
-		if(bf != null)
-			//file = new ImageLink(bf.getName(),bf.getLocation(),bf.getImageData().get(0).getData().getBytes(),bf.getImageData().get(0).getType().toString());
-			file = null;//TODO remove this
-		return file;
-	}
-
-	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#getAlbums()
 	 */
 	public List<Album> getAlbums(){
@@ -151,6 +139,11 @@ public class ControllerManagerImpl implements ControllerManager{
 			images.add(image);
 		}
 		return images;
+	}
+
+	@Override
+	public void close() {
+		modelManager.close();
 	}
 
 }

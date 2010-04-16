@@ -10,8 +10,6 @@ public interface ControllerManager {
 	public abstract void createImage(Image img)
 			throws PersistanceManagerException;
 
-	public abstract Image getImage(String location, String name);
-
 	public abstract List<Album> getAlbums();
 
 	public abstract void createAlbum(String name, String description)
@@ -37,4 +35,5 @@ public interface ControllerManager {
 	public abstract List<ImageLink> getImageLinks(long id)
 	throws PersistanceManagerException;
 	
+	abstract void close();
 }

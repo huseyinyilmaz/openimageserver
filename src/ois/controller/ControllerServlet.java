@@ -65,12 +65,14 @@ public class ControllerServlet extends HttpServlet {
 		albumsBean.setCurrentAlbumId(albumId);
 		
 		req.setAttribute("albums",albumsBean);
-
 		
-		
-		getServletContext().getRequestDispatcher("/albums.jsp").forward(req, res); 
+		forward("/albums.jsp",req, res);
 	}
 
+	private void forward(String context, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		ApplicationManager.getControllerManager().close();
+		getServletContext().getRequestDispatcher(context).forward(req, res); 
+	}
 	/**
 	 * Initialize album edit page
 	 * @param req current request object
@@ -90,7 +92,7 @@ public class ControllerServlet extends HttpServlet {
 			album = ApplicationManager.getControllerManager().getAlbum(albumId);
 		}
 		req.setAttribute("album",album);
-		getServletContext().getRequestDispatcher("/albumEdit.jsp").forward(req, res); 
+		forward("/albumEdit.jsp",req,res);
 	}
 
 	
@@ -106,10 +108,9 @@ public class ControllerServlet extends HttpServlet {
 		long albumId = Long.parseLong( req.getParameter(CSParamType.ITEM.toString()) );
 		Album album = new Album();
 		album.setId(albumId);
-		
 		req.setAttribute("album",album);
 		log.info("Image create page is being opened for album " + Long.toString( album.getId()) );
-		getServletContext().getRequestDispatcher("/imageCreate.jsp").forward(req, res);
+		forward("/imageCreate.jsp",req,res);
 	}
 	
 	/* (non-Javadoc)
@@ -276,7 +277,7 @@ public class ControllerServlet extends HttpServlet {
 				//TODO bu islemden sonra uzerinde bulunulan albumun sayfasina donulmeli.
 				break;
 			}
-
+			ApplicationManager.getControllerManager().close();
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

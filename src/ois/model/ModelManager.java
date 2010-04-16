@@ -11,10 +11,6 @@ public interface ModelManager {
 
 	public abstract Iterable<AlbumFile> getAlbums();
 
-	public abstract ImageFile getImage(String location, String name);
-
-	public abstract ImageFileType getImageType(String typeString);
-
 	public abstract void saveAlbum(AlbumFile album)
 			throws PersistanceManagerException;
 	
@@ -34,6 +30,13 @@ public interface ModelManager {
 	
 	public abstract List<ImageFile> getImages(long albumId); 
 	
-	public abstract void openPM();
-	public abstract void closePM();
+	/**
+	 * Closes Persistent manager.
+	 */
+	public abstract void close();
+	
+	public abstract void addImageToAlbum(ImageFile imageFile,long albumId) throws PersistanceManagerException;
+	
+	public abstract void addDataToImage(ImageData imagedata,long imageId) throws PersistanceManagerException;
+
 }
