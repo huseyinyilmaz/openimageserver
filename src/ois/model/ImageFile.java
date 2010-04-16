@@ -4,6 +4,7 @@ package ois.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -20,11 +21,17 @@ public class ImageFile {
     @Persistent
     private String name;
     @Persistent(mappedBy = "imageFile")
+    @Element(dependent = "true") 
     private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
-	@Persistent
+	/*
+    @Persistent
 	private AlbumFile album;
+	*/
+    @Persistent
+    private long albumId;
+
 	@Persistent
-	private Date creationDate;
+	private Date creationDate = new Date();
     @Persistent
     private String description;
 	@Persistent
@@ -35,11 +42,25 @@ public class ImageFile {
 	public ImageFile(){}//to make ImageFile serializable
 
 	//-------------Getters and setters--------------------------
+	
+	public long getAlbumId() {
+		return albumId;
+	}
+
+	public void setAlbumId(long albumId) {
+		this.albumId = albumId;
+	}
+
+	
 	/**
 	 * @return the creationDate
 	 */
 	public Date getCreationDate() {
 		return creationDate;
+	}
+
+	public void setType(ImageFileType type) {
+		this.type = type;
 	}
 
 	/**
@@ -48,20 +69,7 @@ public class ImageFile {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-
-	/**
-	 * Getter for the album this object belongs to
-	 * @return the album
-	 */
-	public AlbumFile getAlbum() {
-		return album;
-	}
-	/**
-	 * @param album album that this object belongs to
-	 */
-	public void setAlbum(AlbumFile album) {
-		this.album = album;
-	}
+	
 	/**
 	 * Getter for this object's data object
 	 * @return the data

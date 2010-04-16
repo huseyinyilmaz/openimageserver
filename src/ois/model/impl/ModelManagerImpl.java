@@ -15,7 +15,7 @@ import ois.model.PMF;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
-	public PersistenceManager pm;
+	private PersistenceManager pm;
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
@@ -94,8 +94,6 @@ public class ModelManagerImpl implements ModelManager {
 			pm = PMF.get().getPersistenceManager();
 		try {
             pm.makePersistent(album);
-            if (album.getImages().size()>0)
-            	pm.makePersistent(album.getImages().get(0));
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);
         	throw pme;
@@ -110,7 +108,7 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public AlbumFile getAlbum(long id) throws PersistanceManagerException{
+	public AlbumFile getAlbumFile(long id) throws PersistanceManagerException{
 		//persistent manager is begin hold in this object. so if we do changes on object,
 		//we will use same pm object
 		pm = PMF.get().getPersistenceManager();
@@ -154,37 +152,40 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#getImages()
 	 */
 	@Override
-	public Iterable<ImageFile> getImages() {
+	public Iterable<ImageFile> getAllImages() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Iterable<ImageFile> images = pm.getExtent(ImageFile.class);
 		return images;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void createImage(ImageFile file) throws PersistanceManagerException {
-
-		//album is pulled by this object so we cannot use different one here
-		if(pm == null)
-			pm = PMF.get().getPersistenceManager();
-
-		try {
-			pm.makePersistent(file);
-			//pm.currentTransaction().commit();
-			//pm.makePersistent(file.getImageData().get(0));
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image. Name = " + file.getName() +
-        																		", album = " + file.getAlbum().getName(),e);
-        	throw pme;
-        } finally {
-            pm.close();
-        }
-        log.info("new image was successfully created. name = " + file.getName() +
-        		", album = " + file.getAlbum().getName());
+	public List<ImageFile> getImages(long albumId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
-		
+		Query query = pm.newQuery(ImageFile.class);
+		query.setFilter("albumId == id");
+		query.declareParameters("long id");
+		//query.declareParameters("java.lang.String fileName");
+		List<ImageFile> list;
+		try{
+		list = (List<ImageFile>) query.execute(albumId);
+		} finally {
+	        query.closeAll();
+	    }	
+		return list;
+
 	}
 
-	
-	
+	@Override
+	public void closePM() {
+		pm.close();
+	}
+
+	@Override
+	public void openPM() {
+		pm = PMF.get().getPersistenceManager();
+	}
+
 	
 }

@@ -29,9 +29,10 @@ public class ImageData{
 	
 	@Persistent
 	private ImageFileType type;
-	
+	/*
 	@Persistent
     private ImageFile imageFile;
+	*/
 	@Persistent
 	private Date creationDate;
 
@@ -43,8 +44,8 @@ public class ImageData{
     private boolean enhanced;
 
     public ImageData(){}//to make image data serializable
-    public ImageData (ImageFile imageFile,Blob data,ImageFileType type){
-    	this.imageFile = imageFile;
+    public ImageData (Blob data,ImageFileType type){
+    	//this.imageFile = imageFile;
     	this.data = data;
     	this.type = type;
     }
@@ -105,14 +106,6 @@ public class ImageData{
 		this.data = data;
 	}
 	
-	/**
-	 * Getter for this object's handler
-	 * @return imageFile of this object
-	 */
-	public ImageFile getImageFile() {
-		return imageFile;
-	}
-
 	/**
 	 * Getter for this object's image width
 	 * @return the width

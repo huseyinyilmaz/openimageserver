@@ -1,5 +1,7 @@
 package ois.model;
 
+import java.util.List;
+
 import ois.exceptions.PersistanceManagerException;
 
 public interface ModelManager {
@@ -17,7 +19,7 @@ public interface ModelManager {
 			throws PersistanceManagerException;
 	
 	//TODO burda exception firlatilmiyorsa kaldir exception mesajini
-	public abstract AlbumFile getAlbum(long id)
+	public abstract AlbumFile getAlbumFile(long id)
 			throws PersistanceManagerException;
 
 	public abstract void deleteAlbum(AlbumFile album)
@@ -25,11 +27,13 @@ public interface ModelManager {
 
 	public abstract String getImageLink(long id,String extension);
 	
-	public abstract Iterable<ImageFile> getImages();
+	public abstract Iterable<ImageFile> getAllImages();
 
-	public abstract void createImage(ImageFile file)
-			throws PersistanceManagerException;
-	
 	public ImageFile getImageFile(long id)
 			throws PersistanceManagerException;
+	
+	public abstract List<ImageFile> getImages(long albumId); 
+	
+	public abstract void openPM();
+	public abstract void closePM();
 }

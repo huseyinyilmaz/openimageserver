@@ -28,22 +28,23 @@ public class ControllerManagerImpl implements ControllerManager{
 	public void createImage(Image img) throws PersistanceManagerException{
 		//if(img.getAlbum().trim().equals(""))
 		//	throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
-		AlbumFile album = modelManager.getAlbum(img.getAlbum());
-		ImageFile file = new ImageFile();
-		file.setName(img.getName());
+		AlbumFile album = modelManager.getAlbumFile(img.getAlbum());
+		ImageFile imageFile = new ImageFile();
+		imageFile.setName(img.getName());
 		//create album-image connection
-		file.setAlbum(album);
-		album.getImages().add(file);
+		imageFile.setAlbumId(album.getKey().getId());
+		imageFile.setType(ois.model.ImageFileType.fromString(img.getType()) );
 		
-		log.info("new image was successfully redirected to ModelManagerImpl. name = " + file.getName() +
-        		", album = " + file.getAlbum().getName());
+		
 		//modelManager.createImage(file);
 		//modelManager.saveAlbum(album);
-		long id = file.getKey().getId();
+//		long id = imageFile.getKey().getId();
 		//file = modelManager.getImageFile(id);
-		ImageData data = new ImageData(file,new Blob(img.getData()),ois.model.ImageFileType.fromString(img.getType()));
-		file.getImageData().add(data);
-		modelManager.saveAlbum(album);
+		ImageData data = new ImageData(new Blob(img.getData()),imageFile.getType());
+		imageFile.getImageData().add(data);
+		log.info("new image was successfully redirected to ModelManager. name = " + imageFile.getName() +
+        		", album = " + album.getName());
+		modelManager.saveImageFile(imageFile);
 
 		//modelManager.saveImageFile(file);
 	}
@@ -91,7 +92,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#deleteAlbum(long)
 	 */
 	public void deleteAlbum(long id) throws PersistanceManagerException{
-		AlbumFile albumFile = modelManager.getAlbum(id);
+		AlbumFile albumFile = modelManager.getAlbumFile(id);
 		if (albumFile == null)
 			throw new IllegalArgumentException("Album with id '" + id +" could not be found");
 		modelManager.deleteAlbum(albumFile);
@@ -102,7 +103,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#getAlbum(long)
 	 */
 	public Album getAlbum(long id) throws PersistanceManagerException {
-		AlbumFile albumFile = modelManager.getAlbum(id);
+		AlbumFile albumFile = modelManager.getAlbumFile(id);
 		return new Album(albumFile.getKey().getId(),albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
 		
 	}
@@ -112,7 +113,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#saveAlbum(ois.controller.Album)
 	 */
 	public void saveAlbum(Album album) throws PersistanceManagerException {
-		AlbumFile albumFile = modelManager.getAlbum(album.getId());
+		AlbumFile albumFile = modelManager.getAlbumFile(album.getId());
 		albumFile.setName(album.getName());
 		albumFile.setDescription(album.getDescription());
 		modelManager.saveAlbum(albumFile);
@@ -133,10 +134,10 @@ public class ControllerManagerImpl implements ControllerManager{
 		Iterable<ImageFile> imageFiles;
 		if(id==-1)
 			//get all the images in db
-			imageFiles = modelManager.getImages();
+			imageFiles = modelManager.getAllImages();
 		else
 			//get images only given album contains
-			imageFiles = modelManager.getAlbum(id).getImages();
+			imageFiles = modelManager.getImages(id);
 		
 		for( ImageFile imageFile : imageFiles ){
 			//create an image and set properties
