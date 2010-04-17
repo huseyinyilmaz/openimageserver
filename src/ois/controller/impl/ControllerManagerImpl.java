@@ -52,8 +52,8 @@ public class ControllerManagerImpl implements ControllerManager{
 		//modelManager.saveImageFile(file);
 		
 		modelManager.addImageToAlbum(imageFile, img.getAlbum());
-		modelManager.addDataToImage(data, imageFile.getKey().getId());
-		
+		//modelManager.addDataToImage(data, imageFile.getKey().getId());
+		modelManager.addDataToImage(data, imageFile);
 	}
 	
 	/* (non-Javadoc)

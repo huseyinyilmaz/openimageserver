@@ -155,11 +155,11 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	@Override
-	public void addDataToImage(ImageData imagedata, long imageId) throws PersistanceManagerException {
+	public void addDataToImage(ImageData imagedata, ImageFile imageFile) throws PersistanceManagerException {
         open();
         pm.currentTransaction().begin();
         try {
-        	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageId);
+        	//ImageFile imageFile = pm.getObjectById(ImageFile.class,imageId);
         	imageFile.getImageData().add(imagedata);
         	pm.currentTransaction().commit();
         }catch(Exception e){
