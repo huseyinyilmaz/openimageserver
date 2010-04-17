@@ -28,25 +28,32 @@ public class ControllerManagerImpl implements ControllerManager{
 	public void createImage(Image img) throws PersistanceManagerException{
 		//if(img.getAlbum().trim().equals(""))
 		//	throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
-		AlbumFile album = modelManager.getAlbumFile(img.getAlbum());
+
+		//AlbumFile album = modelManager.getAlbumFile(img.getAlbum());
+		
+		//create new Image
 		ImageFile imageFile = new ImageFile();
 		imageFile.setName(img.getName());
-		//create album-image connection
-		imageFile.setAlbumId(album.getKey().getId());
 		imageFile.setType(ois.model.ImageFileType.fromString(img.getType()) );
-		
+		//create album-image connection
+		//imageFile.setAlbumId(album.getKey().getId());
 		
 		//modelManager.createImage(file);
 		//modelManager.saveAlbum(album);
 //		long id = imageFile.getKey().getId();
 		//file = modelManager.getImageFile(id);
+		
+		//create new data
 		ImageData data = new ImageData(new Blob(img.getData()),imageFile.getType());
-		imageFile.getImageData().add(data);
-		log.info("new image was successfully redirected to ModelManager. name = " + imageFile.getName() +
-        		", album = " + album.getName());
-		modelManager.saveImageFile(imageFile);
+		data.setType(imageFile.getType());
+		//imageFile.getImageData().add(data);
+		//modelManager.saveImageFile(imageFile);
 
 		//modelManager.saveImageFile(file);
+		
+		modelManager.addImageToAlbum(imageFile, img.getAlbum());
+		modelManager.addDataToImage(data, imageFile.getKey().getId());
+		
 	}
 	
 	/* (non-Javadoc)

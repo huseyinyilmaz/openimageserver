@@ -29,10 +29,10 @@ public class ImageData{
 	
 	@Persistent
 	private ImageFileType type;
-	/*
+	
 	@Persistent
     private ImageFile imageFile;
-	*/
+	
 	@Persistent
 	private Date creationDate;
 
@@ -151,5 +151,14 @@ public class ImageData{
 	public void setEnhanced(boolean enhanced) {
 		this.enhanced = enhanced;
 	}
+	
+	public ImageFile getImageFile() {
+		return imageFile;
+	}
+	
+	public void setImageFile(ImageFile imageFile) {
+		this.imageFile = imageFile;
+	}
 
+	
 }

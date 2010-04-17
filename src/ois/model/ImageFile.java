@@ -25,8 +25,6 @@ public class ImageFile {
     private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
     @Persistent
 	private AlbumFile album;
- 	@Persistent
-    private long albumId;
 
 	@Persistent
 	private Date creationDate = new Date();
@@ -40,15 +38,6 @@ public class ImageFile {
 	public ImageFile(){}//to make ImageFile serializable
 
 	//-------------Getters and setters--------------------------
-	
-	public long getAlbumId() {
-		return albumId;
-	}
-
-	public void setAlbumId(long albumId) {
-		this.albumId = albumId;
-	}
-
 	
 	/**
 	 * @return the creationDate

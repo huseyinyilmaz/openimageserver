@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
@@ -115,20 +114,11 @@ public class ModelManagerImpl implements ModelManager {
 		return images;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<ImageFile> getImages(long albumId) {
 		open();
-		Query query = pm.newQuery(ImageFile.class);
-		query.setFilter("albumId == id");
-		query.declareParameters("long id");
-		List<ImageFile> list;
-		try{
-			list = (List<ImageFile>) query.execute(albumId);
-		} finally {
-	        query.closeAll();
-	    }	
-		return list;
+		AlbumFile album = pm.getObjectById(AlbumFile.class, albumId);
+		return album.getImages();
 	}
 
 	@Override
