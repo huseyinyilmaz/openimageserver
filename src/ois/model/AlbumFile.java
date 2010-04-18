@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -22,6 +23,7 @@ public class AlbumFile {
     @Persistent
     private String description;
     @Persistent(mappedBy = "album") 
+    @Element(dependent = "true") 
     private List<ImageFile> images = new LinkedList<ImageFile>();
 	@Persistent
 	private Date creationDate = new Date();

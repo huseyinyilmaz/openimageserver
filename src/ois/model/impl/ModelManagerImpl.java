@@ -145,6 +145,7 @@ public class ModelManagerImpl implements ModelManager {
         	AlbumFile album = pm.getObjectById(AlbumFile.class,albumId);
         	album.getImages().add(imageFile);
         	pm.currentTransaction().commit();
+        	pm.flush();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Error while saving Image("+imageFile.getName()+")",e);
         	throw pme;
@@ -155,11 +156,11 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	@Override
-	public void addDataToImage(ImageData imagedata, ImageFile imageFile) throws PersistanceManagerException {
+	public void addDataToImage(ImageData imagedata, long imageId) throws PersistanceManagerException {
         open();
         pm.currentTransaction().begin();
         try {
-        	//ImageFile imageFile = pm.getObjectById(ImageFile.class,imageId);
+        	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageId);
         	imageFile.getImageData().add(imagedata);
         	pm.currentTransaction().commit();
         }catch(Exception e){

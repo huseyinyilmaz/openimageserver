@@ -44,7 +44,7 @@ public class ImageGet extends HttpServlet {
     		location = null;
     	}
 
-    	Image file = ApplicationManager.getControllerManager().getImage(location,name);
+    	Image file = null;//ApplicationManager.getControllerManager().getImage(location,name);
     	if(file != null){
     		res.setContentType(file.getType());
     		res.getOutputStream().write(file.getData());
