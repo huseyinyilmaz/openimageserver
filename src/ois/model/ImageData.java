@@ -2,6 +2,7 @@ package ois.model;
 
 import java.util.Date;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -32,6 +33,10 @@ public class ImageData{
 	
 	@Persistent
     private ImageFile imageFile;
+
+    @Persistent
+    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
+    public Key ImageFileKey;
 	
 	@Persistent
 	private Date creationDate;

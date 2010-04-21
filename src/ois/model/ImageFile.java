@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -23,9 +24,14 @@ public class ImageFile {
     @Persistent(mappedBy = "imageFile")
     @Element(dependent = "true") 
     private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
+    
     @Persistent
 	private AlbumFile album;
 
+    @Persistent
+    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
+    public Key albumKey;
+    
 	@Persistent
 	private Date creationDate = new Date();
     @Persistent

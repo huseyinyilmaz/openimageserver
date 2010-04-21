@@ -57,7 +57,6 @@ public class OpenImageServerServlet extends HttpServlet {
 		try {
 			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).getKey();
 			B newB = pm.getObjectById(B.class,bKey);
-			//B newB = pm.getObjectById(B.class,b.key);//we can not retrieve this object. why?
 			c.bKey = newB.key;
 			newB.cList.add(c);
             pm.currentTransaction().commit();
@@ -68,11 +67,14 @@ public class OpenImageServerServlet extends HttpServlet {
 
 		pm.currentTransaction().begin();
 		try {
-			Key cKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).addChild(C.class.getSimpleName(), c.key.getId()).getKey();
+			String st = //KeyFactory.Builder(c.key).getString();
+			KeyFactory.createKeyString(b.key, C.class.getSimpleName(), c.key.getId());
+			
+			Key cKey  = KeyFactory.stringToKey(st);
+			
 			C newC = pm.getObjectById(C.class,cKey);
 			log.warning("key is = " + newC.key.toString());
-			//B newB = pm.getObjectById(B.class,b.key);//we can not retrieve this object. why?
-            pm.currentTransaction().commit();
+			pm.currentTransaction().commit();
         } finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
