@@ -3,23 +3,28 @@ package ois;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.servlet.http.*;
-import javax.jdo.annotations.IdentityType;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import ois.exceptions.PersistanceManagerException;
+import ois.controller.ControllerServlet;
 import ois.model.PMF;
 
 import com.google.appengine.api.datastore.Key;
-
+import com.google.appengine.api.datastore.KeyFactory;
 @SuppressWarnings("serial")
 public class OpenImageServerServlet extends HttpServlet {
+	private static final Logger log = Logger.getLogger(OpenImageServerServlet.class.getName());
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -39,7 +44,8 @@ public class OpenImageServerServlet extends HttpServlet {
         //3)get A from DB and add B to its list
 		pm.currentTransaction().begin();
 		try {
-			A newA = pm.getObjectById(A.class,a.key.getId());
+			A newA = pm.getObjectById(A.class,a.key);
+			b.aKey = newA.key;
 			newA.bList.add(b);
             pm.currentTransaction().commit();
         } finally {
@@ -49,13 +55,29 @@ public class OpenImageServerServlet extends HttpServlet {
         //4) get B from DB and add C to its list
 		pm.currentTransaction().begin();
 		try {
-			B newB = pm.getObjectById(B.class,b.key.getId());//we can not retrieve this object. why?
+			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).getKey();
+			B newB = pm.getObjectById(B.class,bKey);
+			//B newB = pm.getObjectById(B.class,b.key);//we can not retrieve this object. why?
+			c.bKey = newB.key;
 			newB.cList.add(c);
             pm.currentTransaction().commit();
         } finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
+
+		pm.currentTransaction().begin();
+		try {
+			Key cKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).addChild(C.class.getSimpleName(), c.key.getId()).getKey();
+			C newC = pm.getObjectById(C.class,cKey);
+			log.warning("key is = " + newC.key.toString());
+			//B newB = pm.getObjectById(B.class,b.key);//we can not retrieve this object. why?
+            pm.currentTransaction().commit();
+        } finally {
+        	if(pm.currentTransaction().isActive())
+        		pm.currentTransaction().rollback();
+        }
+
 		
 	}
 }
@@ -79,6 +101,10 @@ class B {
     @Element(dependent = "true") 
     public List<C> cList = new LinkedList<C>();
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
+    public Key aKey;
+    
+    @Persistent
     public A a;
 }
 
@@ -87,7 +113,13 @@ class C {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     public Key key;
+    
+    @Persistent
+    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
+    public Key bKey;
+
     @Persistent
     public B b;
+
 }
 
