@@ -7,7 +7,10 @@ import ois.model.impl.ModelManagerImpl;
 
 public class ApplicationManager {
 	
+	public static final String ALBUMNODE_NONE = "None";
+	public static final String ALBUMNODE_ALL = "All";
 	public static final String IMAGE_URI_PREFIX = "img/";
+	
 	private static ModelManager modelManager = new ModelManagerImpl();
 	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager);
 	
@@ -17,7 +20,4 @@ public class ApplicationManager {
 		return controllerManager;
 	}
 	
-	public static ModelManager getModelManager(){
-		return modelManager;
-	}
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 public class Album {
 	private String name;
 	private String description;
-	private long id;
+	private String key;
 	private Date creationDate;
 	
 	/**
@@ -19,10 +19,10 @@ public class Album {
 	 * @param name
 	 * @param id
 	 */
-	public Album(long id,String name) {
+	public Album(String key,String name) {
 		super();
 		this.name = name;
-		this.id = id;
+		this.key = key;
 	}
 
 	/**
@@ -32,10 +32,10 @@ public class Album {
 	 * @param description
 	 * @param creationDate
 	 */
-	public Album(long id,String name,String description,Date creationDate) {
+	public Album(String key,String name,String description,Date creationDate) {
 		super();
 		this.name = name;
-		this.id = id;
+		this.key = key;
 		this.description = description;
 		this.creationDate = creationDate;
 	}
@@ -82,14 +82,14 @@ public class Album {
 	/**
 	 * @return the key
 	 */
-	public long getId() {
-		return id;
+	public String getKey() {
+		return key;
 	}
 	/**
 	 * @param id the key to set
 	 */
-	public void setId(long id) {
-		this.id = id;
+	public void setKey(String key) {
+		this.key = key;
 	}
 	
 }

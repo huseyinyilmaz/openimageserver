@@ -42,27 +42,21 @@ public class ControllerServlet extends HttpServlet {
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, NumberFormatException, PersistanceManagerException{
     	log.info("Initializing main album page");
 		AlbumsBean albumsBean = new AlbumsBean(); 
-		
-    	// Get album id.
-    	// if album id is selected we have to send image infos to client
-    	String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
-		long albumId = 0;//if no album is selected value has to be 0
-		if(albumIdStr != null)
-			try{
-				albumId = Long.valueOf(albumIdStr);
-			}catch(NumberFormatException e){
-				throw new IllegalArgumentException(albumIdStr +" is not a valid id. Id has to be a number",e);
-			}
-		log.info("Album Id to initialize = " + albumId);
-    	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumId);
-    	log.info("Image Links was came back from contoller link size = " + albumId);
+		// Get album key 
+		String albumKey = req.getParameter(CSParamType.ITEM.toString());
+    	// Default behavior for albums are to select none node 
+		if (albumKey == null)
+    		albumKey = ApplicationManager.ALBUMNODE_NONE;
+		log.info("Album key to initialize = " + albumKey);
+    	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumKey);
+    	log.info("Image Links was came back from contoller link size = " + imageLinks.size());
     	List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
-		albums.add(0, new Album(-1,"All"));
-		albums.add(0, new Album(0,"None"));
+		albums.add(0, new Album(ApplicationManager.ALBUMNODE_ALL,ApplicationManager.ALBUMNODE_ALL));
+		albums.add(0, new Album(ApplicationManager.ALBUMNODE_NONE,ApplicationManager.ALBUMNODE_NONE));
 		
 		albumsBean.setAlbums(albums);
 		albumsBean.setImageLinks(imageLinks);
-		albumsBean.setCurrentAlbumId(albumId);
+		albumsBean.setCurrentAlbumKey(albumKey);
 		
 		req.setAttribute("albums",albumsBean);
 		
@@ -84,12 +78,11 @@ public class ControllerServlet extends HttpServlet {
 	private void initAlbumEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 
 		Album album;
-		String albumIdStr = req.getParameter(CSParamType.ITEM.toString());
-		if (albumIdStr == null){
+		String albumKey = req.getParameter(CSParamType.ITEM.toString());
+		if (albumKey == null){
 			album = new Album();
 		}else{
-			long albumId = Long.parseLong(albumIdStr);
-			album = ApplicationManager.getControllerManager().getAlbum(albumId);
+			album = ApplicationManager.getControllerManager().getAlbum(albumKey);
 		}
 		req.setAttribute("album",album);
 		forward("/albumEdit.jsp",req,res);
@@ -105,11 +98,11 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private void initImageCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		long albumId = Long.parseLong( req.getParameter(CSParamType.ITEM.toString()) );
+		String albumKey = req.getParameter(CSParamType.ITEM.toString());
 		Album album = new Album();
-		album.setId(albumId);
+		album.setKey(albumKey);
 		req.setAttribute("album",album);
-		log.info("Image create page is being opened for album " + Long.toString( album.getId()) );
+		log.info("Image create page is being opened for album " + albumKey );
 		forward("/imageCreate.jsp",req,res);
 	}
 	
@@ -174,9 +167,9 @@ public class ControllerServlet extends HttpServlet {
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		long id = Long.parseLong(req.getParameter(CSParamType.ITEM.toString()));
+		String key = req.getParameter(CSParamType.ITEM.toString());
 		Album album = new Album();
-		album.setId(id);
+		album.setKey(key);
 		album.setName(name);
 		album.setDescription(description);
 		ApplicationManager.getControllerManager().saveAlbum(album);
@@ -244,8 +237,8 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
-		Long id = Long.valueOf(req.getParameter(CSParamType.ITEM.toString()));
-		ApplicationManager.getControllerManager().deleteAlbum(id);
+		String key = req.getParameter(CSParamType.ITEM.toString());
+		ApplicationManager.getControllerManager().deleteAlbum(key);
 	}
 	
 	/* (non-Javadoc)

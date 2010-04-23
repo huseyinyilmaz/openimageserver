@@ -27,7 +27,6 @@ public class ImageFile {
     
     @Persistent
 	private AlbumFile album;
-
     @Persistent
     @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
     public Key albumKey;

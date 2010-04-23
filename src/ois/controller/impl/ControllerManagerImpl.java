@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import ois.ApplicationManager;
 import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Image;
@@ -17,6 +18,7 @@ import ois.model.ModelManager;
 import ois.view.ImageLink;
 
 import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.KeyFactory;
 
 public class ControllerManagerImpl implements ControllerManager{
 	private static final Logger log = Logger.getLogger(ControllerManagerImpl.class.getName());
@@ -62,7 +64,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	public List<Album> getAlbums(){
 		List<Album> albums = new ArrayList<Album>();
 		for(AlbumFile album: modelManager.getAlbums()){
-			albums.add( new Album(album.getKey().getId(),album.getName(),album.getDescription(),album.getCreationDate()));
+			albums.add( new Album(KeyFactory.keyToString(album.getKey()),album.getName(),album.getDescription(),album.getCreationDate()));
 		}
 		return albums;
 	}
@@ -86,10 +88,10 @@ public class ControllerManagerImpl implements ControllerManager{
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#deleteAlbum(long)
 	 */
-	public void deleteAlbum(long id) throws PersistanceManagerException{
-		AlbumFile albumFile = modelManager.getAlbumFile(id);
+	public void deleteAlbum(String key) throws PersistanceManagerException{
+		AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(key));
 		if (albumFile == null)
-			throw new IllegalArgumentException("Album with id '" + id +" could not be found");
+			throw new IllegalArgumentException("Album with key '" + key +" could not be found");
 		modelManager.deleteAlbum(albumFile);
 	}
 
@@ -97,9 +99,9 @@ public class ControllerManagerImpl implements ControllerManager{
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#getAlbum(long)
 	 */
-	public Album getAlbum(long id) throws PersistanceManagerException {
-		AlbumFile albumFile = modelManager.getAlbumFile(id);
-		return new Album(albumFile.getKey().getId(),albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
+	public Album getAlbum(String key) throws PersistanceManagerException {
+		AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(key));
+		return new Album(key,albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
 		
 	}
 
@@ -108,42 +110,39 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#saveAlbum(ois.controller.Album)
 	 */
 	public void saveAlbum(Album album) throws PersistanceManagerException {
-		AlbumFile albumFile = modelManager.getAlbumFile(album.getId());
+		AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKey()));
 		albumFile.setName(album.getName());
 		albumFile.setDescription(album.getDescription());
 		modelManager.saveAlbum(albumFile);
-		
 	}
 
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#getImageLinks(long)
 	 */
-	public List<ImageLink> getImageLinks(long id) throws PersistanceManagerException {
-		//if Id is 0 this means we don't return any image link
-		//we just return an empty list.
-		if(id == 0)
+	public List<ImageLink> getImageLinks(String albumKey) throws PersistanceManagerException {
+		//if key of album is "none" then we just return an empty list.
+		if(albumKey.equals(ApplicationManager.ALBUMNODE_NONE))
 			return Collections.emptyList();
 		//list that will hold result image links
 		List<ImageLink> images = new ArrayList<ImageLink>();
-
 		Iterable<ImageFile> imageFiles;
-		if(id==-1)
+		if(albumKey.equals(ApplicationManager.ALBUMNODE_ALL))
 			//get all the images in db
 			imageFiles = modelManager.getAllImages();
 		else
 			//get images only given album contains
-			imageFiles = modelManager.getImages(id);
+			imageFiles = modelManager.getImageFilesByAlbum(KeyFactory.stringToKey(albumKey));
 		
 		for( ImageFile imageFile : imageFiles ){
 			//create an image and set properties
-			ImageLink image = new ImageLink();
-			image.setCreationDate(imageFile.getCreationDate());
-			image.setDescription(imageFile.getDescription());
-			image.setId(imageFile.getKey().getId());
-			image.setName(image.getName());
-			image.setLink(modelManager.getImageLink(image.getId(),imageFile.getType().getExtension()));
+			ImageLink imageLink = new ImageLink();
+			imageLink.setCreationDate(imageFile.getCreationDate());
+			imageLink.setDescription(imageFile.getDescription());
+			imageLink.setKey(KeyFactory.keyToString(imageFile.getKey()));
+			imageLink.setName(imageLink.getName());
+			imageLink.setLink(modelManager.getImageLink(imageLink.getKey(),imageFile.getType().getExtension()));
 			//add image to image list.
-			images.add(image);
+			images.add(imageLink);
 		}
 		return images;
 	}

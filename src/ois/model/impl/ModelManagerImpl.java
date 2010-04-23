@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
@@ -65,17 +68,17 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public AlbumFile getAlbumFile(long id) throws PersistanceManagerException{
+	public AlbumFile getAlbumFile(Key key) throws PersistanceManagerException {
 		open();
-		return pm.getObjectById(AlbumFile.class, id);
+		return pm.getObjectById(AlbumFile.class, key);
 	}
 
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public ImageFile getImageFile(long id) throws PersistanceManagerException{
+	public ImageFile getImageFile(Key key) throws PersistanceManagerException {
 		open();
-		return pm.getObjectById(ImageFile.class, id);
+		return pm.getObjectById(ImageFile.class, key);
 	}
 
 	/* (non-Javadoc)
@@ -100,8 +103,8 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getImageLink(long, java.lang.String)
 	 */
-	public String getImageLink(long id,String extension) {
-		return "/images/" + id + "." + extension;
+	public String getImageLink(String keyString, String extension){
+		return "/images/" + keyString + "." + extension;
 	}
 
 	/* (non-Javadoc)
@@ -115,9 +118,9 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	@Override
-	public List<ImageFile> getImages(long albumId) {
+	public List<ImageFile> getImageFilesByAlbum(Key albumKey) {
 		open();
-		AlbumFile album = pm.getObjectById(AlbumFile.class, albumId);
+		AlbumFile album = pm.getObjectById(AlbumFile.class, albumKey);
 		return album.getImages();
 	}
 
@@ -171,10 +174,6 @@ public class ModelManagerImpl implements ModelManager {
         		pm.currentTransaction().rollback();
         }
 	}
-	
-	
-
-
 
 	
 }

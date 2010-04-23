@@ -30,7 +30,7 @@ public interface ModelManager {
 	public ImageFile getImageFile(Key key)
 			throws PersistanceManagerException;
 	
-	public abstract List<ImageFile> getImages(Key albumKey); 
+	public abstract List<ImageFile> getImageFilesByAlbum(Key albumKey); 
 	
 	/**
 	 * Closes Persistent manager.
@@ -41,8 +41,5 @@ public interface ModelManager {
 	
 	public abstract void addDataToImage(ImageData imagedata,long imageId) throws PersistanceManagerException;
 
-	public abstract Key getAlbumKeyByString(String keyString);
-	public abstract Key getImageFileKeyByString(String keyString);
-	public abstract Key getImageDataKeyByString(String keyString);
 	
 }

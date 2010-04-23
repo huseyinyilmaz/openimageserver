@@ -20,7 +20,7 @@ public class AlbumsBean {
 
 	private List<ImageLink> imageLinks;
 
-	private long currentAlbumId;
+	private String currentAlbumKey;
 
 	/**
 	 * Creates an empty albums bean
@@ -49,10 +49,10 @@ public class AlbumsBean {
 	 * @param currentAlbumId owner of images that image link is hold. this parameter has to be id of the owner album.
 	 */
 	public AlbumsBean(List<Album> albums, List<ImageLink> imageLinks,
-			long currentAlbumId) {
+			String currentAlbumKey) {
 		this.albums = albums;
 		this.imageLinks = imageLinks;
-		this.currentAlbumId = currentAlbumId;
+		this.currentAlbumKey = currentAlbumKey;
 	}
 
 
@@ -82,15 +82,15 @@ public class AlbumsBean {
 	/**
 	 * @return the currentAlbumId
 	 */
-	public long getCurrentAlbumId() {
-		return currentAlbumId;
+	public String getCurrentAlbumKey() {
+		return currentAlbumKey;
 	}
 
 	/**
 	 * @param currentAlbumId the currentAlbumId to set
 	 */
-	public void setCurrentAlbumId(long currentAlbumId) {
-		this.currentAlbumId = currentAlbumId;
+	public void setCurrentAlbumKey(String currentAlbumKey) {
+		this.currentAlbumKey = currentAlbumKey;
 	}
 	
 	public boolean getImageLinksEmpty(){

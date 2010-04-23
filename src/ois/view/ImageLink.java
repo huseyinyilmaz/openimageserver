@@ -3,23 +3,23 @@ package ois.view;
 import java.util.Date;
 
 public class ImageLink {
-	private long	id;
+	private String	key;
     private String 	name;
     private String 	link;
     private String 	description;
     private Date	creationDate;
 
     /**
-	 * @return the id
+	 * @return the key
 	 */
-	public long getId() {
-		return id;
+	public String getKey() {
+		return key;
 	}
 	/**
-	 * @param id the id to set
+	 * @param key the key to set
 	 */
-	public void setId(long id) {
-		this.id = id;
+	public void setKey(String key) {
+		this.key = key;
 	}
 	/**
 	 * @return the name

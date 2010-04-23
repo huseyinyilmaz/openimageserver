@@ -15,10 +15,10 @@ public interface ControllerManager {
 	public abstract void createAlbum(String name, String description)
 			throws PersistanceManagerException;
 
-	public abstract void deleteAlbum(long id)
+	public abstract void deleteAlbum(String key)
 			throws PersistanceManagerException;
 
-	public abstract Album getAlbum(long id)
+	public abstract Album getAlbum(String key)
 			throws PersistanceManagerException;
 	
 	public abstract void saveAlbum(Album album)
@@ -26,13 +26,13 @@ public interface ControllerManager {
 
 	/**
 	 * Getter for image links that given album has. 
-	 * If id is 0 that returns an empty list.
-	 * If id is -1 that returns all the imagelinks in system.
-	 * @param id Id of album that is owner of the returned images
+	 * If key is "none" that returns an empty list.
+	 * If id is "All" that returns all the imagelinks in system.
+	 * @param albumKey Key of album that is owner of the returned images.
 	 * @return Image links that given album has
 	 * @throws PersistanceManagerException
 	 */
-	public abstract List<ImageLink> getImageLinks(long id)
+	public abstract List<ImageLink> getImageLinks(String albumKey)
 	throws PersistanceManagerException;
 	
 	abstract void close();
