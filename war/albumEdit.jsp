@@ -22,8 +22,8 @@
 
 	<form action="/main" method="post">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 
-value="<c:choose><c:when test="${album.id==0}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
-	<c:if test="${album.id!=0}"><input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.id}"></input></c:if>
+value="<c:choose><c:when test="${album.key==null}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
+	<c:if test="${album.key!='None'}"><input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}"></input></c:if>
 	Album info<br></br>
 	name:<input type="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName" value="${album.name}"><br></br>
 	description:<br></br>
@@ -31,53 +31,6 @@ value="<c:choose><c:when test="${album.id==0}"><%=CSActionType.CREATE_ALBUM.toSt
 	<input type="submit" title="Create a new Album" value="Create" id="createAlbumSubmitButton"> 
 	</form>
 	
-	
-	
-	
-	
-  <form action="ImageUpload" method="post" enctype="multipart/form-data" 
-           name="productForm" id="productForm"><br><br>
-    <table width="400px" align="center" border=0 style="background-color:ffeeff;">
-      <tr>
-        <td align="center" colspan=2 style="font-weight:bold;font-size:20pt;">
-           Image Details</td>
-      </tr>
-
-      <tr>
-        <td align="center" colspan=2>&nbsp;</td>
-      </tr>
-
-      <tr>
-        <td>where to map the image Image: </td>
-        <td>
-          <input type="text" name="fileName1" id="fileName1">
-        <td>
-      </tr>
-
-      <tr>
-        <td>Image Link: </td>
-        <td>
-          <input type="file" name="file" id="file">
-        <td>
-      </tr>
-      
-
-      <tr>
-        <td></td>
-        <td><input type="submit" name="Submit" value="Submit"></td>
-      </tr>
-      <tr>
-        <td colspan="2">&nbsp;</td>
-      </tr>
-
-    </table>
-  </form>	
-	
-	
-	
-	
-
-
 </div>
 
 
