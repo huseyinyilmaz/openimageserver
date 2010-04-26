@@ -45,8 +45,10 @@ public class ImageData{
     private int height;
     @Persistent
     private boolean enhanced;
+    @Persistent
+    private boolean isOriginal;
 
-    public ImageData(){}//to make image data serializable
+	public ImageData(){}//to make image data serializable
     public ImageData (Blob data,ImageFileType type){
     	//this.imageFile = imageFile;
     	this.data = data;
@@ -54,6 +56,18 @@ public class ImageData{
     }
 	
 	//-------------Getters and setters--------------------------
+    /**
+	 * @return the isOriginal
+	 */
+	public boolean isOriginal() {
+		return isOriginal;
+	}
+	/**
+	 * @param isOriginal the isOriginal to set
+	 */
+	public void setOriginal(boolean isOriginal) {
+		this.isOriginal = isOriginal;
+	}
     
 	/**
 	 * @return the creationDate

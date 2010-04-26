@@ -40,7 +40,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		
 		//create new data
 		ImageData imageData = new ImageData(new Blob(img.getData()),imageFile.getType());
-		
+		imageData.setOriginal(true);
 		modelManager.addDataToImage(imageData, imageFile.getKey());
 
 	}
@@ -121,6 +121,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			imageFiles = modelManager.getImageFilesByAlbum(KeyFactory.stringToKey(albumKey));
 		
 		for( ImageFile imageFile : imageFiles ){
+			log.info("Create link for image file " + imageFile.getKey());
 			//create an image and set properties
 			ImageLink imageLink = new ImageLink();
 			imageLink.setCreationDate(imageFile.getCreationDate());

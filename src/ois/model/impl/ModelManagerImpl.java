@@ -151,8 +151,10 @@ public class ModelManagerImpl implements ModelManager {
         pm.currentTransaction().begin();
         try {
         	AlbumFile album = pm.getObjectById(AlbumFile.class,albumFileKey);
-        	imageFile.setAlbumKey(album.getKey());
+        	Key newImageFileKey = new KeyFactory.Builder(albumFileKey).addChild(ImageFile.class.getSimpleName(), imageFile.getName()).getKey();
+        	imageFile.setKey(newImageFileKey);
         	album.getImages().add(imageFile);
+        	imageFile.setAlbumKey(album.getKey());
         	pm.currentTransaction().commit();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Error while saving Image("+imageFile.getName()+")",e);
@@ -170,8 +172,16 @@ public class ModelManagerImpl implements ModelManager {
         pm.currentTransaction().begin();
         try {
         	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageFileKey);
-        	imageData.setImageFileKey(imageFile.getKey());
+        	String name;
+        	if(imageData.isOriginal())
+        		name = imageFile.getName() + "," + "Original";
+        	else
+        		name = imageFile.getName() +"," + imageData.getHeight()+"x"+imageData.getWidth() + "," + Boolean.toString(imageData.isEnhanced());
+        	
+        	Key newImageDataKey = new KeyFactory.Builder(imageFileKey).addChild(ImageData.class.getSimpleName(), name).getKey();
+        	imageData.setKey(newImageDataKey);
         	imageFile.getImageData().add(imageData);
+        	imageData.setImageFileKey(imageFile.getKey());
         	//transaction is closed some how find out why
         	pm.currentTransaction().commit();
         }catch(Exception e){
