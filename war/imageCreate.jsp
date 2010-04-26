@@ -22,7 +22,7 @@
 <div class="main">
 	<form action="/imageupload" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
-		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${album.id}"></input>
+		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${album.key}"></input>
 	<table>
 	<tr>
 		<th>Image Info</th>

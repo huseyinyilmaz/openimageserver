@@ -37,9 +37,9 @@ public interface ModelManager {
 	 */
 	public abstract void close();
 	
-	public abstract void addImageToAlbum(ImageFile imageFile,long albumId) throws PersistanceManagerException;
+	public abstract void addImageToAlbum(ImageFile imageFile,Key albumFileKey) throws PersistanceManagerException;
 	
-	public abstract void addDataToImage(ImageData imagedata,long imageId) throws PersistanceManagerException;
+	public abstract void addDataToImage(ImageData imagedata,Key ImageFileKey) throws PersistanceManagerException;
 
 	
 }

@@ -33,10 +33,9 @@ public class ImageData{
 	
 	@Persistent
     private ImageFile imageFile;
-
     @Persistent
     @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
-    public Key ImageFileKey;
+    private Key imageFileKey;
 	
 	@Persistent
 	private Date creationDate;
@@ -163,6 +162,12 @@ public class ImageData{
 	
 	public void setImageFile(ImageFile imageFile) {
 		this.imageFile = imageFile;
+	}
+	public Key getImageFileKey() {
+		return imageFileKey;
+	}
+	public void setImageFileKey(Key imageFileKey) {
+		this.imageFileKey = imageFileKey;
 	}
 
 	

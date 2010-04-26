@@ -28,34 +28,21 @@ public class ControllerManagerImpl implements ControllerManager{
 	 * @see ois.controller.ControllerManager#saveImage(ois.controller.Image)
 	 */
 	public void createImage(Image img) throws PersistanceManagerException{
-		//if(img.getAlbum().trim().equals(""))
-		//	throw new IllegalArgumentException("Location cannot be null or consist of only white spaces");
 
-		//AlbumFile album = modelManager.getAlbumFile(img.getAlbum());
+		AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(img.getAlbum()));
 		
 		//create new Image
 		ImageFile imageFile = new ImageFile();
 		imageFile.setName(img.getName());
 		imageFile.setType(ois.model.ImageFileType.fromString(img.getType()) );
-		//create album-image connection
-		//imageFile.setAlbumId(album.getKey().getId());
-		
-		//modelManager.createImage(file);
-		//modelManager.saveAlbum(album);
-//		long id = imageFile.getKey().getId();
-		//file = modelManager.getImageFile(id);
+
+		modelManager.addImageToAlbum(imageFile, albumFile.getKey());
 		
 		//create new data
-		ImageData data = new ImageData(new Blob(img.getData()),imageFile.getType());
-		data.setType(imageFile.getType());
-		//imageFile.getImageData().add(data);
-		//modelManager.saveImageFile(imageFile);
-
-		//modelManager.saveImageFile(file);
+		ImageData imageData = new ImageData(new Blob(img.getData()),imageFile.getType());
 		
-		modelManager.addImageToAlbum(imageFile, img.getAlbum());
-		modelManager.addDataToImage(data, imageFile.getKey().getId());
-		//modelManager.addDataToImage(data, imageFile);
+		modelManager.addDataToImage(imageData, imageFile.getKey());
+
 	}
 	
 	/* (non-Javadoc)

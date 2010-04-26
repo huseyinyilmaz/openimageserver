@@ -1,7 +1,7 @@
 package ois.controller;
 
 public class Image {
-	private long album;
+	private String album;
     private String name;
     private byte[] data;
     private String type;
@@ -21,7 +21,7 @@ public class Image {
 	 * @param album
 	 * @param data
 	 */
-	public Image(String name, long album, byte[] data,String type) {
+	public Image(String name, String album, byte[] data,String type) {
 		super();
 		this.name = name;
 		this.album = album;
@@ -32,13 +32,13 @@ public class Image {
     /**
 	 * @return the album
 	 */
-	public long getAlbum() {
+	public String getAlbum() {
 		return album;
 	}
 	/**
 	 * @param album the album to set
 	 */
-	public void setAlbum(long album) {
+	public void setAlbum(String album) {
 		this.album = album;
 	}
 	/**

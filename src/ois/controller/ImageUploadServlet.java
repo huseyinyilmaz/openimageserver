@@ -44,7 +44,7 @@ public class ImageUploadServlet extends HttpServlet {
 					else if(item.getFieldName().equals(CSParamType.DESCRIPTION.toString()) )
 						img.setDescription(fieldValue);
 					else if(item.getFieldName().equals(CSParamType.ITEM.toString()) )//ITEM field holds album id
-						img.setAlbum(Long.parseLong(fieldValue));
+						img.setAlbum(fieldValue);
 				} else {
 					byte[] byteArray = IOUtils.toByteArray(stream);
 					log.info("Got an uploaded file: " + item.getFieldName() +

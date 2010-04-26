@@ -29,7 +29,7 @@ public class ImageFile {
 	private AlbumFile album;
     @Persistent
     @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
-    public Key albumKey;
+    private Key albumKey;
     
 	@Persistent
 	private Date creationDate = new Date();
@@ -43,7 +43,14 @@ public class ImageFile {
 	public ImageFile(){}//to make ImageFile serializable
 
 	//-------------Getters and setters--------------------------
-	
+
+	public Key getAlbumKey() {
+		return albumKey;
+	}
+
+	public void setAlbumKey(Key albumKey) {
+		this.albumKey = albumKey;
+	}
 	/**
 	 * @return the creationDate
 	 */

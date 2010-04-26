@@ -176,60 +176,6 @@ public class ControllerServlet extends HttpServlet {
 		log.info("Album '" + name + "' was saved");
 	}
 
-	
-	/**
-	 * creates a new imagefile and creates original image data
-	 * @param req current request object
-	 * @param res current response object
-	 * @throws PersistanceManagerException
-	 * @throws ServletException 
-	 */
-	private void createImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException{
-	    //TODO this was carried to different servlet. this method and its action type has to be removed
-		try {
-	      Image img = new Image();
-	      ServletFileUpload upload = new ServletFileUpload();
-	      res.setContentType("text/plain");
-
-	      FileItemIterator iterator = upload.getItemIterator(req);
-	      while (iterator.hasNext()) {
-	        FileItemStream item = iterator.next();
-	        InputStream stream = item.openStream();
-	        if (item.isFormField()) {
-	        	String fieldValue = Streams.asString(stream);
-	        	log.info("Got a form field: " + item.getFieldName() + 
-	        		  	", value = " +fieldValue);
-	        	//TODO imageName ve Description fieldlerini paramether type enumerationina ekle. burda ve jsp de degistir bu degerleri.
-	        	if (item.getFieldName() == CSParamType.NAME.toString())
-	        		img.setName(fieldValue);
-	        	else if(item.getFieldName() == CSParamType.DESCRIPTION.toString())
-	        		img.setDescription(fieldValue);
-	        	else if(item.getFieldName() == CSParamType.ITEM.toString())//ITEM field hods album id
-	        		img.setAlbum(Long.parseLong(fieldValue));
-	        } else {
-	        	byte[] byteArray = IOUtils.toByteArray(stream);
-	            log.info("Got an uploaded file: " + item.getFieldName() +
-	                      ", name = " + item.getName() +
-	                      ", type = " + item.getContentType() +
-	                      ", length = " + byteArray.length);
-	          img.setData(byteArray);
-	          img.setType(item.getContentType());
-	          ApplicationManager.getControllerManager().createImage(img);
-	        }
-	      }
-	      res.sendRedirect("/images/upload.jsp");
-	    } catch (FileUploadException ex) {
-	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
-	    	//TODO write also a message here
-	    	throw new ServletException(ex);
-	    }catch (IOException ex) {
-			log.warning("An exception was caught. Exception = " + ex.getMessage());
-			//TODO write also a message here
-			throw new ServletException(ex);
-		}
-	    
-	}
-	
 	/**
 	 * Deletes given album
 	 * @param req current request object
@@ -264,10 +210,6 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case DELETE_ALBUM:
 				deleteAlbum(req,res);
-				break;
-			case CREATE_IMAGE:
-				createImage(req,res);
-				//TODO bu islemden sonra uzerinde bulunulan albumun sayfasina donulmeli.
 				break;
 			}
 			ApplicationManager.getControllerManager().close();

@@ -5,15 +5,14 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
 import ois.model.ModelManager;
 import ois.model.PMF;
+
+import com.google.appengine.api.datastore.Key;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -136,19 +135,20 @@ public class ModelManagerImpl implements ModelManager {
 	 * Instantiates persistent manager.
 	 */
 	private void open(){
+		//TODO check pm.isOpen instead
 		if (pm == null)
 			pm = PMF.get().getPersistenceManager();
 	}
 
 	@Override
-	public void addImageToAlbum(ImageFile imageFile, long albumId) throws PersistanceManagerException {
+	public void addImageToAlbum(ImageFile imageFile, Key albumFileKey) throws PersistanceManagerException {
         open();
         pm.currentTransaction().begin();
         try {
-        	AlbumFile album = pm.getObjectById(AlbumFile.class,albumId);
+        	AlbumFile album = pm.getObjectById(AlbumFile.class,albumFileKey);
+        	imageFile.setAlbumKey(album.getKey());
         	album.getImages().add(imageFile);
         	pm.currentTransaction().commit();
-        	pm.flush();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Error while saving Image("+imageFile.getName()+")",e);
         	throw pme;
@@ -156,15 +156,18 @@ public class ModelManagerImpl implements ModelManager {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
+        log.info("Image File [" + imageFile.getKey() + "] was added to its parent album file");
 	}
 
 	@Override
-	public void addDataToImage(ImageData imagedata, long imageId) throws PersistanceManagerException {
-        open();
+	public void addDataToImage(ImageData imageData, Key imageFileKey) throws PersistanceManagerException {
+		open();
         pm.currentTransaction().begin();
         try {
-        	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageId);
-        	imageFile.getImageData().add(imagedata);
+        	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageFileKey);
+        	imageData.setImageFileKey(imageFile.getKey());
+        	imageFile.getImageData().add(imageData);
+        	//transaction is closed some how find out why
         	pm.currentTransaction().commit();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Error while saving ImageData",e);
@@ -173,6 +176,7 @@ public class ModelManagerImpl implements ModelManager {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
+        log.info("Image Data [" + imageData.getKey() + "] was added to its parent image file");
 	}
 
 	
