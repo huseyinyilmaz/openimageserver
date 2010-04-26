@@ -32,26 +32,39 @@ public class OpenImageServerServlet extends HttpServlet {
 		B b = new B();
 		C c = new C();
 		//2)Persist A
+		
 		pm.currentTransaction().begin();
 		try {
-            pm.makePersistent(a);
+			a.key = new KeyFactory.Builder(A.class.getSimpleName(),"A").getKey();
+			pm.makePersistent(a);
             pm.currentTransaction().commit();
         } finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
-        //3)get A from DB and add B to its list
-		pm.currentTransaction().begin();
+        log.info("id of a is " + a.key);
+        
+		
+		//3)get A from DB and add B to its list
+		
 		try {
-			A newA = pm.getObjectById(A.class,a.key);
+			pm.currentTransaction().begin();
+			A newA = pm.getObjectById(A.class,"A");
 			b.aKey = newA.key;
 			newA.bList.add(b);
+			b.key = new KeyFactory.Builder(newA.key).addChild(B.class.getSimpleName(), "B").getKey();
+			//pm.makePersistent(newA);
+			//pm.makePersistent(b);
+			log.info("transaction active = "+pm.currentTransaction().isActive());
             pm.currentTransaction().commit();
         } finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
+		log.info("key of b " + b.key);
+        
         //4) get B from DB and add C to its list
+		/*
 		pm.currentTransaction().begin();
 		try {
 			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).getKey();
@@ -79,11 +92,12 @@ public class OpenImageServerServlet extends HttpServlet {
         		pm.currentTransaction().rollback();
         }
 
-		
+	*/	
 	}
+	
 }
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable(identityType = IdentityType.APPLICATION , detachable = "true")
 class A {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -93,7 +107,7 @@ class A {
     public List<B> bList = new LinkedList<B>();
 }	
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable(identityType = IdentityType.APPLICATION , detachable = "true")
 class B {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -109,7 +123,7 @@ class B {
     public A a;
 }
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable(identityType = IdentityType.APPLICATION , detachable = "true")
 class C {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

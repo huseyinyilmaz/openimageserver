@@ -3,7 +3,6 @@ package ois.model;
 import java.util.Date;
 
 import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -23,7 +22,7 @@ import com.google.appengine.api.datastore.Key;
 public class ImageData{
 	
     @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    @Persistent
     private Key key;
 	@Persistent
     private Blob data;
@@ -94,6 +93,9 @@ public class ImageData{
 		return key;
 	}
 
+	public void setKey(Key key) {
+		this.key = key;
+	}
 	/**
 	 * Getter for this objects data.
 	 * @return data of this object

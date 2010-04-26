@@ -13,6 +13,7 @@ import ois.model.ModelManager;
 import ois.model.PMF;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -51,7 +52,11 @@ public class ModelManagerImpl implements ModelManager {
 		open();
 		pm.currentTransaction().begin();
 		try {
-            pm.makePersistent(album);
+			// if album file does not have a key, create one
+			if (album.getKey() == null)
+				album.setKey( new KeyFactory.Builder(AlbumFile.class.getSimpleName(), album.getName()).getKey() );
+            
+			pm.makePersistent(album);
             pm.currentTransaction().commit();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);

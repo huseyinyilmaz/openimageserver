@@ -17,7 +17,7 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class ImageFile {
     @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    @Persistent
     private Key key;
     @Persistent
     private String name;
@@ -84,6 +84,12 @@ public class ImageFile {
 	public Key getKey() {
 		return key;
 	}
+	
+	
+	public void setKey(Key key) {
+		this.key = key;
+	}
+
 	/**
 	 * Getter for this object's name
 	 * @return the name
