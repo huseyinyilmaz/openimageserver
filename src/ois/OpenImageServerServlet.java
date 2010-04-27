@@ -1,15 +1,12 @@
 package ois;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -27,76 +24,109 @@ public class OpenImageServerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		//1)Create A,B,C
-		A a = new A();
-		B b = new B();
-		C c = new C();
-		//2)Persist A
 		
-		pm.currentTransaction().begin();
-		try {
-			a.key = new KeyFactory.Builder(A.class.getSimpleName(),"A").getKey();
-			pm.makePersistent(a);
-            pm.currentTransaction().commit();
-        } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
-        }
+		A a = null;
+		B b = null;
+		C c = null;
+		
+		//1)If A does not exist persist A
+		try{
+			a = pm.getObjectById(A.class,"A");//check if A exist
+		}catch(Exception e){
+			try {
+				pm.currentTransaction().begin();
+				a = new A();
+				a.key = new KeyFactory.Builder(A.class.getSimpleName(),"A").getKey();
+				pm.makePersistent(a);
+	            pm.currentTransaction().commit();
+	            log.info("New a was created");
+			} finally {
+	        	if(pm.currentTransaction().isActive())
+	        		pm.currentTransaction().rollback();
+	        }
+		}
         log.info("id of a is " + a.key);
-        
-		
-		//3)get A from DB and add B to its list
-		
+		//2)get A from DB and add B to its list
 		try {
 			pm.currentTransaction().begin();
 			A newA = pm.getObjectById(A.class,"A");
-			b.aKey = newA.key;
-			newA.bList.add(b);
+			b = new B();
 			b.key = new KeyFactory.Builder(newA.key).addChild(B.class.getSimpleName(), "B").getKey();
-			//pm.makePersistent(newA);
-			//pm.makePersistent(b);
-			log.info("transaction active = "+pm.currentTransaction().isActive());
+			newA.bList.add(b);
             pm.currentTransaction().commit();
-        } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
-        }
-		log.info("key of b " + b.key);
-        
-        //4) get B from DB and add C to its list
-		/*
+            log.info("New b was created");
+		} finally {
+			if(pm.currentTransaction().isActive())
+				pm.currentTransaction().rollback();
+		}
+		log.info("Key of b " + b.key);
+        //3) get B from DB and add C to its list
 		pm.currentTransaction().begin();
 		try {
-			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), a.key.getId()).addChild(B.class.getSimpleName(), b.key.getId()).getKey();
-			B newB = pm.getObjectById(B.class,bKey);
-			c.bKey = newB.key;
+			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), "A").addChild(B.class.getSimpleName(), "B").getKey();
+			B newB = pm.getObjectById(B.class,bKey);//Error we cannot retrieve B
+			c = new C();
+			c.key = new KeyFactory.Builder(newB.key).addChild(C.class.getSimpleName(), "C").getKey();
 			newB.cList.add(c);
-            pm.currentTransaction().commit();
-        } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
-        }
-
-		pm.currentTransaction().begin();
-		try {
-			String st = //KeyFactory.Builder(c.key).getString();
-			KeyFactory.createKeyString(b.key, C.class.getSimpleName(), c.key.getId());
-			
-			Key cKey  = KeyFactory.stringToKey(st);
-			
-			C newC = pm.getObjectById(C.class,cKey);
-			log.warning("key is = " + newC.key.toString());
 			pm.currentTransaction().commit();
-        } finally {
+            log.info("New c was created");
+		} finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
-
-	*/	
+		//4) delete B and C from DB
+        pm.currentTransaction().begin();
+		try {
+			C newC = pm.getObjectById(C.class,c.key);
+			pm.deletePersistent(newC);
+			B newB = pm.getObjectById(B.class,b.key);
+			pm.deletePersistent(newB);
+			pm.currentTransaction().commit();
+            log.info("b and c was deleted");
+		} finally {
+        	if(pm.currentTransaction().isActive())
+        		pm.currentTransaction().rollback();
+        }
 	}
-	
 }
 
+@PersistenceCapable
+class A {
+    @PrimaryKey
+    @Persistent
+    public Key key;
+    @Persistent(mappedBy = "a") 
+    @Element(dependent = "true") 
+    public List<B> bList = new ArrayList<B>();
+}	
+
+@PersistenceCapable
+class B {
+    @PrimaryKey
+    @Persistent
+    public Key key;
+    @Persistent(mappedBy = "b") 
+    @Element(dependent = "true") 
+    public List<C> cList = new ArrayList<C>();
+    @Persistent
+    public A a;
+}
+
+@PersistenceCapable
+class C {
+    @PrimaryKey
+    @Persistent
+    public Key key;
+    @Persistent
+    public B b;
+}
+
+
+
+
+
+
+/*
 @PersistenceCapable(identityType = IdentityType.APPLICATION , detachable = "true")
 class A {
     @PrimaryKey
@@ -138,3 +168,4 @@ class C {
 
 }
 
+*/
