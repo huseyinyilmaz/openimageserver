@@ -53,7 +53,7 @@ public class OpenImageServerServlet extends HttpServlet {
 			b = new B();
 			b.key = new KeyFactory.Builder(newA.key).addChild(B.class.getSimpleName(), "B").getKey();
 			newA.bList.add(b);
-            pm.currentTransaction().commit();
+			pm.currentTransaction().commit();
             log.info("New b was created");
 		} finally {
 			if(pm.currentTransaction().isActive())
