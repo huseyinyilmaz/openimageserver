@@ -1,13 +1,13 @@
-<!-- Indices written at Tue, 27 Apr 2010 09:47:46 UTC -->
+<!-- Indices written at Wed, 28 Apr 2010 06:06:40 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 2 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="B" ancestor="true" source="auto">
         <property name="bList_INTEGER_IDX" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 2 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="C" ancestor="true" source="auto">
         <property name="cList_INTEGER_IDX" direction="asc"/>
     </datastore-index>

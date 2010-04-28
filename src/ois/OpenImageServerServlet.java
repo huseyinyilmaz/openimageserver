@@ -95,7 +95,7 @@ class A {
     @PrimaryKey
     @Persistent
     public Key key;
-    @Persistent(mappedBy = "a") 
+    @Persistent 
     @Element(dependent = "true") 
     public List<B> bList = new ArrayList<B>();
 }	
@@ -105,11 +105,9 @@ class B {
     @PrimaryKey
     @Persistent
     public Key key;
-    @Persistent(mappedBy = "b") 
+    @Persistent 
     @Element(dependent = "true") 
     public List<C> cList = new ArrayList<C>();
-    @Persistent
-    public A a;
 }
 
 @PersistenceCapable
@@ -117,8 +115,6 @@ class C {
     @PrimaryKey
     @Persistent
     public Key key;
-    @Persistent
-    public B b;
 }
 
 
