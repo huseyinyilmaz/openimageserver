@@ -17,20 +17,19 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
-	private PersistenceManager pm;
+	//private PersistenceManager pm;
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImageFile(ImageFile imageFile) throws PersistanceManagerException{
-		open();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
             pm.makePersistent(imageFile);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + imageFile.getName() , e);
         	throw pme;
         } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
+        	pm.close();
         }
         log.info("new album was successfully saved. name = " + imageFile.getName() +
         		", description = " + imageFile.getDescription());
@@ -40,8 +39,9 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#getAlbums()
 	 */
 	public Iterable<AlbumFile> getAlbums(){
-		open();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Iterable<AlbumFile> albums = pm.getExtent(AlbumFile.class);
+		pm.close();
 		return albums;
 	}
 	
@@ -49,21 +49,14 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveAlbum(ois.model.AlbumFile)
 	 */
 	public void saveAlbum(AlbumFile album) throws PersistanceManagerException{
-		open();
-		pm.currentTransaction().begin();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			// if album file does not have a key, create one
-			if (album.getKey() == null)
-				album.setKey( new KeyFactory.Builder(AlbumFile.class.getSimpleName(), album.getName()).getKey() );
-            
 			pm.makePersistent(album);
-            pm.currentTransaction().commit();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);
         	throw pme;
         } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
+        	pm.close();
         }
         log.info("new album was successfully saved. name = " + album.getName() +
         		", location = " + album.getDescription());
@@ -73,7 +66,6 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
 	public AlbumFile getAlbumFile(Key key) throws PersistanceManagerException {
-		open();
 		return pm.getObjectById(AlbumFile.class, key);
 	}
 
@@ -88,26 +80,20 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#deleteAlbum(ois.model.AlbumFile)
 	 */
-	public void deleteAlbum(AlbumFile album) throws PersistanceManagerException {
-        open();
-        pm.currentTransaction().begin();
+	public void deleteAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException {
         try {
         	pm.deletePersistent(album);
-        	pm.currentTransaction().commit();
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Album [" + album.getName() + "] could not be deleted",e);
         	throw pme;
-        } finally {
-        	if(pm.currentTransaction().isActive())
-        		pm.currentTransaction().rollback();
         }
 	}
-
 	
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getImageLink(long, java.lang.String)
 	 */
 	public String getImageLink(String keyString, String extension){
+		//TODO move this to application manager
 		return "/images/" + keyString + "." + extension;
 	}
 
@@ -115,34 +101,15 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#getImages()
 	 */
 	@Override
-	public Iterable<ImageFile> getAllImages() {
-		open();
+	public Iterable<ImageFile> getAllImages(PersistenceManager pm) {
 		Iterable<ImageFile> images = pm.getExtent(ImageFile.class);
 		return images;
 	}
 
 	@Override
-	public List<ImageFile> getImageFilesByAlbum(Key albumKey) {
-		open();
+	public List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm) {
 		AlbumFile album = pm.getObjectById(AlbumFile.class, albumKey);
 		return album.getImages();
-	}
-
-	@Override
-	public void close() {
-		if (pm != null){
-			pm.close();
-			pm = null;
-		}
-	}
-	
-	/**
-	 * Instantiates persistent manager.
-	 */
-	private void open(){
-		//TODO check pm.isOpen instead
-		if (pm == null)
-			pm = PMF.get().getPersistenceManager();
 	}
 
 	@Override
@@ -167,9 +134,7 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	@Override
-	public void addDataToImage(ImageData imageData, Key imageFileKey) throws PersistanceManagerException {
-		open();
-        pm.currentTransaction().begin();
+	public void addDataToImage(ImageData imageData, Key imageFileKey,PersistenceManager pm) throws PersistanceManagerException {
         try {
         	ImageFile imageFile = pm.getObjectById(ImageFile.class,imageFileKey);
         	String name;
@@ -180,7 +145,7 @@ public class ModelManagerImpl implements ModelManager {
         	
         	Key newImageDataKey = new KeyFactory.Builder(imageFileKey).addChild(ImageData.class.getSimpleName(), name).getKey();
         	imageData.setKey(newImageDataKey);
-        	imageFile.getImageData().add(imageData);
+        	imageFile.getImageData().add(imageData,pm);
         	imageData.setImageFileKey(imageFile.getKey());
         	//transaction is closed some how find out why
         	pm.currentTransaction().commit();

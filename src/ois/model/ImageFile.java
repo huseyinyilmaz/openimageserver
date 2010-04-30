@@ -1,11 +1,9 @@
 package ois.model;
 
 //import java.util.ArrayList;
-import java.util.ArrayList;
 import java.util.Date;
 
-import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -16,20 +14,13 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class ImageFile {
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
     @Persistent
     private String name;
-    @Persistent(mappedBy = "imageFile")
-    @Element(dependent = "true") 
-    private final ArrayList<ImageData> imageData = new ArrayList<ImageData>();
     
     @Persistent
-	private AlbumFile album;
-    @Persistent
-    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
-    private Key albumKey;
-    
+	private Key albumFileKey;
 	@Persistent
 	private Date creationDate = new Date();
     @Persistent
@@ -43,12 +34,12 @@ public class ImageFile {
 
 	//-------------Getters and setters--------------------------
 
-	public Key getAlbumKey() {
-		return albumKey;
+	public Key getAlbumFileKey() {
+		return albumFileKey;
 	}
 
-	public void setAlbumKey(Key albumKey) {
-		this.albumKey = albumKey;
+	public void setAlbumFileKey(Key albumFileKey) {
+		this.albumFileKey = albumFileKey;
 	}
 	/**
 	 * @return the creationDate
@@ -68,14 +59,6 @@ public class ImageFile {
 		this.creationDate = creationDate;
 	}
 	
-	/**
-	 * Getter for this object's data object
-	 * @return the data
-	 */
-	public ArrayList<ImageData> getImageData() {
-		return imageData;
-	}
-
 	/**
 	 * Getter for this object's key
 	 * @return the key
@@ -122,11 +105,5 @@ public class ImageFile {
 	 */
 	public ImageFileType getType() {
 		return type;
-	}
-	/**
-	 * @return the album
-	 */
-	public AlbumFile getAlbum() {
-		return album;
 	}
 }

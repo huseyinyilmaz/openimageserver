@@ -2,44 +2,41 @@ package ois.model;
 
 import java.util.List;
 
+import javax.jdo.PersistenceManager;
+
 import com.google.appengine.api.datastore.Key;
 
 import ois.exceptions.PersistanceManagerException;
 
 public interface ModelManager {
 
-	public abstract void saveImageFile(ImageFile file)
+	public abstract void saveImageFile(ImageFile file,PersistenceManager pm)
 			throws PersistanceManagerException;
 
-	public abstract Iterable<AlbumFile> getAlbums();
+	public abstract Iterable<AlbumFile> getAlbums(PersistenceManager pm);
 
-	public abstract void saveAlbum(AlbumFile album)
+	public abstract void saveAlbum(AlbumFile album,PersistenceManager pm)
 			throws PersistanceManagerException;
 	
 	//TODO burda exception firlatilmiyorsa kaldir exception mesajini
-	public abstract AlbumFile getAlbumFile(Key key)
+	public abstract AlbumFile getAlbumFile(Key key,PersistenceManager pm)
 			throws PersistanceManagerException;
 
-	public abstract void deleteAlbum(AlbumFile album)
+	public abstract void deleteAlbum(AlbumFile album,PersistenceManager pm)
 			throws PersistanceManagerException;
 
 	public abstract String getImageLink(String keyString,String extension);
 	
-	public abstract Iterable<ImageFile> getAllImages();
+	public abstract Iterable<ImageFile> getAllImages(PersistenceManager pm);
 
-	public ImageFile getImageFile(Key key)
+	public ImageFile getImageFile(Key key,PersistenceManager pm)
 			throws PersistanceManagerException;
 	
-	public abstract List<ImageFile> getImageFilesByAlbum(Key albumKey); 
+	public abstract List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm); 
 	
-	/**
-	 * Closes Persistent manager.
-	 */
-	public abstract void close();
+	public abstract void addImageToAlbum(ImageFile imageFile,Key albumFileKey,PersistenceManager pm) throws PersistanceManagerException;
 	
-	public abstract void addImageToAlbum(ImageFile imageFile,Key albumFileKey) throws PersistanceManagerException;
-	
-	public abstract void addDataToImage(ImageData imagedata,Key ImageFileKey) throws PersistanceManagerException;
+	public abstract void addDataToImage(ImageData imagedata,Key ImageFileKey,PersistenceManager pm) throws PersistanceManagerException;
 
 	
 }

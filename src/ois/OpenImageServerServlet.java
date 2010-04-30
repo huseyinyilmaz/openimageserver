@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.Element;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -29,57 +31,56 @@ public class OpenImageServerServlet extends HttpServlet {
 		B b = null;
 		C c = null;
 		
+
 		//1)If A does not exist persist A
 		try{
-			a = pm.getObjectById(A.class,"A");//check if A exist
+			a = pm.getObjectById(A.class,1);//check if A exist
 		}catch(Exception e){
-			try {
-				pm.currentTransaction().begin();
 				a = new A();
-				a.key = new KeyFactory.Builder(A.class.getSimpleName(),"A").getKey();
 				pm.makePersistent(a);
-	            pm.currentTransaction().commit();
 	            log.info("New a was created");
-			} finally {
-	        	if(pm.currentTransaction().isActive())
-	        		pm.currentTransaction().rollback();
-	        }
 		}
-        log.info("id of a is " + a.key);
+		
+		log.info("id of a is " + a.key);
 		//2)get A from DB and add B to its list
-		try {
-			pm.currentTransaction().begin();
-			A newA = pm.getObjectById(A.class,"A");
-			b = new B();
-			b.key = new KeyFactory.Builder(newA.key).addChild(B.class.getSimpleName(), "B").getKey();
-			newA.bList.add(b);
-			pm.currentTransaction().commit();
-            log.info("New b was created");
-		} finally {
-			if(pm.currentTransaction().isActive())
-				pm.currentTransaction().rollback();
-		}
+		//A newA = pm.getObjectById(A.class,1);
+		b = new B();
+		pm.makePersistent(b);
+		a.bList.add(b);
+		pm.makePersistent(a);
+		log.info("New b was created");
 		log.info("Key of b " + b.key);
-        //3) get B from DB and add C to its list
+		pm.close();
+		pm = PMF.get().getPersistenceManager();
+		//3) get B from DB and add C to its list
+
+		Key bKey  = b.key;//new KeyFactory.Builder(A.class.getSimpleName(), "A").addChild(B.class.getSimpleName(), "B").getKey();
+		B newB = pm.getObjectById(B.class,bKey);//Error we cannot retrieve B
+		c = new C();
+		newB.cList.add(c);
+		pm.makePersistent(newB);
+		log.info("New c was created");
+		/*
 		pm.currentTransaction().begin();
 		try {
-			Key bKey  = new KeyFactory.Builder(A.class.getSimpleName(), "A").addChild(B.class.getSimpleName(), "B").getKey();
+			Key bKey  = b.key;//new KeyFactory.Builder(A.class.getSimpleName(), "A").addChild(B.class.getSimpleName(), "B").getKey();
 			B newB = pm.getObjectById(B.class,bKey);//Error we cannot retrieve B
 			c = new C();
-			c.key = new KeyFactory.Builder(newB.key).addChild(C.class.getSimpleName(), "C").getKey();
 			newB.cList.add(c);
+			pm.makePersistent(newB);
 			pm.currentTransaction().commit();
             log.info("New c was created");
 		} finally {
         	if(pm.currentTransaction().isActive())
         		pm.currentTransaction().rollback();
         }
+	*/
 		//4) delete B and C from DB
         pm.currentTransaction().begin();
 		try {
 			C newC = pm.getObjectById(C.class,c.key);
 			pm.deletePersistent(newC);
-			B newB = pm.getObjectById(B.class,b.key);
+			newB = pm.getObjectById(B.class,b.key);
 			pm.deletePersistent(newB);
 			pm.currentTransaction().commit();
             log.info("b and c was deleted");
@@ -89,31 +90,28 @@ public class OpenImageServerServlet extends HttpServlet {
         }
 	}
 }
-
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 class A {
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     public Key key;
     @Persistent 
-    @Element(dependent = "true") 
     public List<B> bList = new ArrayList<B>();
 }	
 
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 class B {
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     public Key key;
     @Persistent 
-    @Element(dependent = "true") 
     public List<C> cList = new ArrayList<C>();
 }
 
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 class C {
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     public Key key;
 }
 

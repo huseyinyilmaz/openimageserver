@@ -2,7 +2,7 @@ package ois.model;
 
 import java.util.Date;
 
-import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -22,7 +22,7 @@ import com.google.appengine.api.datastore.Key;
 public class ImageData{
 	
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
 	@Persistent
     private Blob data;
@@ -30,10 +30,7 @@ public class ImageData{
 	@Persistent
 	private ImageFileType type;
 	
-	@Persistent
-    private ImageFile imageFile;
     @Persistent
-    @Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
     private Key imageFileKey;
 	
 	@Persistent
@@ -171,14 +168,7 @@ public class ImageData{
 	public void setEnhanced(boolean enhanced) {
 		this.enhanced = enhanced;
 	}
-	
-	public ImageFile getImageFile() {
-		return imageFile;
-	}
-	
-	public void setImageFile(ImageFile imageFile) {
-		this.imageFile = imageFile;
-	}
+
 	public Key getImageFileKey() {
 		return imageFileKey;
 	}

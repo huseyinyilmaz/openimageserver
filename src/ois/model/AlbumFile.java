@@ -1,10 +1,8 @@
 package ois.model;
 
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-import javax.jdo.annotations.Element;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -15,15 +13,12 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class AlbumFile {
     @PrimaryKey
-    @Persistent
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
     @Persistent
     private String name;
     @Persistent
     private String description;
-    @Persistent(mappedBy = "album") 
-    @Element(dependent = "true") 
-    private List<ImageFile> images = new LinkedList<ImageFile>();
 	@Persistent
 	private Date creationDate = new Date();
 
@@ -80,13 +75,6 @@ public class AlbumFile {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	/**
-	 * Getter for this object's image list
-	 * @return the image list
-	 */
-	public List<ImageFile> getImages() {
-		return images;
 	}
 
 
