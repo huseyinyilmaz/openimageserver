@@ -1,7 +1,6 @@
 package ois.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -9,13 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.io.IOUtils;
 
 import ois.ApplicationManager;
 import ois.exceptions.PersistanceManagerException;
@@ -64,7 +56,6 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private void forward(String context, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-		ApplicationManager.getControllerManager().close();
 		getServletContext().getRequestDispatcher(context).forward(req, res); 
 	}
 	/**
@@ -212,7 +203,6 @@ public class ControllerServlet extends HttpServlet {
 				deleteAlbum(req,res);
 				break;
 			}
-			ApplicationManager.getControllerManager().close();
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());

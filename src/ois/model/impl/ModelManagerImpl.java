@@ -4,16 +4,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
 import ois.model.ModelManager;
-import ois.model.PMF;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -25,12 +24,26 @@ public class ModelManagerImpl implements ModelManager {
 		try {
             pm.makePersistent(imageFile);
         }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + imageFile.getName() , e);
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image file. Name = " + imageFile.getName() , e);
         	throw pme;
         }
-        log.info("new album was successfully saved. name = " + imageFile.getName() +
+        log.info("new image file was successfully saved. name = " + imageFile.getName() +
         		", description = " + imageFile.getDescription());
 	}
+
+	/* (non-Javadoc)
+	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
+	 */
+	public void saveImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException{
+		try {
+            pm.makePersistent(imageData);
+        }catch(Exception e){
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image data.", e);
+        	throw pme;
+        }
+        log.info("new Image data was successfully saved.");
+	}
+
 	
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#getAlbums()
@@ -57,7 +70,7 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public AlbumFile getAlbumFile(Key key,PersistenceManager pm) throws PersistanceManagerException {
+	public AlbumFile getAlbumFile(Key key,PersistenceManager pm){
 		return pm.getObjectById(AlbumFile.class, key);
 	}
 
@@ -99,8 +112,12 @@ public class ModelManagerImpl implements ModelManager {
 
 	@Override
 	public List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm) {
-		AlbumFile album = pm.getObjectById(AlbumFile.class, albumKey);
-		return album.getImages();
+		Query query = pm.newQuery(ImageFile.class);
+		query.setFilter("albumFileKey == albumParam");
+		query.declareParameters("com.google.appengine.api.datastore.Key albumKeyParam");
+		List<ImageFile> ImageFiles = (List<ImageFile>) query.execute(albumKey);
+		
+		return ImageFiles;
 	}
 	
 }

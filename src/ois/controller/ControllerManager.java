@@ -35,5 +35,5 @@ public interface ControllerManager {
 	public abstract List<ImageLink> getImageLinks(String albumKey)
 	throws PersistanceManagerException;
 	
-	abstract void close();
+	
 }

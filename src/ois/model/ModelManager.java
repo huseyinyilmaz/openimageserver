@@ -13,14 +13,16 @@ public interface ModelManager {
 	public abstract void saveImageFile(ImageFile file,PersistenceManager pm)
 			throws PersistanceManagerException;
 
+	public abstract void saveImageData(ImageData imageData,PersistenceManager pm)
+	throws PersistanceManagerException;
+
 	public abstract Iterable<AlbumFile> getAlbums(PersistenceManager pm);
 
 	public abstract void saveAlbum(AlbumFile album,PersistenceManager pm)
 			throws PersistanceManagerException;
 	
 	//TODO burda exception firlatilmiyorsa kaldir exception mesajini
-	public abstract AlbumFile getAlbumFile(Key key,PersistenceManager pm)
-			throws PersistanceManagerException;
+	public abstract AlbumFile getAlbumFile(Key key,PersistenceManager pm);
 
 	public abstract void deleteAlbum(AlbumFile album,PersistenceManager pm)
 			throws PersistanceManagerException;
