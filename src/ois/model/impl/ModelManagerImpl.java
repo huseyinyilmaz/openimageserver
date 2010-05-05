@@ -13,6 +13,7 @@ import ois.model.ImageFile;
 import ois.model.ModelManager;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -121,21 +122,27 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	public List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm) {
 		Query query = pm.newQuery(ImageFile.class);
-		query.setFilter("albumFileKey == albumParam");
+		query.setFilter("albumFileKey == albumKeyParam");
 		query.declareParameters("com.google.appengine.api.datastore.Key albumKeyParam");
 		List<ImageFile> ImageFiles = (List<ImageFile>) query.execute(albumKey);
 		
 		return ImageFiles;
 	}
 	
-	public ImageData getThumbnail(Key ImageFileKey,PersistenceManager pm){
+	public ImageData getThumbnail(Key imageFileKey,PersistenceManager pm){
+/*
+		String query = "select from " + ImageData.class.getName() +
+					" where imageFileKey=="+ KeyFactory.keyToString(imageFileKey);
+		List<ImageData> imageDatas = (List<ImageData>)pm.newQuery(query).execute();
+		*/
 		Query query = pm.newQuery(ImageData.class);
 		query.setFilter("imageFileKey == imageFileKeyParam");
-		query.setFilter("isOriginal == true");
+		//query.setFilter("isOriginal == true");
+		//XXX fix this
 		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
-		List<ImageData> ImageDatas = (List<ImageData>) query.execute(ImageFileKey);
+		List<ImageData> imageDatas = (List<ImageData>) query.execute(imageFileKey);
 		
-		return ImageDatas.get(0);
+		return imageDatas.get(0);
 	}
 	
 }

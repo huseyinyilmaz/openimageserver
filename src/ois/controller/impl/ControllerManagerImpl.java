@@ -176,8 +176,9 @@ public class ControllerManagerImpl implements ControllerManager{
 				else
 					//get images only given album contains
 					imageFiles = modelManager.getImageFilesByAlbum(KeyFactory.stringToKey(albumKey),pm);
-
+				
 				for( ImageFile imageFile : imageFiles ){
+					pm.flush();
 					log.info("Create link for image file " + imageFile.getKey());
 					//create an image and set properties
 					ImageLink imageLink = new ImageLink();
@@ -185,7 +186,10 @@ public class ControllerManagerImpl implements ControllerManager{
 					imageLink.setDescription(imageFile.getDescription());
 					imageLink.setKey(KeyFactory.keyToString(imageFile.getKey()));
 					imageLink.setName(imageLink.getName());
-					imageLink.setLink(modelManager.getImageLink(KeyFactory.keyToString(modelManager.getThumbnail(imageFile.getKey(), pm).getKey()),imageFile.getType().getExtension()));
+					ImageData imageData;
+					imageData = modelManager.getThumbnail(imageFile.getKey(), pm);
+					log.info("Image data for "+ imageFile.getKey() + " is " + imageData.getKey());
+					imageLink.setLink(modelManager.getImageLink(KeyFactory.keyToString(imageData.getKey()),imageFile.getType().getExtension()));
 					//add image to image list.
 					images.add(imageLink);
 				}

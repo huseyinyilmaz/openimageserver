@@ -37,5 +37,5 @@ public interface ModelManager {
 	public abstract List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm); 
 	
 	public abstract ImageData getImageData(Key key,PersistenceManager pm) throws PersistanceManagerException;
-	public ImageData getThumbnail(Key ImageFileKey,PersistenceManager pm);
+	public ImageData getThumbnail(Key imageFileKey,PersistenceManager pm);
 }
