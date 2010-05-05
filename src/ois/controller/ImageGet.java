@@ -1,4 +1,4 @@
-package ois.view;
+package ois.controller;
 
 import java.util.logging.Logger;
 
@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
-import ois.controller.Image;
 
 @SuppressWarnings("serial")
 public class ImageGet extends HttpServlet {
@@ -33,6 +32,7 @@ public class ImageGet extends HttpServlet {
     	else{
     		//TODO throw an exception
     	}
+    	/*
     	int slashLocation = uri.lastIndexOf('/');
     	String name;
     	String location;
@@ -43,15 +43,14 @@ public class ImageGet extends HttpServlet {
     		name = uri;
     		location = null;
     	}
-
-    	Image file = null;//ApplicationManager.getControllerManager().getImage(location,name);
+    	 */
+    	Image file = ApplicationManager.getControllerManager().getImageData(uri);
     	if(file != null){
     		res.setContentType(file.getType());
     		res.getOutputStream().write(file.getData());
     	}else{
     		res.setContentType("text/plain");
     		res.getWriter().println("no image found");
-    		
     	}
 
       //res.sendRedirect("/images/upload.jsp");

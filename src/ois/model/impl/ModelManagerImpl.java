@@ -82,6 +82,13 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	/* (non-Javadoc)
+	 * @see ois.model.ModelManager#getAlbum(long)
+	 */
+	public ImageData getImageData(Key key,PersistenceManager pm) throws PersistanceManagerException {
+		return pm.getObjectById(ImageData.class, key);
+	}
+
+	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#deleteAlbum(ois.model.AlbumFile)
 	 */
 	public void deleteAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException {
@@ -98,7 +105,8 @@ public class ModelManagerImpl implements ModelManager {
 	 */
 	public String getImageLink(String keyString, String extension){
 		//TODO move this to application manager
-		return "/images/" + keyString + "." + extension;
+		//return "/ois/images/" + keyString + "." + extension;
+		return "/ois/images/" + keyString; //+ "." + extension;
 	}
 
 	/* (non-Javadoc)
@@ -118,6 +126,16 @@ public class ModelManagerImpl implements ModelManager {
 		List<ImageFile> ImageFiles = (List<ImageFile>) query.execute(albumKey);
 		
 		return ImageFiles;
+	}
+	
+	public ImageData getThumbnail(Key ImageFileKey,PersistenceManager pm){
+		Query query = pm.newQuery(ImageData.class);
+		query.setFilter("imageFileKey == imageFileKeyParam");
+		query.setFilter("isOriginal == true");
+		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
+		List<ImageData> ImageDatas = (List<ImageData>) query.execute(ImageFileKey);
+		
+		return ImageDatas.get(0);
 	}
 	
 }

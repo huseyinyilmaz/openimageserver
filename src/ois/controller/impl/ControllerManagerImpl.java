@@ -185,7 +185,7 @@ public class ControllerManagerImpl implements ControllerManager{
 					imageLink.setDescription(imageFile.getDescription());
 					imageLink.setKey(KeyFactory.keyToString(imageFile.getKey()));
 					imageLink.setName(imageLink.getName());
-					imageLink.setLink(modelManager.getImageLink(imageLink.getKey(),imageFile.getType().getExtension()));
+					imageLink.setLink(modelManager.getImageLink(KeyFactory.keyToString(modelManager.getThumbnail(imageFile.getKey(), pm).getKey()),imageFile.getType().getExtension()));
 					//add image to image list.
 					images.add(imageLink);
 				}
@@ -195,5 +195,17 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 		return images;
 	}		
-
+	public Image getImageData(String keyString) throws PersistanceManagerException{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Image image = new Image();
+		try{
+			ImageData imageData = modelManager.getImageData(KeyFactory.stringToKey(keyString), pm);
+			image.setData(imageData.getData().getBytes());
+			image.setType(imageData.getType().toString());
+		}finally{
+			pm.close();
+		}
+	
+		return image;
+	}
 }

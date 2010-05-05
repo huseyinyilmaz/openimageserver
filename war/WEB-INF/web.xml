@@ -16,7 +16,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
 		<servlet-name>ImageGet</servlet-name>
-		<servlet-class>ois.view.ImageGet</servlet-class>
+		<servlet-class>ois.controller.ImageGet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -47,7 +47,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>	
 	
 		<servlet-name>ImageGet</servlet-name>
-		<url-pattern>/img/*</url-pattern>
+		<url-pattern>/ois/images/*</url-pattern>
 	</servlet-mapping>
 	
 	<error-page>

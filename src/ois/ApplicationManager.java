@@ -9,7 +9,7 @@ public class ApplicationManager {
 	
 	public static final String ALBUMNODE_NONE = "None";
 	public static final String ALBUMNODE_ALL = "All";
-	public static final String IMAGE_URI_PREFIX = "img/";
+	public static final String IMAGE_URI_PREFIX = "/ois/images/";
 	
 	private static ModelManager modelManager = new ModelManagerImpl();
 	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager);
