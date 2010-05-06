@@ -43,7 +43,9 @@ public class ImageData{
     @Persistent
     private boolean enhanced;
     @Persistent
-    private boolean isOriginal;
+    private boolean original;
+    @Persistent
+    private boolean thumbnail;
 
 	public ImageData(){}//to make image data serializable
     public ImageData (Blob data,ImageFileType type){
@@ -53,17 +55,29 @@ public class ImageData{
     }
 	
 	//-------------Getters and setters--------------------------
+	/**
+	 * @return the thumbnail
+	 */
+	public boolean isThumbnail() {
+		return thumbnail;
+	}
+	/**
+	 * @param thumbnail the thumbnail to set
+	 */
+	public void setThumbnail(boolean thumbnail) {
+		this.thumbnail = thumbnail;
+	}
     /**
 	 * @return the isOriginal
 	 */
 	public boolean isOriginal() {
-		return isOriginal;
+		return original;
 	}
 	/**
 	 * @param isOriginal the isOriginal to set
 	 */
-	public void setOriginal(boolean isOriginal) {
-		this.isOriginal = isOriginal;
+	public void setOriginal(boolean original) {
+		this.original = original;
 	}
     
 	/**

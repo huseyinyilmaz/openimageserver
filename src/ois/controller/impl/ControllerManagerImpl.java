@@ -13,6 +13,7 @@ import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Image;
 import ois.exceptions.PersistanceManagerException;
+import ois.images.ImageManipulator;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
@@ -27,11 +28,13 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class ControllerManagerImpl implements ControllerManager{
 	private static final Logger log = Logger.getLogger(ControllerManagerImpl.class.getName());
 	private ModelManager modelManager;
+	private ImageManipulator manipulator;
 	
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#saveImage(ois.controller.Image)
 	 */
 	public void createImage(Image img) throws PersistanceManagerException{
+		//check type from image service.
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
 			pm.currentTransaction().begin();
@@ -98,8 +101,9 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 	}
 
-	public ControllerManagerImpl(ModelManager modelManager){
+	public ControllerManagerImpl(ModelManager modelManager,ImageManipulator manipulator){
 		this.modelManager = modelManager;
+		this.manipulator = manipulator;
 	}
 
 	/* (non-Javadoc)

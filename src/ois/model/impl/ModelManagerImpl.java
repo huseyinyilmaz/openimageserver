@@ -136,9 +136,7 @@ public class ModelManagerImpl implements ModelManager {
 		List<ImageData> imageDatas = (List<ImageData>)pm.newQuery(query).execute();
 		*/
 		Query query = pm.newQuery(ImageData.class);
-		query.setFilter("imageFileKey == imageFileKeyParam");
-		//query.setFilter("isOriginal == true");
-		//XXX fix this
+		query.setFilter("imageFileKey == imageFileKeyParam && isOriginal == true");
 		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
 		List<ImageData> imageDatas = (List<ImageData>) query.execute(imageFileKey);
 		

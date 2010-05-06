@@ -2,6 +2,8 @@ package ois;
 
 import ois.controller.ControllerManager;
 import ois.controller.impl.ControllerManagerImpl;
+import ois.images.ImageManipulator;
+import ois.images.ImageManipulatorImpl;
 import ois.model.ModelManager;
 import ois.model.impl.ModelManagerImpl;
 
@@ -12,8 +14,8 @@ public class ApplicationManager {
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
 	
 	private static ModelManager modelManager = new ModelManagerImpl();
-	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager);
-	
+	private static ImageManipulator manipulator = new ImageManipulatorImpl();
+	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager,manipulator);
 	
 	
 	public static ControllerManager getControllerManager(){
