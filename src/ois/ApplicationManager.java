@@ -15,11 +15,16 @@ public class ApplicationManager {
 	
 	private static ModelManager modelManager = new ModelManagerImpl();
 	private static ImageManipulator manipulator = new ImageManipulatorImpl();
-	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager,manipulator);
-	
+	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager);
 	
 	public static ControllerManager getControllerManager(){
 		return controllerManager;
+	}
+	
+	public static ImageManipulator getManipulator(){
+		if(manipulator == null)
+			manipulator = new ImageManipulatorImpl();
+		return manipulator;
 	}
 	
 }

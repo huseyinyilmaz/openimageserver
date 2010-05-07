@@ -13,7 +13,6 @@ import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Image;
 import ois.exceptions.PersistanceManagerException;
-import ois.images.ImageManipulator;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
@@ -28,7 +27,10 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class ControllerManagerImpl implements ControllerManager{
 	private static final Logger log = Logger.getLogger(ControllerManagerImpl.class.getName());
 	private ModelManager modelManager;
-	private ImageManipulator manipulator;
+
+	public ControllerManagerImpl(ModelManager modelManager){
+		this.modelManager = modelManager;
+	}
 	
 	/* (non-Javadoc)
 	 * @see ois.controller.ControllerManager#saveImage(ois.controller.Image)
@@ -46,18 +48,25 @@ public class ControllerManagerImpl implements ControllerManager{
 			imageFile.setAlbumFileKey(albumFileKey);
 			imageFile.setDescription(img.getDescription());
 			modelManager.saveImageFile(imageFile, pm);
+			//We cannot work on imageFile and image data in same transaction 
 			pm.currentTransaction().commit();//finish first transaction 
 			imageFile = pm.detachCopy(imageFile);
-			//pm.close();
-			//pm = PMF.get().getPersistenceManager();
 			pm.currentTransaction().begin();//start second transaction
 			//create new data
 			ImageData imageData = new ImageData(new Blob(img.getData()),imageFile.getType());
 			imageData.setOriginal(true);
 			imageData.setImageFileKey(imageFile.getKey());
-			//TODO add image info
 			modelManager.saveImageData(imageData, pm);
-			pm.currentTransaction().commit();
+			pm.currentTransaction().commit();//finish second transaction 
+			pm.currentTransaction().begin();//start third transaction
+			//create new thumbnail
+			byte[] thumbnailRawData = ApplicationManager.getManipulator().resizeandEnhance(img.getData(), 100, 100);
+			ImageData thumbnailData = new ImageData(new Blob(thumbnailRawData),imageFile.getType());
+			thumbnailData.setThumbnail(true);
+			thumbnailData.setImageFileKey(imageFile.getKey());
+			//TODO add image info
+			modelManager.saveImageData(thumbnailData, pm);
+			pm.currentTransaction().commit();//finish third transaction
 		}finally{
 			if(pm.currentTransaction().isActive())
 				pm.currentTransaction().rollback();
@@ -99,11 +108,6 @@ public class ControllerManagerImpl implements ControllerManager{
 				pm.currentTransaction().rollback();
 			pm.close();
 		}
-	}
-
-	public ControllerManagerImpl(ModelManager modelManager,ImageManipulator manipulator){
-		this.modelManager = modelManager;
-		this.manipulator = manipulator;
 	}
 
 	/* (non-Javadoc)

@@ -24,7 +24,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-class>ois.controller.ControllerServlet</servlet-class>
 	</servlet>
 	
-	
 	<servlet-mapping>
 		<servlet-name>ControllerServlet</servlet-name>
 		<url-pattern>/main</url-pattern>
@@ -35,23 +34,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/openimageserver</url-pattern>
 	</servlet-mapping>
 	
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-	
 	<servlet-mapping>
 		<servlet-name>ImageUpload</servlet-name>
 		<url-pattern>/imageupload</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>	
-	
 		<servlet-name>ImageGet</servlet-name>
 		<url-pattern>/ois/images/*</url-pattern>
 	</servlet-mapping>
 	
+	<welcome-file-list>
+		<welcome-file>ois/index.html</welcome-file>
+	</welcome-file-list>
 	<error-page>
-	  <error-code>404</error-code>
+
+  <error-code>404</error-code>
 	  <location>/error404.html</location>
   </error-page>
 	
