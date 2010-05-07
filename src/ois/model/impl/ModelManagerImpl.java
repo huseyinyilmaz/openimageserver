@@ -13,7 +13,6 @@ import ois.model.ImageFile;
 import ois.model.ModelManager;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -78,25 +77,26 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public ImageFile getImageFile(Key key,PersistenceManager pm) throws PersistanceManagerException {
+	public ImageFile getImageFile(Key key,PersistenceManager pm){
 		return pm.getObjectById(ImageFile.class, key);
 	}
 
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
 	 */
-	public ImageData getImageData(Key key,PersistenceManager pm) throws PersistanceManagerException {
+	public ImageData getImageData(Key key,PersistenceManager pm){
 		return pm.getObjectById(ImageData.class, key);
 	}
 
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#deleteAlbum(ois.model.AlbumFile)
 	 */
-	public void deleteAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException {
-        try {
-        	pm.deletePersistent(album);
+	public void deleteAlbumFile(Key key,PersistenceManager pm) throws PersistanceManagerException {
+        AlbumFile albumFile = getAlbumFile(key, pm);
+		try {
+        	pm.deletePersistent(albumFile);
         }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Album [" + album.getName() + "] could not be deleted",e);
+        	PersistanceManagerException pme = new PersistanceManagerException("Album [" + albumFile.getName() + "] could not be deleted",e);
         	throw pme;
         }
 	}
@@ -128,24 +128,52 @@ public class ModelManagerImpl implements ModelManager {
 		
 		return ImageFiles;
 	}
+
+	@Override
+	public List<ImageData> getImageDataByImageFile(Key imageFileKey,PersistenceManager pm) {
+		Query query = pm.newQuery(ImageData.class);
+		//TODO do not show thumbnail
+		query.setFilter("imageFileKey == imageKeyParam");
+		query.declareParameters("com.google.appengine.api.datastore.Key imageKeyParam");
+		List<ImageData> imageData = (List<ImageData>) query.execute(imageFileKey);
+		return imageData;
+	}
+
 	
 	public ImageData getThumbnail(Key imageFileKey,PersistenceManager pm){
-/*
-		String query = "select from " + ImageData.class.getName() +
-					" where imageFileKey=="+ KeyFactory.keyToString(imageFileKey);
-		List<ImageData> imageDatas = (List<ImageData>)pm.newQuery(query).execute();
-		*/
 		Query query = pm.newQuery(ImageData.class);
 		query.setFilter("imageFileKey == imageFileKeyParam && thumbnail == true");
 		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
-		List<ImageData> imageDatas = (List<ImageData>) query.execute(imageFileKey);
+		List<ImageData> imageData = (List<ImageData>) query.execute(imageFileKey);
 		ImageData data = null;
-		if (imageDatas.size()>0)
-			data = imageDatas.get(0);
+		if (imageData.size()>0)
+			data = imageData.get(0);
 		else{
 			//TODO throw exception or log
 		}
 		return data;
+	}
+
+	@Override
+	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException {
+		ImageData imageData = getImageData(key, pm);
+        try {
+        	pm.deletePersistent(imageData);
+        }catch(Exception e){
+        	PersistanceManagerException pme = new PersistanceManagerException("Image data [" + imageData.getKey() + "] could not be deleted",e);
+        	throw pme;
+        }
+	}
+
+	@Override
+	public void deleteImageFile(Key key, PersistenceManager pm) throws PersistanceManagerException {
+		ImageFile imageFile = getImageFile(key, pm);
+        try {
+        	pm.deletePersistent(imageFile);
+        }catch(Exception e){
+        	PersistanceManagerException pme = new PersistanceManagerException("Album [" + imageFile.getName() + "] could not be deleted",e);
+        	throw pme;
+        }
 	}
 	
 }

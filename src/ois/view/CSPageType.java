@@ -4,7 +4,9 @@ public enum CSPageType {
 	MAIN("main"),
 	IMAGE("image"),
 	ALBUM_EDIT("albumEdit"),
-	IMAGE_CREATE("imageCreate");
+	IMAGE_CREATE("imageCreate"),
+	IMAGE_EDIT("imageEdit");
+	
 	
 	private String value;
 	

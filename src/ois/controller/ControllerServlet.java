@@ -52,7 +52,7 @@ public class ControllerServlet extends HttpServlet {
 		
 		req.setAttribute("albums",albumsBean);
 		
-		forward("/albums.jsp",req, res);
+		forward(ApplicationManager.JSP_IMAGES_URL,req, res);
 	}
 
 	private void forward(String context, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
@@ -76,7 +76,7 @@ public class ControllerServlet extends HttpServlet {
 			album = ApplicationManager.getControllerManager().getAlbum(albumKey);
 		}
 		req.setAttribute("album",album);
-		forward("/albumEdit.jsp",req,res);
+		forward(ApplicationManager.JSP_IMAGE_EDIT_URL,req,res);
 	}
 
 	
@@ -94,7 +94,7 @@ public class ControllerServlet extends HttpServlet {
 		album.setKey(albumKey);
 		req.setAttribute("album",album);
 		log.info("Image create page is being opened for album " + albumKey );
-		forward("/imageCreate.jsp",req,res);
+		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,req,res);
 	}
 	
 	/* (non-Javadoc)
@@ -120,7 +120,8 @@ public class ControllerServlet extends HttpServlet {
 			case IMAGE_CREATE:
 				initImageCreate(req,res);
 				break;
-				
+			case IMAGE_EDIT:
+				break;
 			}
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
@@ -177,7 +178,18 @@ public class ControllerServlet extends HttpServlet {
 		String key = req.getParameter(CSParamType.ITEM.toString());
 		ApplicationManager.getControllerManager().deleteAlbum(key);
 	}
-	
+
+	/**
+	 * Deletes given album
+	 * @param req current request object
+	 * @param res current response object
+	 * @throws PersistanceManagerException
+	 */
+	private void deleteImage (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String key = req.getParameter(CSParamType.ITEM.toString());
+		ApplicationManager.getControllerManager().deleteImageFile(key);
+	}
+
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -202,6 +214,8 @@ public class ControllerServlet extends HttpServlet {
 			case DELETE_ALBUM:
 				deleteAlbum(req,res);
 				break;
+			case DELETE_IMAGE:
+				deleteImage(req,res);
 			}
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 		} catch (Exception ex) {

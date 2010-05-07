@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
-<%@ page errorPage="/errorPage.jsp" %>
+<%@ page errorPage="/ois/system/errorPage.jsp" %>
 <%@ page import="ois.view.CSParamType"%>
 <%@ page import="ois.view.CSActionType"%>
 
@@ -18,7 +18,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
 </head>
 <body>
-<%@ include file="moduleHeader.jsp"%>
+<%@ include file="modules/moduleHeader.jsp"%>
 <div class="main">
 	<form action="/imageupload" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>

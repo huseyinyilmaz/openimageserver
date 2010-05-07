@@ -12,6 +12,10 @@ public class ApplicationManager {
 	public static final String ALBUMNODE_NONE = "None";
 	public static final String ALBUMNODE_ALL = "All";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
+	//JSP URLS
+	public static final String JSP_IMAGES_URL = "/ois/albums.jsp";
+	public static final String JSP_IMAGE_EDIT_URL = "/ois/albumEdit.jsp";
+	public static final String JSP_IMAGE_CREATE_URL = "/ois/imageCreate.jsp";
 	
 	private static ModelManager modelManager = new ModelManagerImpl();
 	private static ImageManipulator manipulator = new ImageManipulatorImpl();

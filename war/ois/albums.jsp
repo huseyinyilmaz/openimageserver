@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
-<%@ page errorPage="/errorPage.jsp" %>
+<%@ page errorPage="/ois/system/errorPage.jsp" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -15,12 +15,12 @@
 </head>
 <body>
 <div class="main">
-	<%@ include file="moduleHeader.jsp" %>
+	<%@ include file="modules/moduleHeader.jsp" %>
 	<div class="body">
 		<table>
 		<tr>
-			<td><%@ include file="moduleAlbums.jsp" %></td>
-			<td><%@ include file="moduleImages.jsp" %></td>
+			<td><%@ include file="modules/moduleAlbums.jsp" %></td>
+			<td><%@ include file="modules/moduleImages.jsp" %></td>
 		</tr>
 		</table>
 	</div> 

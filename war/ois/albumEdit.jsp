@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
-<%@ page errorPage="/errorPage.jsp" %>
+<%@ page errorPage="/ois/system/errorPage.jsp" %>
 <%@ page import="ois.view.CSParamType"%>
 <%@ page import="ois.view.CSActionType"%>
 
@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="main">
-<%@ include file="moduleHeader.jsp" %>
+<%@ include file="modules/moduleHeader.jsp" %>
 
 	<form action="/main" method="post">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 

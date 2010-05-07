@@ -32,14 +32,10 @@ public class ControllerManagerImpl implements ControllerManager{
 		this.modelManager = modelManager;
 	}
 	
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#saveImage(ois.controller.Image)
-	 */
 	public void createImage(Image img) throws PersistanceManagerException{
 		//check type from image service.
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
-			pm.currentTransaction().begin();
 			Key albumFileKey = KeyFactory.stringToKey(img.getAlbum());
 			//create new Image
 			ImageFile imageFile = new ImageFile();
@@ -49,16 +45,12 @@ public class ControllerManagerImpl implements ControllerManager{
 			imageFile.setDescription(img.getDescription());
 			modelManager.saveImageFile(imageFile, pm);
 			//We cannot work on imageFile and image data in same transaction 
-			pm.currentTransaction().commit();//finish first transaction 
 			imageFile = pm.detachCopy(imageFile);
-			pm.currentTransaction().begin();//start second transaction
 			//create new data
 			ImageData imageData = new ImageData(new Blob(img.getData()),imageFile.getType());
 			imageData.setOriginal(true);
 			imageData.setImageFileKey(imageFile.getKey());
 			modelManager.saveImageData(imageData, pm);
-			pm.currentTransaction().commit();//finish second transaction 
-			pm.currentTransaction().begin();//start third transaction
 			//create new thumbnail
 			byte[] thumbnailRawData = ApplicationManager.getManipulator().resizeandEnhance(img.getData(), 100, 100);
 			ImageData thumbnailData = new ImageData(new Blob(thumbnailRawData),imageFile.getType());
@@ -66,17 +58,11 @@ public class ControllerManagerImpl implements ControllerManager{
 			thumbnailData.setImageFileKey(imageFile.getKey());
 			//TODO add image info
 			modelManager.saveImageData(thumbnailData, pm);
-			pm.currentTransaction().commit();//finish third transaction
 		}finally{
-			if(pm.currentTransaction().isActive())
-				pm.currentTransaction().rollback();
 			pm.close();
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#getAlbums()
-	 */
 	public List<Album> getAlbums(){
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<Album> albums = new ArrayList<Album>();
@@ -90,9 +76,6 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 		
 	
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#createAlbum(java.lang.String, java.lang.String)
-	 */
 	public void createAlbum(String name, String description) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
@@ -110,17 +93,31 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#deleteAlbum(long)
-	 */
 	public void deleteAlbum(String key) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
 			pm.currentTransaction().begin();
-			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(key),pm);
-			if (albumFile == null)
-				throw new IllegalArgumentException("Album with key '" + key +" could not be found");
-			modelManager.deleteAlbum(albumFile,pm);
+			Key albumFileKey = KeyFactory.stringToKey(key);
+			if (albumFileKey == null)
+				throw new IllegalArgumentException("Album with key '" + albumFileKey +" could not be found");
+			modelManager.deleteAlbumFile(albumFileKey,pm);
+			pm.currentTransaction().commit();
+			}finally{
+				if(pm.currentTransaction().isActive())
+					pm.currentTransaction().rollback();
+				pm.close();
+			}
+	}
+
+
+	public void deleteImageFile(String key) throws PersistanceManagerException{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try{
+			pm.currentTransaction().begin();
+			Key imageFileKey = KeyFactory.stringToKey(key);
+			if (imageFileKey == null)
+				throw new IllegalArgumentException("Image with key '" + imageFileKey +" could not be found");
+			modelManager.deleteImageFile(imageFileKey,pm);
 			pm.currentTransaction().commit();
 			}finally{
 				if(pm.currentTransaction().isActive())
@@ -130,9 +127,6 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#getAlbum(long)
-	 */
 	public Album getAlbum(String key) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		AlbumFile albumFile;
@@ -145,9 +139,6 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#saveAlbum(ois.controller.Album)
-	 */
 	public void saveAlbum(Album album) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
@@ -165,9 +156,6 @@ public class ControllerManagerImpl implements ControllerManager{
 
 	}
 
-	/* (non-Javadoc)
-	 * @see ois.controller.ControllerManager#getImageLinks(long)
-	 */
 	public List<ImageLink> getImageLinks(String albumKey) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<ImageLink> images = new ArrayList<ImageLink>();
