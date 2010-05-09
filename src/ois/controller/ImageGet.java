@@ -44,10 +44,10 @@ public class ImageGet extends HttpServlet {
     		location = null;
     	}
     	 */
-    	Image file = ApplicationManager.getControllerManager().getImageData(uri);
-    	if(file != null){
-    		res.setContentType(file.getType());
-    		res.getOutputStream().write(file.getData());
+    	Data data = ApplicationManager.getControllerManager().getImageData(uri);
+    	if(data != null){
+    		res.setContentType(data.getType());
+    		res.getOutputStream().write(data.getData());
     	}else{
     		res.setContentType("text/plain");
     		res.getWriter().println("no image found");

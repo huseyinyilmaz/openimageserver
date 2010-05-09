@@ -76,7 +76,7 @@ public class ControllerServlet extends HttpServlet {
 			album = ApplicationManager.getControllerManager().getAlbum(albumKey);
 		}
 		req.setAttribute("album",album);
-		forward(ApplicationManager.JSP_IMAGE_EDIT_URL,req,res);
+		forward(ApplicationManager.JSP_ALBUM_EDIT_URL,req,res);
 	}
 
 	
@@ -96,7 +96,15 @@ public class ControllerServlet extends HttpServlet {
 		log.info("Image create page is being opened for album " + albumKey );
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,req,res);
 	}
-	
+
+	private void initImageEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
+		Image image = ApplicationManager.getControllerManager().getImageFile(imageFileKey);
+		req.setAttribute("image",image);
+		log.info("Revisions page is being opened for image " + imageFileKey + "(" + image.getName() + ")" );
+		forward(ApplicationManager.JSP_IMAGE_REVISIONS_URL,req,res);
+	}
+
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -121,6 +129,7 @@ public class ControllerServlet extends HttpServlet {
 				initImageCreate(req,res);
 				break;
 			case IMAGE_EDIT:
+				initImageEdit(req,res);
 				break;
 			}
 		} catch (Exception ex) {

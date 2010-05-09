@@ -157,6 +157,10 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException {
 		ImageData imageData = getImageData(key, pm);
+		deleteImageData(imageData, pm);
+	}
+	@Override
+	public void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException {
         try {
         	pm.deletePersistent(imageData);
         }catch(Exception e){
@@ -165,10 +169,15 @@ public class ModelManagerImpl implements ModelManager {
         }
 	}
 
+
 	@Override
 	public void deleteImageFile(Key key, PersistenceManager pm) throws PersistanceManagerException {
 		ImageFile imageFile = getImageFile(key, pm);
-        try {
+		deleteImageFile(imageFile, pm);
+	}
+	@Override
+	public void deleteImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException {
+		try {
         	pm.deletePersistent(imageFile);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Album [" + imageFile.getName() + "] could not be deleted",e);

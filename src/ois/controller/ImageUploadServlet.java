@@ -51,11 +51,12 @@ public class ImageUploadServlet extends HttpServlet {
 							", name = " + item.getName() +
 							", type = " + item.getContentType() +
 							", length = " + byteArray.length);
-					img.setData(byteArray);
+					img.getDataList().add(new Data(byteArray));
 					img.setType(item.getContentType());
-					ApplicationManager.getControllerManager().createImage(img);
 				}
 			}
+			//create Image
+			ApplicationManager.getControllerManager().createImage(img);
 			res.sendRedirect("/main?page=main&item="+img.getAlbum());
 		} catch (FileUploadException e) {
 			log.warning("FileUploadException was caught. Exception = " + e.getMessage());

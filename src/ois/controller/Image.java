@@ -1,12 +1,18 @@
 package ois.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class Image {
-	private String album;
-    private String name;
-    private byte[] data;
+	private String albumKeyString;
+	private String keyString; 
+
+	private String name;
+    private List<Data> dataList = new ArrayList<Data>();
     private String type;
 	private String description;
-    
+    private Date creationDate;
 
 	/**
      * Creates an empty image
@@ -24,22 +30,38 @@ public class Image {
 	public Image(String name, String album, byte[] data,String type) {
 		super();
 		this.name = name;
-		this.album = album;
-		this.data = data;
+		this.albumKeyString = album;
+		Data imageData = new Data();
+		imageData.setData(data);
+		imageData.setOriginal(true);
+		this.dataList.add(imageData);
 		this.type = type;
 	}
 	//Getters and setters
-    /**
+    public String getKeyString() {
+		return keyString;
+	}
+	public void setKeyString(String keyString) {
+		this.keyString = keyString;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	/**
 	 * @return the album
 	 */
 	public String getAlbum() {
-		return album;
+		return albumKeyString;
 	}
 	/**
 	 * @param album the album to set
 	 */
 	public void setAlbum(String album) {
-		this.album = album;
+		this.albumKeyString = album;
 	}
 	/**
 	 * @return the name
@@ -56,14 +78,8 @@ public class Image {
 	/**
 	 * @return the data
 	 */
-	public byte[] getData() {
-		return data;
-	}
-	/**
-	 * @param data the data to set
-	 */
-	public void setData(byte[] data) {
-		this.data = data;
+	public List<Data> getDataList() {
+		return dataList;
 	}
     /**
 	 * @return the type
