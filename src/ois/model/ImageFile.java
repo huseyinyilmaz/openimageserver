@@ -26,7 +26,7 @@ public class ImageFile {
     @Persistent
     private String description;
 	@Persistent
-	private ImageFileType type;
+	private ImageType type;
 	
 
 	//Creates an empty Image File
@@ -48,7 +48,7 @@ public class ImageFile {
 		return creationDate;
 	}
 
-	public void setType(ImageFileType type) {
+	public void setType(ImageType type) {
 		this.type = type;
 	}
 
@@ -103,7 +103,7 @@ public class ImageFile {
 	/**
 	 * @return the type
 	 */
-	public ImageFileType getType() {
+	public ImageType getType() {
 		return type;
 	}
 }

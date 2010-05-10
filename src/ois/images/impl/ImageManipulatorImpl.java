@@ -1,5 +1,9 @@
 package ois.images.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import ois.controller.Data;
 import ois.images.ImageManipulator;
 
@@ -8,7 +12,7 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.Transform;
 
 public class ImageManipulatorImpl implements ImageManipulator {
-	
+	private Map<String,String> contentTypes = new HashMap<String,String>(new String[]{}, new String[]{});
 	public ImageManipulatorImpl(){
 		
 	}
@@ -63,5 +67,9 @@ public class ImageManipulatorImpl implements ImageManipulator {
         imageData.setWidth(image.getWidth());
         imageData.setHeight(image.getHeight());
         imageData.setType(image.getFormat().toString());
+	}
+	
+	private String toContentType(String imageFormat){
+		return null;
 	}
 }

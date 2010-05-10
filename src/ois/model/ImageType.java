@@ -1,7 +1,7 @@
 package ois.model;
 
 
-public enum ImageFileType {
+public enum ImageType {
 	JPEG("image/jpeg","jpg"),
 	PNG("image/png","png"),
 	GIF("image/gif","gif");
@@ -9,7 +9,7 @@ public enum ImageFileType {
 	private final String typeString;
 	private final String fileExtension;
 
-	ImageFileType(String typeString,String fileExtension) {
+	ImageType(String typeString,String fileExtension) {
     	this.typeString = typeString;
     	this.fileExtension = fileExtension;
     }
@@ -35,9 +35,9 @@ public enum ImageFileType {
 	 * @param value String value of CSParamType
 	 * @return CSParamType representation of given script
 	 */
-	public static ImageFileType fromString(String value) {
-		ImageFileType param = null;
-		for (ImageFileType p : values())
+	public static ImageType fromString(String value) {
+		ImageType param = null;
+		for (ImageType p : values())
 			if( p.toString().equals(value)){
 				param = p;
 				break;

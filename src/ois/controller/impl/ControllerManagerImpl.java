@@ -17,7 +17,7 @@ import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
-import ois.model.ImageFileType;
+import ois.model.ImageType;
 import ois.model.ModelManager;
 import ois.model.PMF;
 import ois.view.ImageLink;
@@ -249,7 +249,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	private ImageData toImageData(Data data){
 		ImageData imageData = new ImageData();
 		imageData.setData(new Blob(data.getData()));
-		imageData.setType(ImageFileType.fromString(data.getType()));
+		imageData.setType(ImageType.fromString(data.getType()));
 		//TODO should we put creation date here?
 		imageData.setCreationDate(data.getCreationDate());
 		imageData.setOriginal(data.isOriginal());
@@ -265,9 +265,11 @@ public class ControllerManagerImpl implements ControllerManager{
 		imageFile.setCreationDate(image.getCreationDate());
 		imageFile.setName(image.getName());
 		imageFile.setDescription(image.getDescription());
-		imageFile.setKey(KeyFactory.stringToKey(image.getKeyString()));
-		imageFile.setType(ImageFileType.fromString(image.getType()));
-		imageFile.setAlbumFileKey(KeyFactory.stringToKey(image.getAlbum()));
+		if(image.getKeyString() != null)
+			imageFile.setKey(KeyFactory.stringToKey(image.getKeyString()));
+		imageFile.setType(ImageType.fromString(image.getType()));
+		if(image.getAlbum() != null)
+			imageFile.setAlbumFileKey(KeyFactory.stringToKey(image.getAlbum()));
 		return imageFile;
 	}
 	

@@ -28,7 +28,7 @@ public class ImageData{
     private Blob data;
 	
 	@Persistent
-	private ImageFileType type;
+	private ImageType type;
 	
     @Persistent
     private Key imageFileKey;
@@ -48,7 +48,7 @@ public class ImageData{
     private boolean thumbnail;
 
 	public ImageData(){}//to make image data serializable
-    public ImageData (Blob data,ImageFileType type){
+    public ImageData (Blob data,ImageType type){
     	//this.imageFile = imageFile;
     	this.data = data;
     	this.type = type;
@@ -97,7 +97,7 @@ public class ImageData{
 	 * @return type of this object
 	 */
 
-	public ImageFileType getType() {
+	public ImageType getType() {
 		return type;
 	}
 	
@@ -106,7 +106,7 @@ public class ImageData{
 	 * @param type type that will be assigned to this object
 	 */
 
-	public void setType(ImageFileType type) {
+	public void setType(ImageType type) {
 		this.type = type;
 	}
 
