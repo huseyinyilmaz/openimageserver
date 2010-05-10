@@ -2,7 +2,6 @@ package ois.images.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import ois.controller.Data;
 import ois.images.ImageManipulator;
@@ -12,9 +11,12 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.Transform;
 
 public class ImageManipulatorImpl implements ImageManipulator {
-	private Map<String,String> contentTypes = new HashMap<String,String>(new String[]{}, new String[]{});
+	private Map<String,String> contentTypes;
 	public ImageManipulatorImpl(){
-		
+		contentTypes = new HashMap<String,String>();
+		contentTypes.put("GIF", "image/gif");
+		contentTypes.put("PNG", "image/png");
+		contentTypes.put("JPEG", "image/jpeg");
 	}
 	
 	@Override
@@ -66,10 +68,12 @@ public class ImageManipulatorImpl implements ImageManipulator {
         com.google.appengine.api.images.Image image = ImagesServiceFactory.makeImage(imageData.getData());
         imageData.setWidth(image.getWidth());
         imageData.setHeight(image.getHeight());
-        imageData.setType(image.getFormat().toString());
+        String type = image.getFormat().toString();
+        type = toContentType(type);
+        imageData.setType(toContentType(image.getFormat().toString()));
 	}
 	
 	private String toContentType(String imageFormat){
-		return null;
+		return contentTypes.get(imageFormat);
 	}
 }

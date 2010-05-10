@@ -231,7 +231,16 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 	
 	public Image getImageFile(String keyString) throws PersistanceManagerException{
-		return null;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Image image;
+		try{
+			ImageFile imageFile = modelManager.getImageFile(KeyFactory.stringToKey(keyString), pm);
+			image = toImage(imageFile);
+			//XXX add image datas belongs to this image
+		}finally{
+			pm.close();
+		}
+		return image;
 	}
 	
 	private Data toData(ImageData imageData){
@@ -253,6 +262,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		//TODO should we put creation date here?
 		imageData.setCreationDate(data.getCreationDate());
 		imageData.setOriginal(data.isOriginal());
+		imageData.setThumbnail(data.isThumbnail());
 		imageData.setEnhanced(data.isEnhanced());
 		imageData.setWidth(data.getWidth());
 		imageData.setHeight(data.getHeight());
@@ -271,6 +281,17 @@ public class ControllerManagerImpl implements ControllerManager{
 		if(image.getAlbum() != null)
 			imageFile.setAlbumFileKey(KeyFactory.stringToKey(image.getAlbum()));
 		return imageFile;
+	}
+	
+	private Image toImage(ImageFile imageFile){
+		Image image = new Image();
+		image.setCreationDate(imageFile.getCreationDate());
+		image.setName(imageFile.getName());
+		image.setDescription(imageFile.getDescription());
+		image.setAlbum(KeyFactory.keyToString(imageFile.getAlbumFileKey()));
+		image.setType(imageFile.getType().toString());
+		image.setKeyString(KeyFactory.keyToString(imageFile.getKey()));
+		return image;
 	}
 	
 }
