@@ -207,7 +207,7 @@ public class ControllerManagerImpl implements ControllerManager{
 					ImageData imageData;
 					imageData = modelManager.getThumbnail(imageFile.getKey(), pm);
 					log.info("Image data for "+ imageFile.getKey() + " is " + imageData.getKey());
-					imageLink.setLink(modelManager.getImageLink(KeyFactory.keyToString(imageData.getKey()),imageFile.getType().getExtension()));
+					imageLink.setLink(ApplicationManager.getImageLink(KeyFactory.keyToString(imageData.getKey())));
 					//add image to image list.
 					images.add(imageLink);
 				}
@@ -234,9 +234,15 @@ public class ControllerManagerImpl implements ControllerManager{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Image image;
 		try{
-			ImageFile imageFile = modelManager.getImageFile(KeyFactory.stringToKey(keyString), pm);
+			Key imageFileKey = KeyFactory.stringToKey(keyString);
+			ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
 			image = toImage(imageFile);
-			//XXX add image datas belongs to this image
+			
+			List<ImageData> imageDataList = modelManager.getImageDataByImageFile(imageFileKey, pm);
+			for(ImageData imageData:imageDataList){
+				Data data = toData(imageData);
+				image.getDataList().add(data);
+			}
 		}finally{
 			pm.close();
 		}

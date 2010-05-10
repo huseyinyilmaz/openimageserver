@@ -32,5 +32,10 @@ public class ApplicationManager {
 			manipulator = new ImageManipulatorImpl();
 		return manipulator;
 	}
+
+	public static String getImageLink(String keyString){
+		return IMAGE_URI_PREFIX + keyString; //+ "." + extension;
+	}
+
 	
 }

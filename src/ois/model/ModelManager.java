@@ -21,8 +21,6 @@ public interface ModelManager {
 	public abstract void saveAlbum(AlbumFile album,PersistenceManager pm)
 			throws PersistanceManagerException;
 	
-	public abstract String getImageLink(String keyString,String extension);
-	
 	public abstract Iterable<ImageFile> getAllImages(PersistenceManager pm);
 
 	
