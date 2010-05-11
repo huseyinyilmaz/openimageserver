@@ -7,7 +7,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:useBean id="album" class="ois.controller.Album" scope="request"></jsp:useBean>
+<jsp:useBean id="albumBean" class="ois.view.AlbumBean" scope="request"></jsp:useBean>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -22,7 +22,7 @@
 <div class="main">
 	<form action="/imageupload" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
-		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${album.key}"></input>
+		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${albumBean.keyString}"></input>
 	<table>
 	<tr>
 		<th>Image Info</th>

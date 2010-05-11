@@ -3,24 +3,24 @@
 <%@page import="ois.view.CSActionType"%>
 <%@page import="ois.view.CSPageType"%>
 <table class="albums">
-	<c:forEach var="album" items="${albums.albums}">
+	<c:forEach var="albumBean" items="${mainPageBean.albumBeanList}">
 		<tr>
 			<td class="album">
 			<c:choose>
-				<c:when test="${album.key==albums.currentAlbumKey}">
-					${album.name}
+				<c:when test="${albumBean.keyString==mainPageBean.currentAlbumKeyString}">
+					${albumBean.name}
 				</c:when>
 				<c:otherwise>
-					<a href="/main?page=main&item=${album.key}" id="${album.key}" title="${album.description}">${album.name}</a>
+					<a href="/main?page=main&item=${albumBean.keyString}" id="${albumBean.keyString}" title="${albumBean.description}">${albumBean.name}</a>
 				</c:otherwise>
 			</c:choose>
 			</td>
 			<td> 	
-				<c:if test="${album.key!='None' && album.key!='All'}">
-					<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${album.key}" title="delete ${album.name}">edit</a>
+				<c:if test="${albumBean.keyString!='none'}">
+					<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.ALBUM_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${albumBean.keyString}" title="delete ${albumBean.name}">edit</a>
 					<form action="/main" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
-					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${album.key}">
+					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${albumBean.keyString}">
 					<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">
 					</form>
 				</c:if>

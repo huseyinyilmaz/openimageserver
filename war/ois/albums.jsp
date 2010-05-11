@@ -5,13 +5,13 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:useBean id="albums" class="ois.view.AlbumsBean" scope="request"></jsp:useBean>
+<jsp:useBean id="mainPageBean" class="ois.view.MainPageBean" scope="request"></jsp:useBean>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Image Administration Page</title>
-	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
+	<link rel="stylesheet" type="text/css" href="/ois/css/images.css"> 
 </head>
 <body>
 <div class="main">
