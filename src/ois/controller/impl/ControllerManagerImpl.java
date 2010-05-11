@@ -20,7 +20,9 @@ import ois.model.ImageFile;
 import ois.model.ImageType;
 import ois.model.ModelManager;
 import ois.model.PMF;
-import ois.view.ImageLink;
+import ois.view.AlbumBean;
+import ois.view.DataBean;
+import ois.view.ImageBean;
 
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
@@ -65,16 +67,17 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 	}
 	
-	public List<Album> getAlbums(){
+	public List<AlbumBean> getAlbumBeanList(){
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		List<Album> albums = new ArrayList<Album>();
+		List<AlbumBean> albumBeanList = new ArrayList<AlbumBean>();
 		try{
-			for(AlbumFile album: modelManager.getAlbums(pm))
-				albums.add( new Album(KeyFactory.keyToString(album.getKey()),album.getName(),album.getDescription(),album.getCreationDate()));
+			for(AlbumFile albumFile: modelManager.getAlbums(pm)){
+				albumBeanList.add(toAlbumBean(albumFile));
+			}
 		}finally{
 			pm.close();
 		}
-		return albums;
+		return albumBeanList;
 	}
 		
 	
@@ -149,73 +152,70 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 
 	
-	public Album getAlbum(String key) throws PersistanceManagerException {
+	public Album getAlbum(String keyString) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		AlbumFile albumFile;
 		try{
-			albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(key),pm);
+			albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(keyString),pm);
 		}finally{
 			pm.close();
 		}
-		return new Album(key,albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
+		return new Album(keyString,albumFile.getName(),albumFile.getDescription(),albumFile.getCreationDate());
+	}
+
+	public AlbumBean getAlbumBean(String keyString) throws PersistanceManagerException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		AlbumFile albumFile;
+		try{
+			albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(keyString),pm);
+		}finally{
+			pm.close();
+		}
+		return toAlbumBean(albumFile);
 	}
 
 	
 	public void saveAlbum(Album album) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
-			pm.currentTransaction().begin();
-			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKey()),pm);
+			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKeyString()),pm);
 			albumFile.setName(album.getName());
 			albumFile.setDescription(album.getDescription());
 			modelManager.saveAlbum(albumFile,pm);
-			pm.currentTransaction().commit();
 		}finally{
-			if(pm.currentTransaction().isActive())
-				pm.currentTransaction().rollback();
 			pm.close();
 		}
 
 	}
 
-	public List<ImageLink> getImageLinks(String albumKey) throws PersistanceManagerException {
+	public List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		List<ImageLink> images = new ArrayList<ImageLink>();
+		List<ImageBean> imageBeanList = new ArrayList<ImageBean>();
 		try{
 			//if key of album is "none" then we just return an empty list.
-			if(albumKey.equals(ApplicationManager.ALBUMNODE_NONE))
-				images = Collections.emptyList();
+			if(albumKeyString.equals(ApplicationManager.ALBUMNODE_NONE))
+				imageBeanList = Collections.emptyList();
 			else{
 			//list that will hold result image links
-				Iterable<ImageFile> imageFiles;
-				if(albumKey.equals(ApplicationManager.ALBUMNODE_ALL))
-					//get all the images in db
-					imageFiles = modelManager.getAllImages(pm);
-				else
-					//get images only given album contains
-					imageFiles = modelManager.getImageFilesByAlbum(KeyFactory.stringToKey(albumKey),pm);
-				
+				Iterable<ImageFile> imageFiles = modelManager.getImageFilesByAlbum(KeyFactory.stringToKey(albumKeyString),pm);
 				for( ImageFile imageFile : imageFiles ){
+					//TODO is flush necessary
 					pm.flush();
 					log.info("Create link for image file " + imageFile.getKey());
 					//create an image and set properties
-					ImageLink imageLink = new ImageLink();
-					imageLink.setCreationDate(imageFile.getCreationDate());
-					imageLink.setDescription(imageFile.getDescription());
-					imageLink.setKey(KeyFactory.keyToString(imageFile.getKey()));
-					imageLink.setName(imageLink.getName());
-					ImageData imageData;
-					imageData = modelManager.getThumbnail(imageFile.getKey(), pm);
+					ImageBean imageBean = toImageBean(imageFile);
+					ImageData imageData = modelManager.getThumbnail(imageFile.getKey(), pm);
 					log.info("Image data for "+ imageFile.getKey() + " is " + imageData.getKey());
-					imageLink.setLink(ApplicationManager.getImageLink(KeyFactory.keyToString(imageData.getKey())));
-					//add image to image list.
-					images.add(imageLink);
+					List<DataBean> dataBeanList = new ArrayList<DataBean>();
+					dataBeanList.add(toDataBean(imageData));
+					imageBean.setImageDataList(dataBeanList);
+					imageBeanList.add(imageBean);
 				}
 			}
 		}finally{
 			pm.close();
 		}
-		return images;
+		return imageBeanList;
 	}		
 	
 	public Data getImageData(String keyString) throws PersistanceManagerException{
@@ -298,6 +298,35 @@ public class ControllerManagerImpl implements ControllerManager{
 		image.setType(imageFile.getType().toString());
 		image.setKeyString(KeyFactory.keyToString(imageFile.getKey()));
 		return image;
+	}
+	private ImageBean toImageBean(ImageFile imageFile){
+		ImageBean imageBean = new ImageBean();
+		imageBean.setCreationDate(imageFile.getCreationDate());
+		imageBean.setDescription(imageFile.getDescription());
+		imageBean.setKeyString(KeyFactory.keyToString(imageFile.getKey()));
+		imageBean.setName(imageFile.getName());
+		return imageBean;
+	}
+	private DataBean toDataBean(ImageData imageData){
+		DataBean dataBean = new DataBean();
+		dataBean.setCreationDate(imageData.getCreationDate());
+		if( imageData.getKey() != null)
+			dataBean.setKeyString(KeyFactory.keyToString(imageData.getKey()));
+		dataBean.setEnhanced(imageData.isEnhanced());
+		dataBean.setOriginal(imageData.isOriginal());
+		dataBean.setThumbnail(imageData.isThumbnail());
+		dataBean.setHeight(imageData.getHeight());
+		dataBean.setWidth(imageData.getWidth());
+		dataBean.setTypeString(imageData.getType().toString());
+		return dataBean;
+	}
+	private AlbumBean toAlbumBean(AlbumFile albumFile){
+		AlbumBean albumBean = new AlbumBean();
+		if(albumFile.getKey() != null)
+			albumBean.setKeyString(KeyFactory.keyToString(albumFile.getKey()));
+		albumBean.setName(albumFile.getName());
+		albumBean.setDescription(albumFile.getDescription());
+		return albumBean;
 	}
 	
 }

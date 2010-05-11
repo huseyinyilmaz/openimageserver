@@ -11,11 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
 import ois.exceptions.PersistanceManagerException;
-import ois.view.AlbumsBean;
+import ois.view.AlbumBean;
 import ois.view.CSActionType;
 import ois.view.CSPageType;
 import ois.view.CSParamType;
-import ois.view.ImageLink;
+import ois.view.ImageBean;
+import ois.view.MainPageBean;
 
 @SuppressWarnings("serial")
 public class ControllerServlet extends HttpServlet {
@@ -33,24 +34,27 @@ public class ControllerServlet extends HttpServlet {
 	 */
 	private void initMain(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, NumberFormatException, PersistanceManagerException{
     	log.info("Initializing main album page");
-		AlbumsBean albumsBean = new AlbumsBean(); 
+		MainPageBean mainPageBean = new MainPageBean(); 
 		// Get album key 
-		String albumKey = req.getParameter(CSParamType.ITEM.toString());
+		String currentAlbumKeyString = req.getParameter(CSParamType.ITEM.toString());
     	// Default behavior for albums are to select none node 
-		if (albumKey == null)
-    		albumKey = ApplicationManager.ALBUMNODE_NONE;
-		log.info("Album key to initialize = " + albumKey);
-    	List<ImageLink> imageLinks = ApplicationManager.getControllerManager().getImageLinks(albumKey);
-    	log.info("Image Links was came back from contoller link size = " + imageLinks.size());
-    	List<Album> albums = ApplicationManager.getControllerManager().getAlbums();
-		albums.add(0, new Album(ApplicationManager.ALBUMNODE_ALL,ApplicationManager.ALBUMNODE_ALL));
-		albums.add(0, new Album(ApplicationManager.ALBUMNODE_NONE,ApplicationManager.ALBUMNODE_NONE));
+		if (currentAlbumKeyString == null)
+    		currentAlbumKeyString = ApplicationManager.ALBUMNODE_NONE;
+		log.info("Album key to initialize = " + currentAlbumKeyString);
+    	List<ImageBean> imageBeanList = ApplicationManager.getControllerManager().getImageBeanList(currentAlbumKeyString);
+    	log.info("Image Beans was came back from contoller number of beans are " + imageBeanList.size());
+    	List<AlbumBean> albumBeanList = ApplicationManager.getControllerManager().getAlbumBeanList();
+    	for(AlbumBean albumBean:albumBeanList){
+    		if (albumBean.getKeyString().equals(currentAlbumKeyString)){
+    			albumBean.setImageBeanList(imageBeanList);
+    			break;
+    		}
+    	}
+		albumBeanList.add(0, new AlbumBean(ApplicationManager.ALBUMNODE_NONE,ApplicationManager.ALBUMNODE_NONE));
+		mainPageBean.setAlbumBeanList(albumBeanList);
+		mainPageBean.setCurrentAlbumKeyString(currentAlbumKeyString);
 		
-		albumsBean.setAlbums(albums);
-		albumsBean.setImageLinks(imageLinks);
-		albumsBean.setCurrentAlbumKey(albumKey);
-		
-		req.setAttribute("albums",albumsBean);
+		req.setAttribute("mainPageBean",mainPageBean);
 		
 		forward(ApplicationManager.JSP_IMAGES_URL,req, res);
 	}
@@ -68,14 +72,14 @@ public class ControllerServlet extends HttpServlet {
 	 */
 	private void initAlbumEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 
-		Album album;
-		String albumKey = req.getParameter(CSParamType.ITEM.toString());
-		if (albumKey == null){
-			album = new Album();
+		AlbumBean albumBean;
+		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		if (albumKeyString == null){
+			albumBean = new AlbumBean();
 		}else{
-			album = ApplicationManager.getControllerManager().getAlbum(albumKey);
+			albumBean = ApplicationManager.getControllerManager().getAlbumBean(albumKeyString);
 		}
-		req.setAttribute("album",album);
+		req.setAttribute("albumBean",albumBean);
 		forward(ApplicationManager.JSP_ALBUM_EDIT_URL,req,res);
 	}
 
@@ -89,11 +93,11 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private void initImageCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		String albumKey = req.getParameter(CSParamType.ITEM.toString());
-		Album album = new Album();
-		album.setKey(albumKey);
-		req.setAttribute("album",album);
-		log.info("Image create page is being opened for album " + albumKey );
+		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		AlbumBean albumBean = new AlbumBean();
+		albumBean.setKeyString(albumKeyString);
+		req.setAttribute("albumBean",albumBean);
+		log.info("Image create page is being opened for album " + albumKeyString );
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,req,res);
 	}
 
@@ -168,9 +172,9 @@ public class ControllerServlet extends HttpServlet {
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		String key = req.getParameter(CSParamType.ITEM.toString());
+		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
 		Album album = new Album();
-		album.setKey(key);
+		album.setKeyString(albumKeyString);
 		album.setName(name);
 		album.setDescription(description);
 		ApplicationManager.getControllerManager().saveAlbum(album);

@@ -5,7 +5,7 @@ import java.util.Date;
 public class Album {
 	private String name;
 	private String description;
-	private String key;
+	private String keyString;
 	private Date creationDate;
 	
 	/**
@@ -15,18 +15,18 @@ public class Album {
 		super();
 	}
 	/**
-	 * generates a new album from given name and key
+	 * generates a new album from given name and keyString
 	 * @param name
 	 * @param id
 	 */
 	public Album(String key,String name) {
 		super();
 		this.name = name;
-		this.key = key;
+		this.keyString = key;
 	}
 
 	/**
-	 * generates a new album from given name ,key,description and creationdate
+	 * generates a new album from given name ,keyString,description and creationdate
 	 * @param id
 	 * @param name
 	 * @param description
@@ -35,7 +35,7 @@ public class Album {
 	public Album(String key,String name,String description,Date creationDate) {
 		super();
 		this.name = name;
-		this.key = key;
+		this.keyString = key;
 		this.description = description;
 		this.creationDate = creationDate;
 	}
@@ -80,16 +80,16 @@ public class Album {
 		this.name = name;
 	}
 	/**
-	 * @return the key
+	 * @return the keyString
 	 */
-	public String getKey() {
-		return key;
+	public String getKeyString() {
+		return keyString;
 	}
 	/**
-	 * @param id the key to set
+	 * @param id the keyString to set
 	 */
-	public void setKey(String key) {
-		this.key = key;
+	public void setKeyString(String key) {
+		this.keyString = key;
 	}
 	
 }
