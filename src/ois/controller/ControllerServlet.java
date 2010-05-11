@@ -50,13 +50,13 @@ public class ControllerServlet extends HttpServlet {
     			break;
     		}
     	}
-		albumBeanList.add(0, new AlbumBean(ApplicationManager.ALBUMNODE_NONE,ApplicationManager.ALBUMNODE_NONE));
+		albumBeanList.add(0, new AlbumBean(ApplicationManager.ALBUMNODE_NONE,"None"));
 		mainPageBean.setAlbumBeanList(albumBeanList);
 		mainPageBean.setCurrentAlbumKeyString(currentAlbumKeyString);
 		
 		req.setAttribute("mainPageBean",mainPageBean);
 		
-		forward(ApplicationManager.JSP_IMAGES_URL,req, res);
+		forward(ApplicationManager.JSP_MAIN_PAGE_URL,req, res);
 	}
 
 	private void forward(String context, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{

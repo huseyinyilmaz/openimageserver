@@ -2,8 +2,6 @@ package ois.view;
 
 import java.util.List;
 
-import ois.controller.Album;
-
 /**
  * @author Huseyin
  * this class is used to pass values to albums.jsp page from controller servlet.
@@ -18,6 +16,7 @@ public class MainPageBean {
 	 */
 	private List<AlbumBean> albumBeanList;
 
+	private AlbumBean currentAlbumBean = null;
 	private String currentAlbumKeyString;
 
 	/**
@@ -51,14 +50,19 @@ public class MainPageBean {
 
 	
 	public AlbumBean getCurrentAlbumBean(){
-		AlbumBean currentAlbumBean = null;
-		for(AlbumBean albumBean:albumBeanList){
-			if(albumBean.getKeyString().equals(currentAlbumKeyString)){
-				currentAlbumBean = albumBean;
-				break;
+		if(currentAlbumBean == null){
+			for(AlbumBean albumBean:albumBeanList){
+				if(albumBean.getKeyString().equals(currentAlbumKeyString)){
+					currentAlbumBean = albumBean;
+					break;
+				}
 			}
 		}
 		return currentAlbumBean;
+	}
+	
+	public String getAlbumCreateLink(){
+		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.ALBUM_EDIT.toString();
 	}
 	
 	

@@ -208,7 +208,7 @@ public class ControllerManagerImpl implements ControllerManager{
 					log.info("Image data for "+ imageFile.getKey() + " is " + imageData.getKey());
 					List<DataBean> dataBeanList = new ArrayList<DataBean>();
 					dataBeanList.add(toDataBean(imageData));
-					imageBean.setImageDataList(dataBeanList);
+					imageBean.setDataBeanList(dataBeanList);
 					imageBeanList.add(imageBean);
 				}
 			}

@@ -13,13 +13,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Image Administration Page</title>
-	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
+	<link rel="stylesheet" type="text/css" href="/ois/css/images.css"> 
 
 </head>
 <body>
 <div class="main">
 <%@ include file="modules/moduleHeader.jsp" %>
-
+<div class="body">
 	<form action="/main" method="post">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 
 value="<c:choose><c:when test="${albumBean.keyString==null}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
@@ -30,7 +30,7 @@ value="<c:choose><c:when test="${albumBean.keyString==null}"><%=CSActionType.CRE
 	<input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="createAlbumDescription" value="${albumBean.description}"><br></br>
 	<input type="submit" title="Create a new Album" value="Create" id="createAlbumSubmitButton"> 
 	</form>
-	
+	</div>
 </div>
 
 

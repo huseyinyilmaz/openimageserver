@@ -19,14 +19,11 @@
 	<div class="body">
 		<table>
 		<tr>
-			<td><%@ include file="modules/moduleAlbums.jsp" %></td>
-			<td><%@ include file="modules/moduleImages.jsp" %></td>
+			<td><%@ include file="modules/moduleAlbumList.jsp" %></td>
+			<td><%@ include file="modules/moduleAlbumImages.jsp" %></td>
 		</tr>
 		</table>
 	</div> 
 </div>
-
-
-
 </body>
 </html>

@@ -12,7 +12,7 @@ public class ApplicationManager {
 	public static final String ALBUMNODE_NONE = "none";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
 	//JSP URLS
-	public static final String JSP_IMAGES_URL = "/ois/albums.jsp";
+	public static final String JSP_MAIN_PAGE_URL = "/ois/mainPage.jsp";
 	public static final String JSP_ALBUM_EDIT_URL = "/ois/albumEdit.jsp";
 	
 	public static final String JSP_IMAGE_CREATE_URL = "/ois/imageCreate.jsp";

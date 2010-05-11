@@ -1,8 +1,6 @@
 package ois.view;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class AlbumBean {
 	private String keyString;
@@ -20,7 +18,20 @@ public class AlbumBean {
 	}
 	
 	
+	public String getEditLink(){
+		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.ALBUM_EDIT.toString()
+			 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
 	
+	public String getViewLink(){
+		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()
+	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
+	
+	public String getCreateImageLink(){
+		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_CREATE.toString()
+	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
 	/**
 	 * @return the keyString
 	 */

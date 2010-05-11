@@ -7,12 +7,13 @@ public class ImageBean {
 	private String	name;
 	private String	description;
 	private String	keyString;
+	private String currentDataBeanKeyString;
 	private Date	creationDate;
-	private List<DataBean> imageDataList;
-
+	private List<DataBean> dataBeanList;
+	
 	public DataBean getThumbnail(){
 		DataBean thumbnail = null;
-		for(DataBean dataBean:imageDataList){
+		for(DataBean dataBean:dataBeanList){
 			if(dataBean.isThumbnail()==true){
 				thumbnail = dataBean;
 				break;
@@ -21,7 +22,26 @@ public class ImageBean {
 		return thumbnail;
 	}
 	
+	public String getEditLink(){
+		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
+				  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
 	
+	
+	/**
+	 * @return the currentDataBeanKeyString
+	 */
+	public String getCurrentDataBeanKeyString() {
+		return currentDataBeanKeyString;
+	}
+
+	/**
+	 * @param currentDataBeanKeyString the currentDataBeanKeyString to set
+	 */
+	public void setCurrentDataBeanKeyString(String currentDataBeanKeyString) {
+		this.currentDataBeanKeyString = currentDataBeanKeyString;
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -81,15 +101,15 @@ public class ImageBean {
 	/**
 	 * @return the imageDataSet
 	 */
-	public List<DataBean> getImageDataList() {
-		return imageDataList;
+	public List<DataBean> getDataBeanList() {
+		return dataBeanList;
 	}
 
 	/**
 	 * @param imageDataSet the imageDataSet to set
 	 */
-	public void setImageDataList(List<DataBean> imageDataList) {
-		this.imageDataList = imageDataList;
+	public void setDataBeanList(List<DataBean> imageDataList) {
+		this.dataBeanList = imageDataList;
 	}
 	
 	

@@ -15,7 +15,7 @@
 				<div>
 					<img src="${imageBean.thumbnail.link}"></img>
 					<div>
-						<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.IMAGE_EDIT.toString()%>&<%=CSParamType.ITEM.toString()%>=${imageBean.keyString}">edit</a> | 
+						<a href="${imageBean.editLink}">edit</a> | 
 						<form action="/main" method="post">
 							<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_IMAGE.toString()%>">
 							<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${imageBean.keyString}">
@@ -29,7 +29,7 @@
 			</table>
 			<br></br>
 			<c:if test="${mainPageBean.currentAlbumKeyString!='none'}">
-				<a href="/main?<%=CSParamType.PAGE.toString()%>=<%=CSPageType.IMAGE_CREATE.toString()%>&<%=CSParamType.ITEM.toString()%>=${mainPageBean.currentAlbumKeyString}" title="Create a new Image in album ${albumBean.name}">Create an image</a>
+				<a href="${mainPageBean.currentAlbumBean.createImageLink}" title="Create a new Image in album ${albumBean.name}">Create an image</a>
 			</c:if>
 					</c:otherwise>
 	</c:choose>

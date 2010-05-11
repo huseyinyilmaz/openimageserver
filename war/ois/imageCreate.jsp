@@ -15,11 +15,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Image Page</title>
-	<link rel="stylesheet" type="text/css" href="/css/images.css"> 
+	<link rel="stylesheet" type="text/css" href="/ois/css/images.css"> 
 </head>
 <body>
-<%@ include file="modules/moduleHeader.jsp"%>
 <div class="main">
+<%@ include file="modules/moduleHeader.jsp"%>
+<div class="body">
 	<form action="/imageupload" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${albumBean.keyString}"></input>
@@ -49,6 +50,7 @@
 	</tr>	
 	</table>
 	</form>
+	</div>
 </div>
 </body>
 </html>
