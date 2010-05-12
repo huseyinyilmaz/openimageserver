@@ -2,7 +2,8 @@
 <%@page import="ois.view.CSActionType"%>
 <%@page import="ois.view.CSPageType"%>
 
-<div>
+
+<%@page import="ois.ApplicationManager"%><div>
 	<c:choose>
 		<c:when test="${mainPageBean.currentAlbumKeyString=='none'}">
 			Please choose an album to see images inside
@@ -16,7 +17,7 @@
 					<img src="${imageBean.thumbnail.link}"></img>
 					<div>
 						<a href="${imageBean.editLink}">edit</a> | 
-						<form action="/main" method="post">
+						<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 							<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_IMAGE.toString()%>">
 							<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${imageBean.keyString}">
 							<input type="submit" title="Delete this image" value="Delete" id="deleteImageSubmitButton">

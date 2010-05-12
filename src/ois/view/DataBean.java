@@ -6,6 +6,7 @@ import ois.ApplicationManager;
 
 public class DataBean {
 	private String 	keyString;
+	private String 	imageKeyString;
 	private String 	typeString;
 	private Date 	creationDate;
 	private int		width;
@@ -14,10 +15,42 @@ public class DataBean {
 	private boolean original;
 	private boolean thumbnail;
 	
+	public DataBean (){
+		super();
+	}
+	public DataBean(String keyString,String imageKeyString){
+		this.keyString = keyString;
+		this.imageKeyString = imageKeyString;
+	}
 	
 	public String getLink(){
-		return ApplicationManager.getImageLink(keyString);
+		return ApplicationManager.IMAGE_URI_PREFIX + keyString;
 	}
+
+	public String getViewLink(){
+		return ApplicationManager.MAIN_PAGE + "?"
+		+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
+		+ "&" + CSParamType.ITEM.toString() + "=" + imageKeyString
+		+ "&" + CSParamType.REVISION.toString() + "=" + keyString;
+	}
+	
+	public String getName(){
+		String name;
+		if(keyString.equals(ApplicationManager.NONE))
+			name = "None";
+		else
+			name = width + "x" + height;
+		return name;
+	}
+
+	public String getImageKeyString() {
+		return imageKeyString;
+	}
+
+	public void setImageKeyString(String imageBeanKeyString) {
+		this.imageKeyString = imageBeanKeyString;
+	}
+
 	/**
 	 * @return the keyString
 	 */

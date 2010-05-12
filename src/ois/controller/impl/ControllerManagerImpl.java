@@ -193,7 +193,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		List<ImageBean> imageBeanList = new ArrayList<ImageBean>();
 		try{
 			//if key of album is "none" then we just return an empty list.
-			if(albumKeyString.equals(ApplicationManager.ALBUMNODE_NONE))
+			if(albumKeyString.equals(ApplicationManager.NONE))
 				imageBeanList = Collections.emptyList();
 			else{
 			//list that will hold result image links
@@ -230,7 +230,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		return data;
 	}
 	
-	public Image getImageFile(String keyString) throws PersistanceManagerException{
+	public Image getImage(String keyString) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Image image;
 		try{
@@ -248,7 +248,27 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 		return image;
 	}
-	
+
+	public ImageBean getImageBean(String keyString) throws PersistanceManagerException{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ImageBean imageBean;
+		try{
+			Key imageFileKey = KeyFactory.stringToKey(keyString);
+			ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
+			imageBean = toImageBean(imageFile);
+			imageBean.setDataBeanList(new ArrayList<DataBean>());
+			List<ImageData> imageDataList = modelManager.getImageDataByImageFile(imageFileKey, pm);
+			for(ImageData imageData:imageDataList){
+				DataBean dataBean = toDataBean(imageData);
+				dataBean.setImageKeyString(keyString);
+				imageBean.getDataBeanList().add(dataBean);
+			}
+		}finally{
+			pm.close();
+		}
+		return imageBean;
+	}
+
 	private Data toData(ImageData imageData){
 		Data data = new Data();
 		data.setData(imageData.getData().getBytes());

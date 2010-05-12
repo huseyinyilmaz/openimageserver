@@ -3,6 +3,8 @@ package ois.view;
 import java.util.Date;
 import java.util.List;
 
+import ois.ApplicationManager;
+
 public class ImageBean {
 	private String	name;
 	private String	description;
@@ -23,8 +25,9 @@ public class ImageBean {
 	}
 	
 	public String getEditLink(){
-		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
-				  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+		return ApplicationManager.MAIN_PAGE + "?"
+				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
+			+ "&" + CSParamType.ITEM.toString() + "=" + keyString;
 	}
 	
 	

@@ -9,8 +9,11 @@ import ois.model.impl.ModelManagerImpl;
 
 public class ApplicationManager {
 	
-	public static final String ALBUMNODE_NONE = "none";
+	public static final String NONE = "none";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
+	public static final String MAIN_PAGE = "/main";
+	public static final String IMAGE_UPLOAD_PAGE = "/imageupload";
+	
 	//JSP URLS
 	public static final String JSP_MAIN_PAGE_URL = "/ois/mainPage.jsp";
 	public static final String JSP_ALBUM_EDIT_URL = "/ois/albumEdit.jsp";
@@ -31,10 +34,5 @@ public class ApplicationManager {
 			manipulator = new ImageManipulatorImpl();
 		return manipulator;
 	}
-
-	public static String getImageLink(String keyString){
-		return IMAGE_URI_PREFIX + keyString; //+ "." + extension;
-	}
-
 	
 }

@@ -15,6 +15,7 @@ import ois.view.AlbumBean;
 import ois.view.CSActionType;
 import ois.view.CSPageType;
 import ois.view.CSParamType;
+import ois.view.DataBean;
 import ois.view.ImageBean;
 import ois.view.MainPageBean;
 
@@ -39,7 +40,7 @@ public class ControllerServlet extends HttpServlet {
 		String currentAlbumKeyString = req.getParameter(CSParamType.ITEM.toString());
     	// Default behavior for albums are to select none node 
 		if (currentAlbumKeyString == null)
-    		currentAlbumKeyString = ApplicationManager.ALBUMNODE_NONE;
+    		currentAlbumKeyString = ApplicationManager.NONE;
 		log.info("Album key to initialize = " + currentAlbumKeyString);
     	List<ImageBean> imageBeanList = ApplicationManager.getControllerManager().getImageBeanList(currentAlbumKeyString);
     	log.info("Image Beans was came back from contoller number of beans are " + imageBeanList.size());
@@ -50,7 +51,7 @@ public class ControllerServlet extends HttpServlet {
     			break;
     		}
     	}
-		albumBeanList.add(0, new AlbumBean(ApplicationManager.ALBUMNODE_NONE,"None"));
+		albumBeanList.add(0, new AlbumBean(ApplicationManager.NONE,"None"));
 		mainPageBean.setAlbumBeanList(albumBeanList);
 		mainPageBean.setCurrentAlbumKeyString(currentAlbumKeyString);
 		
@@ -103,9 +104,11 @@ public class ControllerServlet extends HttpServlet {
 
 	private void initImageEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
-		Image image = ApplicationManager.getControllerManager().getImageFile(imageFileKey);
-		req.setAttribute("image",image);
-		log.info("Revisions page is being opened for image " + imageFileKey + "(" + image.getName() + ")" );
+		ImageBean imageBean = ApplicationManager.getControllerManager().getImageBean(imageFileKey);
+		imageBean.setCurrentDataBeanKeyString(ApplicationManager.NONE);
+		imageBean.getDataBeanList().add(0,new DataBean(ApplicationManager.NONE,imageFileKey));
+		req.setAttribute("imageBean",imageBean);
+		log.info("Revisions page is being opened for image " + imageFileKey + "(" + imageBean.getName() + ")" );
 		forward(ApplicationManager.JSP_IMAGE_REVISIONS_URL,req,res);
 	}
 

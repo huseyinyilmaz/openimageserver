@@ -2,6 +2,8 @@ package ois.view;
 
 import java.util.List;
 
+import ois.ApplicationManager;
+
 public class AlbumBean {
 	private String keyString;
 	private String name;
@@ -19,17 +21,20 @@ public class AlbumBean {
 	
 	
 	public String getEditLink(){
-		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.ALBUM_EDIT.toString()
-			 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+		return ApplicationManager.MAIN_PAGE + "?" 
+			 		+ CSParamType.PAGE.toString() + "=" + CSPageType.ALBUM_EDIT.toString()
+			 + "&" + CSParamType.ITEM.toString() + "=" + keyString;
 	}
 	
 	public String getViewLink(){
-		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()
-	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+		return ApplicationManager.MAIN_PAGE + "?"
+		 	 		+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()
+		 	 + "&" + CSParamType.ITEM.toString() + "=" + keyString;
 	}
 	
 	public String getCreateImageLink(){
-		return "/main?" + CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_CREATE.toString()
+		return ApplicationManager.MAIN_PAGE + "?" 
+				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_CREATE.toString()
 	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
 	}
 	/**

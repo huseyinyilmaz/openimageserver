@@ -1,6 +1,7 @@
 <%@page import="ois.view.CSParamType"%>
 <%@page import="ois.view.CSActionType"%>
-<table class="listTable">
+
+<%@page import="ois.ApplicationManager"%><table class="listTable">
 	<c:forEach var="albumBean" items="${mainPageBean.albumBeanList}">
 		<tr>
 			<td class="listCell">
@@ -16,7 +17,7 @@
 			<td> 	
 				<c:if test="${albumBean.keyString!='none'}">
 					<a href="${albumBean.editLink}" title="delete ${albumBean.name}">edit</a>
-					<form action="/main" method="post">
+					<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
 					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${albumBean.keyString}">
 					<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">

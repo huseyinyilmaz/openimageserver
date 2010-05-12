@@ -32,5 +32,6 @@ public interface ControllerManager {
 	
 	public void deleteImageFile(String key) throws PersistanceManagerException;
 	
-	public Image getImageFile(String keyString) throws PersistanceManagerException;
+	public Image getImage(String keyString) throws PersistanceManagerException;
+	public ImageBean getImageBean(String keyString) throws PersistanceManagerException;
 }

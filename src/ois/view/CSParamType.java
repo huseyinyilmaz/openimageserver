@@ -6,7 +6,7 @@ public enum CSParamType {
 	ACTION("action"),
 	NAME("name"),
 	DESCRIPTION("description"),
-	FILE("file");
+	REVISION("revision");
 	
 	private String value;
 	
