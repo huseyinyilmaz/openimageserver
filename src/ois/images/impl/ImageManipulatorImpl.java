@@ -28,8 +28,8 @@ public class ImageManipulatorImpl implements ImageManipulator {
 
         com.google.appengine.api.images.Image newImage = imagesService.applyTransform(resize, oldImage);
         Data newImageData = new Data(oldImageData,newImage.getImageData());
-        newImageData.setHeight(height);
-        newImageData.setWidth(width);
+        newImageData.setHeight(newImage.getHeight());
+        newImageData.setWidth(newImage.getWidth());
         return newImageData;
 	}
 
@@ -57,8 +57,8 @@ public class ImageManipulatorImpl implements ImageManipulator {
         com.google.appengine.api.images.Image newImage = imagesService.applyTransform(resize, oldImage);
         newImage = imagesService.applyTransform(enhance, newImage);
         Data newImageData = new Data(oldImageData,newImage.getImageData());
-        newImageData.setHeight(height);
-        newImageData.setWidth(width);
+        newImageData.setHeight(newImage.getHeight());
+        newImageData.setWidth(newImage.getWidth());
         newImageData.setEnhanced(true);
         return newImageData;
 	}
