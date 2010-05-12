@@ -10,6 +10,7 @@ public class ImageBean {
 	private String	description;
 	private String	keyString;
 	private String currentDataBeanKeyString;
+	private DataBean currentDataBean = null;
 	private Date	creationDate;
 	private List<DataBean> dataBeanList;
 	
@@ -30,6 +31,26 @@ public class ImageBean {
 			+ "&" + CSParamType.ITEM.toString() + "=" + keyString;
 	}
 	
+	public String getRevisionCreateLink(){
+		return ApplicationManager.MAIN_PAGE + "?"
+		+ CSParamType.PAGE.toString() + "=" + CSPageType.REVISION_CREATE.toString()
+	+ "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
+	
+	public DataBean getCurrentDataBean(){
+		if(currentDataBean == null)
+			for(DataBean dataBean:dataBeanList)
+				if(dataBean.getKeyString().equals(currentDataBeanKeyString))
+					currentDataBean = dataBean;
+		
+		return currentDataBean;
+	}
+	
+	public String getCreationDateString(){
+		if (creationDate == null)
+			return "deneme";
+		return creationDate.toString();
+	}
 	
 	/**
 	 * @return the currentDataBeanKeyString

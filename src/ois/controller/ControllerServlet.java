@@ -104,12 +104,31 @@ public class ControllerServlet extends HttpServlet {
 
 	private void initImageEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
+		String imageDataKey = req.getParameter(CSParamType.REVISION.toString());
+		String url = req.getRequestURL().substring(0, req.getRequestURL().length()-ApplicationManager.MAIN_PAGE.length());
+		ApplicationManager.setServerUrl(url);
+		if(imageDataKey == null)
+			imageDataKey = ApplicationManager.NONE;
 		ImageBean imageBean = ApplicationManager.getControllerManager().getImageBean(imageFileKey);
-		imageBean.setCurrentDataBeanKeyString(ApplicationManager.NONE);
+		imageBean.setCurrentDataBeanKeyString(imageDataKey);
+		log.info("here = " + req.getRemoteAddr());
+		log.info("here = " + req.getRequestURI());
+		log.info("here = " + req.getRequestURL());
+		
+		
 		imageBean.getDataBeanList().add(0,new DataBean(ApplicationManager.NONE,imageFileKey));
 		req.setAttribute("imageBean",imageBean);
 		log.info("Revisions page is being opened for image " + imageFileKey + "(" + imageBean.getName() + ")" );
 		forward(ApplicationManager.JSP_IMAGE_REVISIONS_URL,req,res);
+	}
+
+	private void initRevisionCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
+		ImageBean imageBean = new ImageBean();
+		imageBean.setKeyString(imageFileKey);
+		req.setAttribute("imageBean",imageBean);
+		log.info("Create revision page is being opened for image " + imageFileKey);
+		forward(ApplicationManager.JSP_CREATE_REVISION_URL,req,res);
 	}
 
 	/* (non-Javadoc)
@@ -138,6 +157,9 @@ public class ControllerServlet extends HttpServlet {
 			case IMAGE_EDIT:
 				initImageEdit(req,res);
 				break;
+			case REVISION_CREATE:
+				initRevisionCreate(req,res);
+				break;
 			}
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
@@ -159,6 +181,24 @@ public class ControllerServlet extends HttpServlet {
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
 		ApplicationManager.getControllerManager().createAlbum(name, description);
 		log.info("Album '" + name + "' was created");
+	}
+
+	private void createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String imageKeyString = req.getParameter(CSParamType.ITEM.toString());
+		String widthString = req.getParameter(CSParamType.WIDTH.toString());
+		String heightString = req.getParameter(CSParamType.HEIGHT.toString());
+		String enhancedString = req.getParameter(CSParamType.ENHANCED.toString());//value is either null or "on"
+		
+		int width = Integer.parseInt(widthString);
+		int height = Integer.parseInt(heightString);
+		boolean isEnhanced = enhancedString != null;
+		Data data = new Data();
+		data.setWidth(width);
+		data.setHeight(height);
+		data.setEnhanced(isEnhanced);
+		ApplicationManager.getControllerManager().createImageData(imageKeyString, data);
+		log.info("New revision was created size=" + widthString + "x" + heightString 
+										+ ",	enhanced=" + isEnhanced);
 	}
 
 	
@@ -190,7 +230,7 @@ public class ControllerServlet extends HttpServlet {
 	 * @param res current response object
 	 * @throws PersistanceManagerException
 	 */
-	private void deleteAlbum (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private void deleteAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		String key = req.getParameter(CSParamType.ITEM.toString());
 		ApplicationManager.getControllerManager().deleteAlbum(key);
 	}
@@ -201,9 +241,14 @@ public class ControllerServlet extends HttpServlet {
 	 * @param res current response object
 	 * @throws PersistanceManagerException
 	 */
-	private void deleteImage (HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private void deleteImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		String key = req.getParameter(CSParamType.ITEM.toString());
 		ApplicationManager.getControllerManager().deleteImageFile(key);
+	}
+
+	private void deleteRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String key = req.getParameter(CSParamType.ITEM.toString());
+		ApplicationManager.getControllerManager().deleteImageData(key);
 	}
 
 	/* (non-Javadoc)
@@ -213,8 +258,10 @@ public class ControllerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		try {
+			/*
 			if (req.getQueryString() != null )
 				doGet(req,res);
+			*/
 			String actionStr = req.getParameter(CSParamType.ACTION.toString());
 			CSActionType action = CSActionType.fromString(actionStr);
 			if (action == null)
@@ -232,6 +279,13 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case DELETE_IMAGE:
 				deleteImage(req,res);
+				break;
+			case CREATE_REVISION:
+				createRevision(req,res);
+				break;
+			case DELETE_REVISION:
+				deleteRevision(req,res);
+				break;
 			}
 			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
 		} catch (Exception ex) {

@@ -22,7 +22,7 @@ public class ImageFile {
     @Persistent
 	private Key albumFileKey;
 	@Persistent
-	private Date creationDate = new Date();
+	private Date creationDate;
     @Persistent
     private String description;
 	@Persistent
@@ -106,4 +106,5 @@ public class ImageFile {
 	public ImageType getType() {
 		return type;
 	}
+	
 }

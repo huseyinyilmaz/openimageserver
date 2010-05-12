@@ -6,7 +6,12 @@ public enum CSParamType {
 	ACTION("action"),
 	NAME("name"),
 	DESCRIPTION("description"),
-	REVISION("revision");
+	FILE("file"),//uploaded image parameter
+	REVISION("revision"),
+	WIDTH("width"),
+	HEIGHT("height"),
+	ENHANCED("enhanced");
+	
 	
 	private String value;
 	

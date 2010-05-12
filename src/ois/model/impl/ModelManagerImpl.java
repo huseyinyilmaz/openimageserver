@@ -133,11 +133,27 @@ public class ModelManagerImpl implements ModelManager {
 		return imageData;
 	}
 
-	
+	@Override
 	@SuppressWarnings("unchecked")
 	public ImageData getThumbnail(Key imageFileKey,PersistenceManager pm){
 		Query query = pm.newQuery(ImageData.class);
 		query.setFilter("imageFileKey == imageFileKeyParam && thumbnail == true");
+		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
+		List<ImageData> imageData = (List<ImageData>) query.execute(imageFileKey);
+		ImageData data = null;
+		if (imageData.size()>0)
+			data = imageData.get(0);
+		else{
+			//TODO throw exception or log
+		}
+		return data;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ImageData getOriginal(Key imageFileKey,PersistenceManager pm){
+		Query query = pm.newQuery(ImageData.class);
+		query.setFilter("imageFileKey == imageFileKeyParam && original == true");
 		query.declareParameters("com.google.appengine.api.datastore.Key imageFileKeyParam");
 		List<ImageData> imageData = (List<ImageData>) query.execute(imageFileKey);
 		ImageData data = null;

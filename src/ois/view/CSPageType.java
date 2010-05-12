@@ -5,8 +5,8 @@ public enum CSPageType {
 	IMAGE("image"),
 	ALBUM_EDIT("albumEdit"),
 	IMAGE_CREATE("imageCreate"),
-	IMAGE_EDIT("imageEdit");
-	
+	IMAGE_EDIT("imageEdit"),
+	REVISION_CREATE("revisionCreate");
 	
 	private String value;
 	

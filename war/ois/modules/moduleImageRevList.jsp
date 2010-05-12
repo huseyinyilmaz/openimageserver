@@ -14,20 +14,11 @@
 				</c:otherwise>
 			</c:choose>
 			</td>
-			<td> 	
-				<c:if test="${dataBean.keyString!='none'}">
-					<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
-					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
-					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${dataBean.keyString}">
-					<input type="submit" title="Delete this data" value="Delete" id="deleteDataSubmitButton">
-					</form>
-				</c:if>
-			</td>
 		</tr>
 	</c:forEach>
 	<tr>
 	<td colspan="2">
-		<a href="${mainPageBean.albumCreateLink}" title="Create a new album">Create a new album</a>
+		<a href="${imageBean.revisionCreateLink}" title="Create a new revision">Create a new revision</a>
 	</td>
 	</tr>
 </table>

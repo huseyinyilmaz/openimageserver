@@ -11,7 +11,8 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+
+<%@page import="ois.ApplicationManager"%><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Image Page</title>
@@ -21,7 +22,7 @@
 <div class="main">
 <%@ include file="modules/moduleHeader.jsp"%>
 <div class="body">
-	<form action="/imageupload" method="post" enctype="multipart/form-data">
+	<form action="<%=ApplicationManager.IMAGE_UPLOAD_PAGE%>" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${albumBean.keyString}"></input>
 	<table>

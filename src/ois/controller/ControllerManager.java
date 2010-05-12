@@ -26,12 +26,13 @@ public interface ControllerManager {
 	
 	public abstract void saveAlbum(Album album) throws PersistanceManagerException;
 
-	public List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException;
+	public abstract List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException;
 	
-	public Data getImageData(String keyString) throws PersistanceManagerException;
+	public abstract Data getImageData(String keyString) throws PersistanceManagerException;
 	
-	public void deleteImageFile(String key) throws PersistanceManagerException;
-	
-	public Image getImage(String keyString) throws PersistanceManagerException;
-	public ImageBean getImageBean(String keyString) throws PersistanceManagerException;
+	public abstract void deleteImageFile(String key) throws PersistanceManagerException;
+	public abstract void deleteImageData(String key) throws PersistanceManagerException;	
+	public abstract Image getImage(String keyString) throws PersistanceManagerException;
+	public abstract ImageBean getImageBean(String keyString) throws PersistanceManagerException;
+	public abstract void createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException;
 }

@@ -2,6 +2,7 @@ package ois.controller.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -42,6 +43,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		try{
 			//create new ImageFile from given Image object
 			ImageFile imageFile = toImageFile(img);
+			imageFile.setCreationDate(new Date());
 			modelManager.saveImageFile(imageFile, pm);
 			//We cannot work on imageFile and image data in same transaction 
 			imageFile = pm.detachCopy(imageFile);
@@ -52,6 +54,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			data.setOriginal(true);
 			//convert controller Object to model object
 			ImageData imageData = toImageData(data);
+			imageData.setCreationDate(new Date());
 			imageData.setImageFileKey(imageFile.getKey());
 			//save original image data.
 			modelManager.saveImageData(imageData, pm);
@@ -61,6 +64,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			thumbnailRawData.setOriginal(false);//this object is created from original one
 			ImageData thumbnailData = toImageData(thumbnailRawData);
 			thumbnailData.setImageFileKey(imageFile.getKey());
+			thumbnailData.setCreationDate(new Date());
 			modelManager.saveImageData(thumbnailData, pm);
 		}finally{
 			pm.close();
@@ -89,6 +93,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			if(!Pattern.matches("\\w+",name))
 				throw new IllegalArgumentException("name can only be consist of digits , letters or _ characters");
 			AlbumFile album = new AlbumFile(name,description);
+			album.setCreationDate(new Date());
 			modelManager.saveAlbum(album,pm);
 			pm.currentTransaction().commit();
 		}finally{
@@ -269,6 +274,29 @@ public class ControllerManagerImpl implements ControllerManager{
 		return imageBean;
 	}
 
+	public void createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);
+		//ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
+		ImageData originalData = modelManager.getOriginal(imageFileKey,pm);
+		Data data = new Data();
+		data.setData(originalData.getData().getBytes());
+		if(infoData.isEnhanced())
+			data = ApplicationManager.getManipulator().resizeAndEnhance(data, infoData.getWidth(), infoData.getHeight());
+		else
+			data = ApplicationManager.getManipulator().resize(data, infoData.getWidth(), infoData.getHeight());
+		
+		ImageData imageData = toImageData(data);
+		imageData.setType(originalData.getType());
+		imageData.setImageFileKey(imageFileKey);
+		imageData.setCreationDate(new Date());
+		try{
+			modelManager.saveImageData(imageData, pm);
+		}finally{
+			pm.close();
+		}
+	}
+	
 	private Data toData(ImageData imageData){
 		Data data = new Data();
 		data.setData(imageData.getData().getBytes());
@@ -283,15 +311,14 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 	private ImageData toImageData(Data data){
 		ImageData imageData = new ImageData();
-		imageData.setData(new Blob(data.getData()));
+		if(data.getData() != null)
+			imageData.setData(new Blob(data.getData()));
 		imageData.setType(ImageType.fromString(data.getType()));
-		//TODO should we put creation date here?
 		imageData.setCreationDate(data.getCreationDate());
 		imageData.setOriginal(data.isOriginal());
 		imageData.setThumbnail(data.isThumbnail());
 		imageData.setEnhanced(data.isEnhanced());
 		imageData.setWidth(data.getWidth());
-		imageData.setHeight(data.getHeight());
 		imageData.setHeight(data.getHeight());
 		return imageData;
 	}

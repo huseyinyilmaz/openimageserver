@@ -20,7 +20,7 @@ public class AlbumFile {
     @Persistent
     private String description;
 	@Persistent
-	private Date creationDate = new Date();
+	private Date creationDate;
 
 	public AlbumFile(){}
 
@@ -75,6 +75,13 @@ public class AlbumFile {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 

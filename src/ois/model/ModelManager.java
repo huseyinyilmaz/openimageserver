@@ -33,12 +33,14 @@ public interface ModelManager {
 	
 	
 	public abstract ImageData getThumbnail(Key imageFileKey,PersistenceManager pm);
+	public abstract ImageData getOriginal(Key imageFileKey, PersistenceManager pm);
 	
 	public abstract void deleteAlbumFile(Key key,PersistenceManager pm)throws PersistanceManagerException;
 	public abstract void deleteImageFile(Key key, PersistenceManager pm) throws PersistanceManagerException;
 	public abstract void deleteImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException;
 	public abstract void deleteImageData(Key key,PersistenceManager pm)throws PersistanceManagerException;
 	public abstract void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException;
+
 
 
 }

@@ -1,9 +1,9 @@
+<%@page import="ois.ApplicationManager"%>
 <%@page import="ois.view.CSParamType"%>
 <%@page import="ois.view.CSActionType"%>
 <%@page import="ois.view.CSPageType"%>
 
-
-<%@page import="ois.ApplicationManager"%><div>
+<div>
 	<c:choose>
 		<c:when test="${mainPageBean.currentAlbumKeyString=='none'}">
 			Please choose an album to see images inside

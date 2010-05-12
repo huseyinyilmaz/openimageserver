@@ -6,7 +6,9 @@ public enum CSActionType {
 	DELETE_ALBUM("deleteAlbum"),
 	CREATE_IMAGE("createImage"),
 	EDIT_IMAGE("editImage"),
-	DELETE_IMAGE("deleteImage");
+	DELETE_IMAGE("deleteImage"),
+	CREATE_REVISION("createRevision"),
+	DELETE_REVISION("deleteRevision");
 	
 	private String value;
 	

@@ -27,6 +27,9 @@ public class DataBean {
 		return ApplicationManager.IMAGE_URI_PREFIX + keyString;
 	}
 
+	public String getFullLink(){
+		return ApplicationManager.getServerURL() + getLink();
+	}
 	public String getViewLink(){
 		return ApplicationManager.MAIN_PAGE + "?"
 		+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
@@ -41,6 +44,10 @@ public class DataBean {
 		else
 			name = width + "x" + height;
 		return name;
+	}
+	
+	public String getCreationDateString(){
+		return creationDate.toString();
 	}
 
 	public String getImageKeyString() {
