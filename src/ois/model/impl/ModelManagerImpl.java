@@ -111,6 +111,7 @@ public class ModelManagerImpl implements ModelManager {
 		return images;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ImageFile> getImageFilesByAlbum(Key albumKey,PersistenceManager pm) {
 		Query query = pm.newQuery(ImageFile.class);
@@ -121,6 +122,7 @@ public class ModelManagerImpl implements ModelManager {
 		return ImageFiles;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ImageData> getImageDataByImageFile(Key imageFileKey,PersistenceManager pm) {
 		Query query = pm.newQuery(ImageData.class);
@@ -132,6 +134,7 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public ImageData getThumbnail(Key imageFileKey,PersistenceManager pm){
 		Query query = pm.newQuery(ImageData.class);
 		query.setFilter("imageFileKey == imageFileKeyParam && thumbnail == true");

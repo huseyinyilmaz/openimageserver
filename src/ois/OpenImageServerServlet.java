@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -19,12 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import ois.model.PMF;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 @SuppressWarnings("serial")
 public class OpenImageServerServlet extends HttpServlet {
 	private static final Logger log = Logger.getLogger(OpenImageServerServlet.class.getName());
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		
+		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
 		A a = null;
