@@ -234,7 +234,19 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 		return data;
 	}
-	
+
+	public DataBean getOriginalDataBean(String imageFilekeyString) throws PersistanceManagerException{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		DataBean dataBean;
+		try{
+			ImageData imageData = modelManager.getOriginal(KeyFactory.stringToKey(imageFilekeyString), pm);
+			dataBean = toDataBean(imageData);
+		}finally{
+			pm.close();
+		}
+		return dataBean;
+	}
+
 	public Image getImage(String keyString) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Image image;
@@ -254,12 +266,16 @@ public class ControllerManagerImpl implements ControllerManager{
 		return image;
 	}
 
-	public ImageBean getImageBean(String keyString) throws PersistanceManagerException{
+	public AlbumBean getImageBean(String keyString) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		AlbumBean albumBean;
 		ImageBean imageBean;
 		try{
 			Key imageFileKey = KeyFactory.stringToKey(keyString);
 			ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
+			AlbumFile albumFile = modelManager.getAlbumFile(imageFile.getAlbumFileKey(), pm);
+			albumBean = toAlbumBean(albumFile);
+			albumBean.setCurrentImageKeyString(keyString);
 			imageBean = toImageBean(imageFile);
 			imageBean.setDataBeanList(new ArrayList<DataBean>());
 			List<ImageData> imageDataList = modelManager.getImageDataByImageFile(imageFileKey, pm);
@@ -268,10 +284,12 @@ public class ControllerManagerImpl implements ControllerManager{
 				dataBean.setImageKeyString(keyString);
 				imageBean.getDataBeanList().add(dataBean);
 			}
+			albumBean.setImageBeanList(new ArrayList<ImageBean>());
+			albumBean.getImageBeanList().add(imageBean);			
 		}finally{
 			pm.close();
 		}
-		return imageBean;
+		return albumBean;
 	}
 
 	public void createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{

@@ -6,6 +6,8 @@ import ois.ApplicationManager;
 
 public class AlbumBean {
 	private String keyString;
+	private String currentImageKeyString;
+	private ImageBean currentImageBean = null;
 	private String name;
 	private String description;
 	private List<ImageBean> imageBeanList;
@@ -36,6 +38,30 @@ public class AlbumBean {
 		return ApplicationManager.MAIN_PAGE + "?" 
 				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_CREATE.toString()
 	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	}
+	
+	
+	public ImageBean getCurrentImageBean(){
+		if(currentImageBean == null){
+			for(ImageBean imageBean:imageBeanList)
+				if(imageBean.getKeyString().equals(currentImageKeyString))
+					currentImageBean = imageBean;
+		}
+		return currentImageBean;
+	}
+	
+	/**
+	 * @return the currentImageKeyString
+	 */
+	public String getCurrentImageKeyString() {
+		return currentImageKeyString;
+	}
+	/**
+	 * @param currentImageKeyString the currentImageKeyString to set
+	 */
+	public void setCurrentImageKeyString(String currentImageKeyString) {
+		this.currentImageKeyString = currentImageKeyString;
+		currentImageBean = null;
 	}
 	/**
 	 * @return the keyString

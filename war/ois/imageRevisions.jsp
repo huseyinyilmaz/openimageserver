@@ -7,7 +7,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:useBean id="imageBean" class="ois.view.ImageBean" scope="request"></jsp:useBean>
+<jsp:useBean id="albumBean" class="ois.view.AlbumBean" scope="request"></jsp:useBean>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,7 +16,9 @@
 <link rel="stylesheet" type="text/css" href="/ois/css/images.css">
 </head>
 <body>
-<div class="main"><%@ include file="modules/moduleHeader.jsp"%>
+<div class="main">
+<%@ include file="modules/moduleHeader.jsp"%>
+<%@ include file="modules/moduleBreadCrumbs.jsp" %>
 <div class="body">
 <table>
 	<tr>

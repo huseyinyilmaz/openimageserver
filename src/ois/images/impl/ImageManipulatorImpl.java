@@ -42,23 +42,25 @@ public class ImageManipulatorImpl implements ImageManipulator {
 
         com.google.appengine.api.images.Image newImage = imagesService.applyTransform(enhance, oldImage);
         Data newImageData = new Data(oldImageData,newImage.getImageData());
+
+        setImageProperties(newImageData);
         newImageData.setEnhanced(true);
         return newImageData;
 	}
 
 	@Override
 	public Data resizeAndEnhance(Data oldImageData, int width, int height) {
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-
+		ImagesService imagesService = ImagesServiceFactory.getImagesService();
         com.google.appengine.api.images.Image oldImage = ImagesServiceFactory.makeImage(oldImageData.getData());
+        if(oldImage.getHeight()==height && oldImage.getWidth()==width)
+        	return enhance(oldImageData);
         Transform resize = ImagesServiceFactory.makeResize(width, height);
         Transform enhance = ImagesServiceFactory.makeImFeelingLucky();
 
         com.google.appengine.api.images.Image newImage = imagesService.applyTransform(resize, oldImage);
         newImage = imagesService.applyTransform(enhance, newImage);
         Data newImageData = new Data(oldImageData,newImage.getImageData());
-        newImageData.setHeight(newImage.getHeight());
-        newImageData.setWidth(newImage.getWidth());
+        setImageProperties(newImageData);
         newImageData.setEnhanced(true);
         return newImageData;
 	}

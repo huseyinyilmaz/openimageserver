@@ -29,17 +29,13 @@
 	<tr>
 		<th>Revision Info</th>
 	</tr>
-	
-		<tr>
-		<th>Image Info</th>
-	</tr>
 	<tr>
 		<td>width:</td>
-		<td><input type="text" name="<%=CSParamType.WIDTH.toString()%>" id="<%=CSParamType.WIDTH.toString()%>"></td>
+		<td><input type="text" name="<%=CSParamType.WIDTH.toString()%>" id="<%=CSParamType.WIDTH.toString()%>" value="${imageBean.currentDataBean.width}"></td>
 	</tr>
 	<tr>
 		<td>height:</td>
-		<td><input type="text" name="<%=CSParamType.HEIGHT.toString()%>" id="<%=CSParamType.HEIGHT.toString()%>"></td>
+		<td><input type="text" name="<%=CSParamType.HEIGHT.toString()%>" id="<%=CSParamType.HEIGHT.toString()%>" value="${imageBean.currentDataBean.height}"></td>
 	</tr>
 	<tr>
 		<td>Enhanced:</td>

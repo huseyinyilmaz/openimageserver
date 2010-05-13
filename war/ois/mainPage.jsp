@@ -16,6 +16,7 @@
 <body>
 <div class="main">
 	<%@ include file="modules/moduleHeader.jsp" %>
+	<%@ include file="modules/moduleBreadCrumbs.jsp" %>
 	<div class="body">
 		<table>
 		<tr>

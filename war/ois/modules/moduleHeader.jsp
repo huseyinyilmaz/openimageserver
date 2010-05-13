@@ -1,4 +1,2 @@
 
-<%@page import="java.util.Arrays"%><div class="title">IMAGE ADMIN PAGE</div>
-
-
+<div class="title">OPEN IMAGE SERVER</div>

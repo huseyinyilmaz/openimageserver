@@ -64,6 +64,7 @@ public class ImageBean {
 	 */
 	public void setCurrentDataBeanKeyString(String currentDataBeanKeyString) {
 		this.currentDataBeanKeyString = currentDataBeanKeyString;
+		currentDataBean = null;
 	}
 
 	/**

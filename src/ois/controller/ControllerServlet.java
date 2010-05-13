@@ -1,6 +1,7 @@
 package ois.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -109,25 +110,25 @@ public class ControllerServlet extends HttpServlet {
 		ApplicationManager.setServerUrl(url);
 		if(imageDataKey == null)
 			imageDataKey = ApplicationManager.NONE;
-		ImageBean imageBean = ApplicationManager.getControllerManager().getImageBean(imageFileKey);
-		imageBean.setCurrentDataBeanKeyString(imageDataKey);
-		log.info("here = " + req.getRemoteAddr());
-		log.info("here = " + req.getRequestURI());
-		log.info("here = " + req.getRequestURL());
+		AlbumBean albumBean = ApplicationManager.getControllerManager().getImageBean(imageFileKey);
+		albumBean.getCurrentImageBean().setCurrentDataBeanKeyString(imageDataKey);
 		
-		
-		imageBean.getDataBeanList().add(0,new DataBean(ApplicationManager.NONE,imageFileKey));
-		req.setAttribute("imageBean",imageBean);
-		log.info("Revisions page is being opened for image " + imageFileKey + "(" + imageBean.getName() + ")" );
+		albumBean.getCurrentImageBean().getDataBeanList().add(0,new DataBean(ApplicationManager.NONE,imageFileKey));
+		req.setAttribute("albumBean",albumBean);
+		log.info("Revisions page is being opened for image " + imageFileKey + "(" + albumBean.getCurrentImageBean().getName() + ")" );
 		forward(ApplicationManager.JSP_IMAGE_REVISIONS_URL,req,res);
 	}
 
 	private void initRevisionCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
+		String imageFileKeyString = req.getParameter(CSParamType.ITEM.toString());
 		ImageBean imageBean = new ImageBean();
-		imageBean.setKeyString(imageFileKey);
+		imageBean.setKeyString(imageFileKeyString);
+		imageBean.setDataBeanList(new ArrayList<DataBean>());
+		DataBean dataBean = ApplicationManager.getControllerManager().getOriginalDataBean(imageFileKeyString);
+		imageBean.getDataBeanList().add(dataBean);
+		imageBean.setCurrentDataBeanKeyString(dataBean.getKeyString());
 		req.setAttribute("imageBean",imageBean);
-		log.info("Create revision page is being opened for image " + imageFileKey);
+		log.info("Create revision page is being opened for image " + imageFileKeyString);
 		forward(ApplicationManager.JSP_CREATE_REVISION_URL,req,res);
 	}
 
