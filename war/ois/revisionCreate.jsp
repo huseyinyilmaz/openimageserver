@@ -41,16 +41,13 @@
 		<td>Enhanced:</td>
 		<td><input type="checkbox" name="<%=CSParamType.ENHANCED.toString()%>" id="<%=CSParamType.ENHANCED.toString()%>"></td>
 	</tr>
-	
-	
-	
 	<tr>
 		<td></td>
 		<td><input type="submit" title="Create new image" value="Create" id="imageSubmitButton"> </td>
-		
 	</tr>	
 	</table>
 	</form>
+	<a href="${imageBean.editLink}">cancel</a>
 	</div>
 </div>
 </body>

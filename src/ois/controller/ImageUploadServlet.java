@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.CSParamType;
 
@@ -58,19 +59,23 @@ public class ImageUploadServlet extends HttpServlet {
 			//create Image
 			ApplicationManager.getControllerManager().createImage(img);
 			res.sendRedirect("/main?page=main&item="+img.getAlbum());
-		} catch (FileUploadException e) {
+		}catch (InvalidNameException e){
+			log.warning("InvalidNameException caught :" + e.getMessage());
+			req.setAttribute("exception", e);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
+		}catch (FileUploadException e){
 			log.warning("FileUploadException was caught. Exception = " + e.getMessage());
-			//TODO write also a message here
-			throw new ServletException(e);
+			req.setAttribute("exception", e);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (IOException e) {
 			log.warning("IOException was caught. Exception = " + e.getMessage());
-			//TODO write also a message here
-			throw new ServletException(e);
+			req.setAttribute("exception", e);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (PersistanceManagerException e) {
-			// TODO Auto-generated catch block
 			log.warning("Persistance manager exceptino was caught. Exception = " + e.getMessage());
-			throw new ServletException(e);
-		}
+			req.setAttribute("exception", e);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
+		} 
 
   }//doPost
 }

@@ -22,6 +22,7 @@
 <div class="main">
 <%@ include file="modules/moduleHeader.jsp"%>
 <div class="body">
+	<%@ include file="modules/moduleException.jsp"%>
 	<form action="<%=ApplicationManager.IMAGE_UPLOAD_PAGE%>" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${albumBean.keyString}"></input>
@@ -51,6 +52,7 @@
 	</tr>	
 	</table>
 	</form>
+	<a href="${albumBean.viewLink}">cancel</a>
 	</div>
 </div>
 </body>

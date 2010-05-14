@@ -41,6 +41,8 @@ public interface ModelManager {
 	public abstract void deleteImageData(Key key,PersistenceManager pm)throws PersistanceManagerException;
 	public abstract void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException;
 
+	public abstract AlbumFile getAlbumFileByName(String name, PersistenceManager pm);
+	public abstract ImageFile getImageFileByName(String name,Key albumFileKey,PersistenceManager pm);
 
 
 }

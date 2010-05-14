@@ -1,21 +1,27 @@
 package ois.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
 import ois.view.DataBean;
 import ois.view.ImageBean;
 
 public interface ControllerManager {
-
 	public abstract void createImage(Image img)
-			throws PersistanceManagerException;
+			throws PersistanceManagerException, InvalidNameException;
 
 	public abstract List<AlbumBean> getAlbumBeanList();
 
 	public abstract void createAlbum(String name, String description)
-			throws PersistanceManagerException;
+			throws PersistanceManagerException, InvalidNameException;
 
 	public abstract void deleteAlbum(String key)
 			throws PersistanceManagerException;
@@ -37,4 +43,7 @@ public interface ControllerManager {
 	public abstract Image getImage(String keyString) throws PersistanceManagerException;
 	public abstract AlbumBean getImageBean(String keyString) throws PersistanceManagerException;
 	public abstract void createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException;
+
+	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 }
+

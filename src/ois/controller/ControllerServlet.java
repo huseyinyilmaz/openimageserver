@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
 import ois.view.CSActionType;
@@ -75,11 +76,18 @@ public class ControllerServlet extends HttpServlet {
 	private void initAlbumEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 
 		AlbumBean albumBean;
-		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
-		if (albumKeyString == null){
-			albumBean = new AlbumBean();
+		String albumKeyString = null;
+		if(req.getAttribute("exception")==null){
+			albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+			if (albumKeyString == null){
+				albumBean = new AlbumBean();
+			}else{
+				albumBean = ApplicationManager.getControllerManager().getAlbumBean(albumKeyString);
+			}
 		}else{
-			albumBean = ApplicationManager.getControllerManager().getAlbumBean(albumKeyString);
+			albumBean = new AlbumBean();
+			albumBean.setName(req.getParameter(CSParamType.NAME.toString()));
+			albumBean.setDescription(req.getParameter(CSParamType.DESCRIPTION.toString()));
 		}
 		req.setAttribute("albumBean",albumBean);
 		forward(ApplicationManager.JSP_ALBUM_EDIT_URL,req,res);
@@ -95,12 +103,15 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private void initImageCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+		/*
 		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
 		AlbumBean albumBean = new AlbumBean();
 		albumBean.setKeyString(albumKeyString);
 		req.setAttribute("albumBean",albumBean);
 		log.info("Image create page is being opened for album " + albumKeyString );
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,req,res);
+		*/
+		ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 	}
 
 	private void initImageEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
@@ -173,14 +184,27 @@ public class ControllerServlet extends HttpServlet {
 	 * @param req current request object
 	 * @param res current response object
 	 * @throws PersistanceManagerException 
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	private void createAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private void createAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String name = req.getParameter(CSParamType.NAME.toString());
-		//TODO move this to name check
-		if (name == null)
-			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		ApplicationManager.getControllerManager().createAlbum(name, description);
+		try {
+			ApplicationManager.getControllerManager().createAlbum(name, description);
+		} catch(InvalidNameException e) {
+			log.warning("InvalidNameException occured: " + e.getMessage());
+			req.setAttribute("exception", e);
+			initAlbumEdit(req, res);
+		} catch(PersistanceManagerException e){
+			log.warning("PersistanceManagerException occured: " + e.getMessage());
+			req.setAttribute("exception",e);
+			initAlbumEdit(req, res);
+		} catch(Exception e){
+			log.warning("Unexpected exception occured: " + e.getMessage());
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			initAlbumEdit(req, res);
+		}
 		log.info("Album '" + name + "' was created");
 	}
 

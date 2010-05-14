@@ -166,6 +166,43 @@ public class ModelManagerImpl implements ModelManager {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public AlbumFile getAlbumFileByName(String name,PersistenceManager pm){
+		Query query = pm.newQuery(AlbumFile.class);
+		query.setFilter("name == nameParam");
+		query.declareParameters("String nameParam");
+		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(name);
+		AlbumFile albumFile = null;
+		if (albumFileList.size()>0)
+			albumFile = albumFileList.get(0);
+		else{
+			//TODO throw exception or log
+		}
+		return albumFile;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ImageFile getImageFileByName(String name,Key albumFileKey,PersistenceManager pm){
+		Query query = pm.newQuery(ImageFile.class);
+		query.setFilter("name == nameParam && albumFileKey == albumKeyParam");
+		query.declareParameters("String nameParam, com.google.appengine.api.datastore.Key albumKeyParam");
+		//query.declareParameters("com.google.appengine.api.datastore.Key albumKeyParam");
+		List<ImageFile> imageFileList = (List<ImageFile>) query.execute(name,albumFileKey);
+		ImageFile imageFile = null;
+		if (imageFileList.size()>0)
+			imageFile = imageFileList.get(0);
+		else{
+			//TODO throw exception or log
+		}
+		return imageFile;
+	}
+
+	
+	
+	
+	
+	@Override
 	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException {
 		ImageData imageData = getImageData(key, pm);
 		deleteImageData(imageData, pm);

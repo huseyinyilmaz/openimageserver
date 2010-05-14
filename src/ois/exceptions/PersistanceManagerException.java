@@ -18,5 +18,18 @@ public class PersistanceManagerException extends Exception {
 	public PersistanceManagerException(Throwable cause) {
 		super(cause);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Throwable#getMessage()
+	 */
+	@Override
+	public String getMessage() {
+		return "Datastore Exception: <br></br>" 
+			  + super.getMessage() + "<br></br>"
+			  +"Technical Explanation:<br></br>"
+			  + super.getCause();
+	}
+	
+	
 	
 }

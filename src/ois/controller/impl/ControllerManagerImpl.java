@@ -1,19 +1,24 @@
 package ois.controller.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import javax.jdo.PersistenceManager;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
 import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Data;
 import ois.controller.Image;
+import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
@@ -22,6 +27,7 @@ import ois.model.ImageType;
 import ois.model.ModelManager;
 import ois.model.PMF;
 import ois.view.AlbumBean;
+import ois.view.CSParamType;
 import ois.view.DataBean;
 import ois.view.ImageBean;
 
@@ -37,13 +43,16 @@ public class ControllerManagerImpl implements ControllerManager{
 		this.modelManager = modelManager;
 	}
 	
-	public void createImage(Image img) throws PersistanceManagerException{
+	public void createImage(Image img) throws PersistanceManagerException, InvalidNameException{
 		//check type from image service.
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
 			//create new ImageFile from given Image object
 			ImageFile imageFile = toImageFile(img);
 			imageFile.setCreationDate(new Date());
+			ApplicationManager.checkName(img.getName());
+			if(modelManager.getImageFileByName(img.getName(),imageFile.getAlbumFileKey(),pm)!=null)
+				throw new InvalidNameException("An image with name '" + img.getName() + "' is already exist");
 			modelManager.saveImageFile(imageFile, pm);
 			//We cannot work on imageFile and image data in same transaction 
 			imageFile = pm.detachCopy(imageFile);
@@ -85,20 +94,18 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 		
 	
-	public void createAlbum(String name, String description) throws PersistanceManagerException{
+	public void createAlbum(String name, String description) 
+				throws PersistanceManagerException, InvalidNameException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
-			pm.currentTransaction().begin();
 			//TODO check if the name is unique
-			if(!Pattern.matches("\\w+",name))
-				throw new IllegalArgumentException("name can only be consist of digits , letters or _ characters");
+			ApplicationManager.checkName(name);
+			if(modelManager.getAlbumFileByName(name,pm)!= null)
+				throw new InvalidNameException("An album with name '" + name + "' is already exists.");
 			AlbumFile album = new AlbumFile(name,description);
 			album.setCreationDate(new Date());
 			modelManager.saveAlbum(album,pm);
-			pm.currentTransaction().commit();
 		}finally{
-			if(pm.currentTransaction().isActive())
-				pm.currentTransaction().rollback();
 			pm.close();
 		}
 	}
@@ -292,6 +299,18 @@ public class ControllerManagerImpl implements ControllerManager{
 		return albumBean;
 	}
 
+	private void forward(String context, HttpServlet servlet, HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		servlet.getServletContext().getRequestDispatcher(context).forward(req, res); 
+	}
+
+	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		AlbumBean albumBean = new AlbumBean();
+		albumBean.setKeyString(albumKeyString);
+		req.setAttribute("albumBean",albumBean);
+		log.info("Image create page is being opened for album " + albumKeyString );
+		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,servlet,req,res);
+	}
 	public void createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);
