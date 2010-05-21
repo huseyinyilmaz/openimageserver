@@ -208,7 +208,7 @@ public class ControllerServlet extends HttpServlet {
 		log.info("Album '" + name + "' was created");
 	}
 
-	private void createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private void createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String imageKeyString = req.getParameter(CSParamType.ITEM.toString());
 		String widthString = req.getParameter(CSParamType.WIDTH.toString());
 		String heightString = req.getParameter(CSParamType.HEIGHT.toString());
@@ -221,7 +221,18 @@ public class ControllerServlet extends HttpServlet {
 		data.setWidth(width);
 		data.setHeight(height);
 		data.setEnhanced(isEnhanced);
+		try{
 		ApplicationManager.getControllerManager().createImageData(imageKeyString, data);
+		} catch(PersistanceManagerException e){
+			log.warning("PersistanceManagerException occured: " + e.getMessage());
+			req.setAttribute("exception",e);
+			initRevisionCreate(req, res);
+		} catch(Exception e){
+			log.warning("Unexpected exception occured: " + e.getMessage());
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			initRevisionCreate(req, res);
+		}
+		
 		log.info("New revision was created size=" + widthString + "x" + heightString 
 										+ ",	enhanced=" + isEnhanced);
 	}

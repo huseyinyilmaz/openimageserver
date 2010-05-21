@@ -66,7 +66,12 @@ public class ControllerManagerImpl implements ControllerManager{
 			imageData.setCreationDate(new Date());
 			imageData.setImageFileKey(imageFile.getKey());
 			//save original image data.
-			modelManager.saveImageData(imageData, pm);
+			try{
+				modelManager.saveImageData(imageData, pm);
+			}catch(PersistanceManagerException e){
+				deleteImageFile(KeyFactory.keyToString(imageFile.getKey()));
+				throw e;
+			}
 			//create new thumbnail
 			Data thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 100, 100);
 			thumbnailRawData.setThumbnail(true);
@@ -304,13 +309,16 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
-		AlbumBean albumBean = new AlbumBean();
-		albumBean.setKeyString(albumKeyString);
-		req.setAttribute("albumBean",albumBean);
-		log.info("Image create page is being opened for album " + albumKeyString );
+		if(req.getAttribute("exception")== null){
+			String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(albumKeyString);
+			req.setAttribute("albumBean",albumBean);
+			log.info("Image create page is being opened for album " + albumKeyString );
+		}
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,servlet,req,res);
 	}
+	
 	public void createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);

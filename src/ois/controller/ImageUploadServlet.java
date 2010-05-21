@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import ois.ApplicationManager;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
+import ois.view.AlbumBean;
 import ois.view.CSParamType;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -22,15 +23,15 @@ import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 @SuppressWarnings("serial")
 public class ImageUploadServlet extends HttpServlet {
+	
 	private static final Logger log =
 		Logger.getLogger(ImageUploadServlet.class.getName());
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
     	throws ServletException, IOException {
+		ServletFileUpload upload = new ServletFileUpload();
+		Image img = new Image();
 		try{
-			Image img = new Image();
-			ServletFileUpload upload = new ServletFileUpload();
-
 			FileItemIterator iterator = upload.getItemIterator(req);
 			while (iterator.hasNext()) {
 				FileItemStream item = iterator.next();
@@ -61,19 +62,35 @@ public class ImageUploadServlet extends HttpServlet {
 			res.sendRedirect("/main?page=main&item="+img.getAlbum());
 		}catch (InvalidNameException e){
 			log.warning("InvalidNameException caught :" + e.getMessage());
+			//add request parameters that will be used in jsp
 			req.setAttribute("exception", e);
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(img.getAlbum());
+			req.setAttribute("albumBean", albumBean);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		}catch (FileUploadException e){
 			log.warning("FileUploadException was caught. Exception = " + e.getMessage());
+			//add request parameters that will be used in jsp
 			req.setAttribute("exception", e);
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(img.getAlbum());
+			req.setAttribute("albumBean", albumBean);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (IOException e) {
 			log.warning("IOException was caught. Exception = " + e.getMessage());
+			//add request parameters that will be used in jsp
 			req.setAttribute("exception", e);
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(img.getAlbum());
+			req.setAttribute("albumBean", albumBean);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (PersistanceManagerException e) {
 			log.warning("Persistance manager exceptino was caught. Exception = " + e.getMessage());
+			//add request parameters that will be used in jsp
 			req.setAttribute("exception", e);
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(img.getAlbum());
+			req.setAttribute("albumBean", albumBean);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} 
 

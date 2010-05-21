@@ -25,6 +25,7 @@ public class ModelManagerImpl implements ModelManager {
             pm.makePersistent(imageFile);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image file. Name = " + imageFile.getName() , e);
+        	log.warning("new PersistanceManagerException was thrown");
         	throw pme;
         }
         log.info("new image file was successfully saved. name = " + imageFile.getName() +
@@ -39,6 +40,7 @@ public class ModelManagerImpl implements ModelManager {
             pm.makePersistent(imageData);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image data.", e);
+        	log.warning("new PersistanceManagerException was thrown");
         	throw pme;
         }
         log.info("new Image data was successfully saved.");

@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean id="imageBean" class="ois.view.ImageBean" scope="request"></jsp:useBean>
+<jsp:useBean id="exception" class="java.lang.Exception" scope="request"></jsp:useBean>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -22,6 +23,7 @@
 <div class="main">
 <%@ include file="modules/moduleHeader.jsp"%>
 <div class="body">
+	<%@ include file="modules/moduleException.jsp" %>
 	<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_REVISION.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${imageBean.keyString}"></input>
