@@ -15,6 +15,12 @@ public class AlbumBean {
 	public AlbumBean(){
 		super();
 	}
+
+	public AlbumBean(String keyString){
+		super();
+		this.keyString = keyString;
+	}
+
 	public AlbumBean(String keyString,String name){
 		super();
 		this.name = name;

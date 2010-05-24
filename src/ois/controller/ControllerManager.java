@@ -20,7 +20,7 @@ public interface ControllerManager {
 
 	public abstract List<AlbumBean> getAlbumBeanList();
 
-	public abstract void createAlbum(String name, String description)
+	public abstract String createAlbum(String name, String description)
 			throws PersistanceManagerException, InvalidNameException;
 
 	public abstract void deleteAlbum(String key)
@@ -32,7 +32,7 @@ public interface ControllerManager {
 	public abstract AlbumBean getAlbumBean(String key) throws PersistanceManagerException;
 	public DataBean getOriginalDataBean(String imageFilekeyString) throws PersistanceManagerException;
 	
-	public abstract void saveAlbum(Album album) throws PersistanceManagerException;
+	public abstract void saveAlbum(Album album) throws PersistanceManagerException, InvalidNameException;
 
 	public abstract List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException;
 	

@@ -183,15 +183,17 @@ public class ControllerServlet extends HttpServlet {
 	 * Creates a new album.
 	 * @param req current request object
 	 * @param res current response object
+	 * @return TODO
 	 * @throws PersistanceManagerException 
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private void createAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
+	private String createAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String name = req.getParameter(CSParamType.NAME.toString());
+		String albumKeyString = null;
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
 		try {
-			ApplicationManager.getControllerManager().createAlbum(name, description);
+			albumKeyString = ApplicationManager.getControllerManager().createAlbum(name, description);
 		} catch(InvalidNameException e) {
 			log.warning("InvalidNameException occured: " + e.getMessage());
 			req.setAttribute("exception", e);
@@ -206,6 +208,7 @@ public class ControllerServlet extends HttpServlet {
 			initAlbumEdit(req, res);
 		}
 		log.info("Album '" + name + "' was created");
+		return new AlbumBean(albumKeyString,name).getViewLink();
 	}
 
 	private void createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
@@ -240,12 +243,15 @@ public class ControllerServlet extends HttpServlet {
 	
 	
 	/**
-	 * modifys an existing album.
+	 * modifies an existing album.
 	 * @param req current request object
 	 * @param res current response object
+	 * @return TODO
 	 * @throws PersistanceManagerException 
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	private void editAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private String editAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String name = req.getParameter(CSParamType.NAME.toString());
 		//TODO move this to name check
 		if (name == null)
@@ -256,8 +262,20 @@ public class ControllerServlet extends HttpServlet {
 		album.setKeyString(albumKeyString);
 		album.setName(name);
 		album.setDescription(description);
+		try{
 		ApplicationManager.getControllerManager().saveAlbum(album);
+		} catch(InvalidNameException e) {
+			log.warning("InvalidNameException occured: " + e.getMessage());
+			req.setAttribute("exception", e);
+			initAlbumEdit(req, res);
+		} catch(Exception e){
+			log.warning("Unexpected exception occured: " + e.getMessage());
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			initAlbumEdit(req, res);
+		}
+
 		log.info("Album '" + name + "' was saved");
+		return new AlbumBean(albumKeyString).getViewLink();
 	}
 
 	/**
@@ -303,12 +321,13 @@ public class ControllerServlet extends HttpServlet {
 			if (action == null)
 				throw new IllegalArgumentException("'action' paramether does not have an expected value. action =" + actionStr );
 			log.info("Got action type " + action.toString());
+			String url=null;
 			switch(action){
 			case CREATE_ALBUM:
-				createAlbum(req,res);
+				url = createAlbum(req,res);
 				break;
 			case EDIT_ALBUM:
-				editAlbum(req,res);
+				url = editAlbum(req,res);
 				break;
 			case DELETE_ALBUM:
 				deleteAlbum(req,res);
@@ -323,7 +342,11 @@ public class ControllerServlet extends HttpServlet {
 				deleteRevision(req,res);
 				break;
 			}
-			res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
+			if(url==null)
+				//if there is no url provided return to main page
+				res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
+			else
+				res.sendRedirect(url);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);

@@ -99,20 +99,22 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 		
 	
-	public void createAlbum(String name, String description) 
+	public String createAlbum(String name, String description) 
 				throws PersistanceManagerException, InvalidNameException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		AlbumFile albumFile;
 		try{
-			//TODO check if the name is unique
 			ApplicationManager.checkName(name);
+			//check if the name is unique
 			if(modelManager.getAlbumFileByName(name,pm)!= null)
 				throw new InvalidNameException("An album with name '" + name + "' is already exists.");
-			AlbumFile album = new AlbumFile(name,description);
-			album.setCreationDate(new Date());
-			modelManager.saveAlbum(album,pm);
+			albumFile = new AlbumFile(name,description);
+			albumFile.setCreationDate(new Date());
+			modelManager.saveAlbum(albumFile,pm);
 		}finally{
 			pm.close();
 		}
+		return KeyFactory.keyToString(albumFile.getKey());
 	}
 
 	public void deleteAlbum(String key) throws PersistanceManagerException{
@@ -192,9 +194,13 @@ public class ControllerManagerImpl implements ControllerManager{
 	}
 
 	
-	public void saveAlbum(Album album) throws PersistanceManagerException {
+	public void saveAlbum(Album album) throws PersistanceManagerException, InvalidNameException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
+			ApplicationManager.checkName(album.getName());
+			//check if the name is unique
+			if(KeyFactory.keyToString(modelManager.getAlbumFileByName(album.getName(),pm).getKey())!= album.getKeyString())
+				throw new InvalidNameException("An album with name '" + album.getName() + "' is already exists.");
 			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKeyString()),pm);
 			albumFile.setName(album.getName());
 			albumFile.setDescription(album.getDescription());
