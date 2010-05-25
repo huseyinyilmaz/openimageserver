@@ -48,7 +48,7 @@ public class AlbumBean {
 	
 	
 	public ImageBean getCurrentImageBean(){
-		if(currentImageBean == null){
+		if(currentImageBean == null && imageBeanList!=null){
 			for(ImageBean imageBean:imageBeanList)
 				if(imageBean.getKeyString().equals(currentImageKeyString))
 					currentImageBean = imageBean;

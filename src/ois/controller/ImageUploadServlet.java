@@ -2,6 +2,7 @@ package ois.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
 import ois.view.CSParamType;
+import ois.view.ImageBean;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -27,6 +29,23 @@ public class ImageUploadServlet extends HttpServlet {
 	private static final Logger log =
 		Logger.getLogger(ImageUploadServlet.class.getName());
 
+	public void setAttributes(Image image, Exception e,HttpServletRequest req){
+		String temproryImageBeanKeyString = "-1";
+		req.setAttribute("exception", e);
+		AlbumBean albumBean = new AlbumBean();
+		albumBean.setKeyString(image.getAlbum());
+		ImageBean imageBean = new ImageBean();
+		//this is a new image so it does not have any keyString
+		imageBean.setKeyString(temproryImageBeanKeyString);
+		imageBean.setName(image.getName());
+		imageBean.setDescription(image.getDescription());
+		albumBean.setImageBeanList(new ArrayList<ImageBean>());
+		albumBean.getImageBeanList().add(imageBean);
+		//set temprory image key string, So we can find current image
+		albumBean.setCurrentImageKeyString(temproryImageBeanKeyString);
+		req.setAttribute("albumBean", albumBean);
+	}
+	
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
     	throws ServletException, IOException {
 		ServletFileUpload upload = new ServletFileUpload();
@@ -63,34 +82,22 @@ public class ImageUploadServlet extends HttpServlet {
 		}catch (InvalidNameException e){
 			log.warning("InvalidNameException caught :" + e.getMessage());
 			//add request parameters that will be used in jsp
-			req.setAttribute("exception", e);
-			AlbumBean albumBean = new AlbumBean();
-			albumBean.setKeyString(img.getAlbum());
-			req.setAttribute("albumBean", albumBean);
+			setAttributes(img,e,req);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		}catch (FileUploadException e){
 			log.warning("FileUploadException was caught. Exception = " + e.getMessage());
 			//add request parameters that will be used in jsp
-			req.setAttribute("exception", e);
-			AlbumBean albumBean = new AlbumBean();
-			albumBean.setKeyString(img.getAlbum());
-			req.setAttribute("albumBean", albumBean);
+			setAttributes(img,e,req);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (IOException e) {
 			log.warning("IOException was caught. Exception = " + e.getMessage());
 			//add request parameters that will be used in jsp
-			req.setAttribute("exception", e);
-			AlbumBean albumBean = new AlbumBean();
-			albumBean.setKeyString(img.getAlbum());
-			req.setAttribute("albumBean", albumBean);
+			setAttributes(img,e,req);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (PersistanceManagerException e) {
 			log.warning("Persistance manager exceptino was caught. Exception = " + e.getMessage());
 			//add request parameters that will be used in jsp
-			req.setAttribute("exception", e);
-			AlbumBean albumBean = new AlbumBean();
-			albumBean.setKeyString(img.getAlbum());
-			req.setAttribute("albumBean", albumBean);
+			setAttributes(img,e,req);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} 
 

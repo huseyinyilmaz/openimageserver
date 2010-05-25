@@ -41,7 +41,7 @@
 	</tr>
 	<tr>
 		<td>Enhanced:</td>
-		<td><input type="checkbox" name="<%=CSParamType.ENHANCED.toString()%>" id="<%=CSParamType.ENHANCED.toString()%>"></td>
+		<td><input type="checkbox" name="<%=CSParamType.ENHANCED.toString()%>" id="<%=CSParamType.ENHANCED.toString()%>" <c:if test="${imageBean.currentDataBean.enhanced}">checked</c:if> ></td>
 	</tr>
 	<tr>
 		<td></td>

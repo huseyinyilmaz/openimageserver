@@ -42,7 +42,7 @@ public interface ControllerManager {
 	public abstract void deleteImageData(String key) throws PersistanceManagerException;	
 	public abstract Image getImage(String keyString) throws PersistanceManagerException;
 	public abstract AlbumBean getImageBean(String keyString) throws PersistanceManagerException;
-	public abstract void createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException;
+	public abstract String createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException;
 
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 }

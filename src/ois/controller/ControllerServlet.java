@@ -76,16 +76,21 @@ public class ControllerServlet extends HttpServlet {
 	private void initAlbumEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 
 		AlbumBean albumBean;
-		String albumKeyString = null;
+		//get Album id for clean state and exception state
+		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
 		if(req.getAttribute("exception")==null){
-			albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+			//clean state
 			if (albumKeyString == null){
+				//create album
 				albumBean = new AlbumBean();
 			}else{
+				//edit album
 				albumBean = ApplicationManager.getControllerManager().getAlbumBean(albumKeyString);
 			}
 		}else{
+			//exception state
 			albumBean = new AlbumBean();
+			albumBean.setKeyString(req.getParameter(CSParamType.ITEM.toString()));
 			albumBean.setName(req.getParameter(CSParamType.NAME.toString()));
 			albumBean.setDescription(req.getParameter(CSParamType.DESCRIPTION.toString()));
 		}
@@ -103,14 +108,6 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private void initImageCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		/*
-		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
-		AlbumBean albumBean = new AlbumBean();
-		albumBean.setKeyString(albumKeyString);
-		req.setAttribute("albumBean",albumBean);
-		log.info("Image create page is being opened for album " + albumKeyString );
-		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,req,res);
-		*/
 		ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 	}
 
@@ -131,15 +128,17 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private void initRevisionCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		String imageFileKeyString = req.getParameter(CSParamType.ITEM.toString());
-		ImageBean imageBean = new ImageBean();
-		imageBean.setKeyString(imageFileKeyString);
-		imageBean.setDataBeanList(new ArrayList<DataBean>());
-		DataBean dataBean = ApplicationManager.getControllerManager().getOriginalDataBean(imageFileKeyString);
-		imageBean.getDataBeanList().add(dataBean);
-		imageBean.setCurrentDataBeanKeyString(dataBean.getKeyString());
-		req.setAttribute("imageBean",imageBean);
-		log.info("Create revision page is being opened for image " + imageFileKeyString);
+		if(req.getAttribute("exception")==null){
+			String imageFileKeyString = req.getParameter(CSParamType.ITEM.toString());
+			ImageBean imageBean = new ImageBean();
+			imageBean.setKeyString(imageFileKeyString);
+			imageBean.setDataBeanList(new ArrayList<DataBean>());
+			DataBean dataBean = ApplicationManager.getControllerManager().getOriginalDataBean(imageFileKeyString);
+			imageBean.getDataBeanList().add(dataBean);
+			imageBean.setCurrentDataBeanKeyString(dataBean.getKeyString());
+			req.setAttribute("imageBean",imageBean);
+			log.info("Create revision page is being opened for image " + imageFileKeyString);
+		}
 		forward(ApplicationManager.JSP_CREATE_REVISION_URL,req,res);
 	}
 
@@ -211,12 +210,12 @@ public class ControllerServlet extends HttpServlet {
 		return new AlbumBean(albumKeyString,name).getViewLink();
 	}
 
-	private void createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
+	private String createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String imageKeyString = req.getParameter(CSParamType.ITEM.toString());
 		String widthString = req.getParameter(CSParamType.WIDTH.toString());
 		String heightString = req.getParameter(CSParamType.HEIGHT.toString());
 		String enhancedString = req.getParameter(CSParamType.ENHANCED.toString());//value is either null or "on"
-		
+		String imageDataKeyString = null;
 		int width = Integer.parseInt(widthString);
 		int height = Integer.parseInt(heightString);
 		boolean isEnhanced = enhancedString != null;
@@ -224,8 +223,21 @@ public class ControllerServlet extends HttpServlet {
 		data.setWidth(width);
 		data.setHeight(height);
 		data.setEnhanced(isEnhanced);
+		
+		ImageBean imageBean = new ImageBean();
+		imageBean.setKeyString(imageKeyString);
+		imageBean.setDataBeanList(new ArrayList<DataBean>());
+		DataBean dataBean = new DataBean();
+		dataBean.setHeight(height);
+		dataBean.setWidth(width);
+		dataBean.setEnhanced(isEnhanced);
+		dataBean.setKeyString("-1");
+		imageBean.getDataBeanList().add(dataBean);
+		imageBean.setCurrentDataBeanKeyString("-1");
+		req.removeAttribute("imageBean");
+		req.setAttribute("imageBean",imageBean);
 		try{
-		ApplicationManager.getControllerManager().createImageData(imageKeyString, data);
+			imageDataKeyString = ApplicationManager.getControllerManager().createImageData(imageKeyString, data);
 		} catch(PersistanceManagerException e){
 			log.warning("PersistanceManagerException occured: " + e.getMessage());
 			req.setAttribute("exception",e);
@@ -238,6 +250,7 @@ public class ControllerServlet extends HttpServlet {
 		
 		log.info("New revision was created size=" + widthString + "x" + heightString 
 										+ ",	enhanced=" + isEnhanced);
+		return new DataBean(imageDataKeyString,imageKeyString).getViewLink();
 	}
 
 	
@@ -336,7 +349,7 @@ public class ControllerServlet extends HttpServlet {
 				deleteImage(req,res);
 				break;
 			case CREATE_REVISION:
-				createRevision(req,res);
+				url = createRevision(req,res);
 				break;
 			case DELETE_REVISION:
 				deleteRevision(req,res);

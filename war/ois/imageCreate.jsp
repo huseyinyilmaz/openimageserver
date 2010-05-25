@@ -32,14 +32,13 @@
 	</tr>
 	<tr>
 		<td>name:</td>
-		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="<%=CSParamType.NAME.toString()%>"></td>
+		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="<%=CSParamType.NAME.toString()%>" <c:if test="${albumBean.currentImageBean!=null}"> value="${albumBean.currentImageBean.name}"</c:if> ></td>
 	</tr>
 	<tr>
 		<td>description:</td>
 	</tr>
 	<tr>
-	
-		<td colspan="2"><input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="<%=CSParamType.DESCRIPTION.toString()%>"></td>
+		<td colspan="2"><input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="<%=CSParamType.DESCRIPTION.toString()%>" <c:if test="${albumBean.currentImageBean!=null}"> value="${albumBean.currentImageBean.description}"</c:if> ></td>
 	</tr>
 
 	<tr>

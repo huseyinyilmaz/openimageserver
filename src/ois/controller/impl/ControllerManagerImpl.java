@@ -199,7 +199,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		try{
 			ApplicationManager.checkName(album.getName());
 			//check if the name is unique
-			if(KeyFactory.keyToString(modelManager.getAlbumFileByName(album.getName(),pm).getKey())!= album.getKeyString())
+			if(!KeyFactory.keyToString(modelManager.getAlbumFileByName(album.getName(),pm).getKey()).equals(album.getKeyString()))
 				throw new InvalidNameException("An album with name '" + album.getName() + "' is already exists.");
 			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKeyString()),pm);
 			albumFile.setName(album.getName());
@@ -316,6 +316,7 @@ public class ControllerManagerImpl implements ControllerManager{
 
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
 		if(req.getAttribute("exception")== null){
+			//clean state
 			String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
 			AlbumBean albumBean = new AlbumBean();
 			albumBean.setKeyString(albumKeyString);
@@ -325,7 +326,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,servlet,req,res);
 	}
 	
-	public void createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
+	public String createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);
 		//ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
@@ -346,6 +347,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		}finally{
 			pm.close();
 		}
+		return KeyFactory.keyToString(imageData.getKey());
 	}
 	
 	private Data toData(ImageData imageData){

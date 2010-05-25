@@ -14,6 +14,16 @@ public class ImageBean {
 	private Date	creationDate;
 	private List<DataBean> dataBeanList;
 	
+	
+	public ImageBean(){
+		super();
+	}
+	
+	public ImageBean(String keyString){
+		super();
+		this.keyString = keyString;
+	}
+	
 	public DataBean getThumbnail(){
 		DataBean thumbnail = null;
 		for(DataBean dataBean:dataBeanList){
