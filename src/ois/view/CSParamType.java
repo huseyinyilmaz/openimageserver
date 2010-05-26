@@ -3,11 +3,13 @@ package ois.view;
 public enum CSParamType {
 	PAGE("page"),
 	ITEM("item"),
+	ALBUM("album"),
+	IMAGE("image"),
+	REVISION("revision"),
 	ACTION("action"),
 	NAME("name"),
 	DESCRIPTION("description"),
 	FILE("file"),//uploaded image parameter
-	REVISION("revision"),
 	WIDTH("width"),
 	HEIGHT("height"),
 	ENHANCED("enhanced");
