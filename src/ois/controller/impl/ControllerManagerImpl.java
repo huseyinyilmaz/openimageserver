@@ -18,6 +18,8 @@ import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Data;
 import ois.controller.Image;
+import ois.exceptions.EmptyImageDataException;
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
@@ -43,7 +45,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		this.modelManager = modelManager;
 	}
 	
-	public void createImage(Image img) throws PersistanceManagerException, InvalidNameException{
+	public void createImage(Image img) throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException{
 		//check type from image service.
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
@@ -53,6 +55,8 @@ public class ControllerManagerImpl implements ControllerManager{
 			ApplicationManager.checkName(img.getName());
 			if(modelManager.getImageFileByName(img.getName(),imageFile.getAlbumFileKey(),pm)!=null)
 				throw new InvalidNameException("An image with name '" + img.getName() + "' is already exist");
+			if (img.getDataList().isEmpty() || img.getDataList().get(0).getData().length==0)
+				throw new EmptyImageDataException("Please choose an image file to upload");
 			modelManager.saveImageFile(imageFile, pm);
 			//We cannot work on imageFile and image data in same transaction 
 			imageFile = pm.detachCopy(imageFile);
@@ -68,10 +72,11 @@ public class ControllerManagerImpl implements ControllerManager{
 			//save original image data.
 			try{
 				modelManager.saveImageData(imageData, pm);
-			}catch(PersistanceManagerException e){
+			}catch(ImageDataTooBigException e){
 				deleteImageFile(KeyFactory.keyToString(imageFile.getKey()));
 				throw e;
 			}
+			
 			//create new thumbnail
 			Data thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 100, 100);
 			thumbnailRawData.setThumbnail(true);
@@ -326,7 +331,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		forward(ApplicationManager.JSP_IMAGE_CREATE_URL,servlet,req,res);
 	}
 	
-	public String createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException{
+	public String createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException, ImageDataTooBigException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);
 		//ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);

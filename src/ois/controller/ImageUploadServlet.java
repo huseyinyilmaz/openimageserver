@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.EmptyImageDataException;
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
@@ -96,6 +98,16 @@ public class ImageUploadServlet extends HttpServlet {
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
 		} catch (PersistanceManagerException e) {
 			log.warning("Persistance manager exceptino was caught. Exception = " + e.getMessage());
+			//add request parameters that will be used in jsp
+			setAttributes(img,e,req);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
+		} catch (ImageDataTooBigException e) {
+			log.warning("ImageDataTooBigException was caught. Exception = " + e.getMessage());
+			//add request parameters that will be used in jsp
+			setAttributes(img,e,req);
+			ApplicationManager.getControllerManager().initImageCreate(this, req, res);
+		} catch (EmptyImageDataException e) {
+			log.warning("EmptyImageDataException was caught. Exception = " + e.getMessage());
 			//add request parameters that will be used in jsp
 			setAttributes(img,e,req);
 			ApplicationManager.getControllerManager().initImageCreate(this, req, res);

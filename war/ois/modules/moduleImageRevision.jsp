@@ -39,7 +39,8 @@
 			<br></br>
 			<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 				<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_REVISION.toString()%>">
-				<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${albumBean.currentImageBean.currentDataBeanKeyString}">
+				<input type="hidden" name="<%=CSParamType.REVISION.toString()%>" value="${albumBean.currentImageBean.currentDataBeanKeyString}">
+				<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${albumBean.currentImageBean.keyString}">
 				<input type="submit" title="Delete this Revision" value="Delete" id="deleteRevisionSubmitButton">
 			</form>
 			

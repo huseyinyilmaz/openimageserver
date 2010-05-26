@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ois.exceptions.EmptyImageDataException;
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
@@ -16,7 +18,7 @@ import ois.view.ImageBean;
 
 public interface ControllerManager {
 	public abstract void createImage(Image img)
-			throws PersistanceManagerException, InvalidNameException;
+			throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException;
 
 	public abstract List<AlbumBean> getAlbumBeanList();
 
@@ -42,7 +44,7 @@ public interface ControllerManager {
 	public abstract void deleteImageData(String key) throws PersistanceManagerException;	
 	public abstract Image getImage(String keyString) throws PersistanceManagerException;
 	public abstract AlbumBean getImageBean(String keyString) throws PersistanceManagerException;
-	public abstract String createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException;
+	public abstract String createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException, ImageDataTooBigException;
 
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 }

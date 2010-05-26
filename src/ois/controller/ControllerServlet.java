@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
@@ -238,12 +239,16 @@ public class ControllerServlet extends HttpServlet {
 		req.setAttribute("imageBean",imageBean);
 		try{
 			imageDataKeyString = ApplicationManager.getControllerManager().createImageData(imageKeyString, data);
-		} catch(PersistanceManagerException e){
+		}catch(ImageDataTooBigException e){
+			log.warning("ImageDataTooBigException occured: " + e.getMessage());
+			req.setAttribute("exception",new Exception("Revision size exeeds limit : " + e.getMessage()));
+			initRevisionCreate(req, res);
+		}catch(PersistanceManagerException e){
 			log.warning("PersistanceManagerException occured: " + e.getMessage());
 			req.setAttribute("exception",e);
 			initRevisionCreate(req, res);
 		} catch(Exception e){
-			log.warning("Unexpected exception occured: " + e.getMessage());
+			log.warning("Unexpected exception occured: " + e);
 			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
 			initRevisionCreate(req, res);
 		}
@@ -297,9 +302,10 @@ public class ControllerServlet extends HttpServlet {
 	 * @param res current response object
 	 * @throws PersistanceManagerException
 	 */
-	private void deleteAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private String deleteAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
 		String key = req.getParameter(CSParamType.ITEM.toString());
 		ApplicationManager.getControllerManager().deleteAlbum(key);
+		return ApplicationManager.getHomeURL();
 	}
 
 	/**
@@ -308,14 +314,19 @@ public class ControllerServlet extends HttpServlet {
 	 * @param res current response object
 	 * @throws PersistanceManagerException
 	 */
-	private void deleteImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
-		String key = req.getParameter(CSParamType.ITEM.toString());
+	private String deleteImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String key = req.getParameter(CSParamType.IMAGE.toString());
+		String albumKeyString =  req.getParameter(CSParamType.ALBUM.toString());
+		
 		ApplicationManager.getControllerManager().deleteImageFile(key);
+		return new AlbumBean(albumKeyString).getViewLink();
 	}
 
-	private void deleteRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
-		String key = req.getParameter(CSParamType.ITEM.toString());
-		ApplicationManager.getControllerManager().deleteImageData(key);
+	private String deleteRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+		String keyString = req.getParameter(CSParamType.REVISION.toString());
+		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
+		ApplicationManager.getControllerManager().deleteImageData(keyString);
+		return new ImageBean(imageKeyString).getEditLink();
 	}
 
 	/* (non-Javadoc)
@@ -343,23 +354,19 @@ public class ControllerServlet extends HttpServlet {
 				url = editAlbum(req,res);
 				break;
 			case DELETE_ALBUM:
-				deleteAlbum(req,res);
+				url = deleteAlbum(req,res);
 				break;
 			case DELETE_IMAGE:
-				deleteImage(req,res);
+				url = deleteImage(req,res);
 				break;
 			case CREATE_REVISION:
 				url = createRevision(req,res);
 				break;
 			case DELETE_REVISION:
-				deleteRevision(req,res);
+				url =deleteRevision(req,res);
 				break;
 			}
-			if(url==null)
-				//if there is no url provided return to main page
-				res.sendRedirect("/main?"+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString());
-			else
-				res.sendRedirect(url);
+			res.sendRedirect(url);
 		} catch (Exception ex) {
 	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
 	    	throw new ServletException(ex);

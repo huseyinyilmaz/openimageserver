@@ -6,6 +6,7 @@ import javax.jdo.PersistenceManager;
 
 import com.google.appengine.api.datastore.Key;
 
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.PersistanceManagerException;
 
 public interface ModelManager {
@@ -14,7 +15,7 @@ public interface ModelManager {
 			throws PersistanceManagerException;
 
 	public abstract void saveImageData(ImageData imageData,PersistenceManager pm)
-	throws PersistanceManagerException;
+	throws ImageDataTooBigException;
 
 	public abstract Iterable<AlbumFile> getAlbums(PersistenceManager pm);
 

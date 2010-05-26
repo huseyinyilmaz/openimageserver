@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
@@ -13,6 +14,7 @@ import ois.model.ImageFile;
 import ois.model.ModelManager;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.DatastoreFailureException;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -35,13 +37,13 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
-	public void saveImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException{
+	public void saveImageData(ImageData imageData, PersistenceManager pm) throws ImageDataTooBigException{
 		try {
             pm.makePersistent(imageData);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image data.", e);
-        	log.warning("new PersistanceManagerException was thrown");
-        	throw pme;
+		}catch(Exception e){
+        	ImageDataTooBigException exception = new ImageDataTooBigException("File is too large for datastore. (Limit is 1 MB)", e);
+        	log.warning("new DatastoreFailureException was caught = " + e);
+        	throw exception;
         }
         log.info("new Image data was successfully saved.");
 	}

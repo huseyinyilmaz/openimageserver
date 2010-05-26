@@ -19,7 +19,8 @@
 						<a href="${imageBean.editLink}">edit</a> | 
 						<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 							<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_IMAGE.toString()%>">
-							<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${imageBean.keyString}">
+							<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${imageBean.keyString}">
+							<input type="hidden" name="<%=CSParamType.ALBUM.toString()%>" value="${mainPageBean.currentAlbumBean.keyString}">
 							<input type="submit" title="Delete this image" value="Delete" id="deleteImageSubmitButton">
 						</form>
 					</div>  
