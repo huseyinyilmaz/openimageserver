@@ -1,7 +1,11 @@
 package ois.exceptions;
 
-@SuppressWarnings("serial")
 public class PersistanceManagerException extends Exception {
+	
+	/**
+	 * Serial ID
+	 */
+	private static final long serialVersionUID = 7711333068379166596L;
 
 	public PersistanceManagerException() {
 		super();

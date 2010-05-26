@@ -91,7 +91,8 @@ public class ControllerServlet extends HttpServlet {
 		}else{
 			//exception state
 			albumBean = new AlbumBean();
-			albumBean.setKeyString(req.getParameter(CSParamType.ITEM.toString()));
+			if (albumKeyString != null && albumKeyString.length()>0)
+				albumBean.setKeyString(albumKeyString);
 			albumBean.setName(req.getParameter(CSParamType.NAME.toString()));
 			albumBean.setDescription(req.getParameter(CSParamType.DESCRIPTION.toString()));
 		}

@@ -14,7 +14,6 @@ import ois.model.ImageFile;
 import ois.model.ModelManager;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.DatastoreFailureException;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
