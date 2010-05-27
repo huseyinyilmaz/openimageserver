@@ -19,7 +19,7 @@
 					<a href="${albumBean.editLink}" title="delete ${albumBean.name}">edit</a>
 					<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 					<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
-					<input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${albumBean.keyString}">
+					<input type="hidden" name="<%=CSParamType.ALBUM.toString()%>" value="${albumBean.keyString}">
 					<input type="submit" title="Delete this album" value="Delete" id="deleteAlbumSubmitButton">
 					</form>
 				</c:if>

@@ -40,7 +40,7 @@ public class ControllerServlet extends HttpServlet {
     	log.info("Initializing main album page");
 		MainPageBean mainPageBean = new MainPageBean(); 
 		// Get album key 
-		String currentAlbumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		String currentAlbumKeyString = req.getParameter(CSParamType.ALBUM.toString());
     	// Default behavior for albums are to select none node 
 		if (currentAlbumKeyString == null)
     		currentAlbumKeyString = ApplicationManager.NONE;
@@ -78,7 +78,7 @@ public class ControllerServlet extends HttpServlet {
 
 		AlbumBean albumBean;
 		//get Album id for clean state and exception state
-		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
 		if(req.getAttribute("exception")==null){
 			//clean state
 			if (albumKeyString == null){
@@ -114,7 +114,58 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private void initImageEdit(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
-		String imageFileKey = req.getParameter(CSParamType.ITEM.toString());
+		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
+		if(req.getAttribute("exception")== null){
+			//clean state
+			//String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
+			Image image = ApplicationManager.getControllerManager().getImage(imageKeyString);
+
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(image.getAlbum());
+
+			ImageBean imageBean = new ImageBean();
+			imageBean.setKeyString(image.getKeyString());
+			imageBean.setName(image.getName());
+			imageBean.setDescription(image.getDescription());
+			imageBean.setCreationDate(image.getCreationDate());
+			
+			albumBean.setImageBeanList(new ArrayList<ImageBean>());
+			albumBean.getImageBeanList().add(imageBean);
+			albumBean.setCurrentImageKeyString(imageKeyString);
+			
+			req.setAttribute("albumBean",albumBean);
+			log.info("Edit image page is being opened image name = " + image.getName() + 
+														"\n image key = " + image.getKeyString() +
+														"\n album key = " + image.getAlbum());
+		}else{
+			//exception state
+			String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
+			String name = req.getParameter(CSParamType.NAME.toString());
+			String description = req.getParameter(CSParamType.DESCRIPTION.toString());
+
+			
+			AlbumBean albumBean = new AlbumBean();
+			albumBean.setKeyString(albumKeyString);
+
+			ImageBean imageBean = new ImageBean();
+			imageBean.setKeyString(imageKeyString);
+			imageBean.setName(name);
+			imageBean.setDescription(description);
+			//imageBean.setCreationDate(image.getCreationDate());
+			
+			albumBean.setImageBeanList(new ArrayList<ImageBean>());
+			albumBean.getImageBeanList().add(imageBean);
+			albumBean.setCurrentImageKeyString(imageKeyString);
+			
+			req.setAttribute("albumBean",albumBean);
+		
+		}
+		forward(ApplicationManager.JSP_IMAGE_EDIT_URL,req,res);
+	}
+	
+	
+	private void initImageRevisions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
+		String imageFileKey = req.getParameter(CSParamType.IMAGE.toString());
 		String imageDataKey = req.getParameter(CSParamType.REVISION.toString());
 		String url = req.getRequestURL().substring(0, req.getRequestURL().length()-ApplicationManager.MAIN_PAGE.length());
 		ApplicationManager.setServerUrl(url);
@@ -131,7 +182,7 @@ public class ControllerServlet extends HttpServlet {
 
 	private void initRevisionCreate(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, PersistanceManagerException{
 		if(req.getAttribute("exception")==null){
-			String imageFileKeyString = req.getParameter(CSParamType.ITEM.toString());
+			String imageFileKeyString = req.getParameter(CSParamType.IMAGE.toString());
 			ImageBean imageBean = new ImageBean();
 			imageBean.setKeyString(imageFileKeyString);
 			imageBean.setDataBeanList(new ArrayList<DataBean>());
@@ -167,16 +218,19 @@ public class ControllerServlet extends HttpServlet {
 			case IMAGE_CREATE:
 				initImageCreate(req,res);
 				break;
+			case IMAGE_REVISIONS:
+				initImageRevisions(req,res);
+				break;
 			case IMAGE_EDIT:
-				initImageEdit(req,res);
+				initImageEdit(req, res);
 				break;
 			case REVISION_CREATE:
 				initRevisionCreate(req,res);
 				break;
 			}
-		} catch (Exception ex) {
-	    	log.warning("An exception was caught. Exception = " + ex.getMessage());
-	    	throw new ServletException(ex);
+		} catch (Exception e) {
+	    	log.warning("An exception was caught. Exception = " + e);
+	    	throw new ServletException(e);
 	    }
 	}
 
@@ -184,7 +238,7 @@ public class ControllerServlet extends HttpServlet {
 	 * Creates a new album.
 	 * @param req current request object
 	 * @param res current response object
-	 * @return TODO
+	 * @return Key string of newly created album
 	 * @throws PersistanceManagerException 
 	 * @throws IOException 
 	 * @throws ServletException 
@@ -213,7 +267,7 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private String createRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
-		String imageKeyString = req.getParameter(CSParamType.ITEM.toString());
+		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
 		String widthString = req.getParameter(CSParamType.WIDTH.toString());
 		String heightString = req.getParameter(CSParamType.HEIGHT.toString());
 		String enhancedString = req.getParameter(CSParamType.ENHANCED.toString());//value is either null or "on"
@@ -265,18 +319,15 @@ public class ControllerServlet extends HttpServlet {
 	 * modifies an existing album.
 	 * @param req current request object
 	 * @param res current response object
-	 * @return TODO
+	 * @return Key String of current album
 	 * @throws PersistanceManagerException 
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
 	private String editAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
 		String name = req.getParameter(CSParamType.NAME.toString());
-		//TODO move this to name check
-		if (name == null)
-			throw new IllegalArgumentException("name cannot be null");
 		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
-		String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+		String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
 		Album album = new Album();
 		album.setKeyString(albumKeyString);
 		album.setName(name);
@@ -297,6 +348,33 @@ public class ControllerServlet extends HttpServlet {
 		return new AlbumBean(albumKeyString).getViewLink();
 	}
 
+	private String editImage(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, ServletException, IOException{
+		String name = req.getParameter(CSParamType.NAME.toString());
+		String description = req.getParameter(CSParamType.DESCRIPTION.toString());
+		String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
+		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
+		Image image = new Image();
+		image.setKeyString(imageKeyString);
+		image.setName(name);
+		image.setDescription(description);
+		try{
+			ApplicationManager.getControllerManager().saveImage(image);
+		} catch(InvalidNameException e) {
+			log.warning("InvalidNameException occured: " + e.getMessage());
+			req.setAttribute("exception", e);
+			initImageEdit(req, res);
+		} catch(Exception e){
+			log.warning("Unexpected exception occured: " + e.getMessage());
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			initImageEdit(req, res);
+		}
+
+		log.info("Album '" + name + "' was saved");
+		return new AlbumBean(albumKeyString).getViewLink();
+	}
+	
+	
+	
 	/**
 	 * Deletes given album
 	 * @param req current request object
@@ -304,7 +382,7 @@ public class ControllerServlet extends HttpServlet {
 	 * @throws PersistanceManagerException
 	 */
 	private String deleteAlbum(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
-		String key = req.getParameter(CSParamType.ITEM.toString());
+		String key = req.getParameter(CSParamType.ALBUM.toString());
 		ApplicationManager.getControllerManager().deleteAlbum(key);
 		return ApplicationManager.getHomeURL();
 	}
@@ -327,7 +405,7 @@ public class ControllerServlet extends HttpServlet {
 		String keyString = req.getParameter(CSParamType.REVISION.toString());
 		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
 		ApplicationManager.getControllerManager().deleteImageData(keyString);
-		return new ImageBean(imageKeyString).getEditLink();
+		return new ImageBean(imageKeyString).getRevisionsLink();
 	}
 
 	/* (non-Javadoc)
@@ -356,6 +434,9 @@ public class ControllerServlet extends HttpServlet {
 				break;
 			case DELETE_ALBUM:
 				url = deleteAlbum(req,res);
+				break;
+			case EDIT_IMAGE:
+				url = editImage(req,res);
 				break;
 			case DELETE_IMAGE:
 				url = deleteImage(req,res);

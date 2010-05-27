@@ -45,5 +45,8 @@ public interface ModelManager {
 	public abstract AlbumFile getAlbumFileByName(String name, PersistenceManager pm);
 	public abstract ImageFile getImageFileByName(String name,Key albumFileKey,PersistenceManager pm);
 
+	ImageData getImageDataByProperties(int width, int height,
+			boolean isEnhanced, Key imageFileKey, PersistenceManager pm);
+
 
 }

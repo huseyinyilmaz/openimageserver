@@ -2,7 +2,7 @@ package ois.view;
 
 public enum CSParamType {
 	PAGE("page"),
-	ITEM("item"),
+	//ITEM("item"),
 	ALBUM("album"),
 	IMAGE("image"),
 	REVISION("revision"),

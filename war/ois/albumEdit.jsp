@@ -23,17 +23,33 @@
 <%@ include file="modules/moduleHeader.jsp" %>
 <div class="body">
 	<%@ include file="modules/moduleException.jsp" %>
-	<form action="/main" method="post">
+	<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 
 value="<c:choose><c:when test="${albumBean.keyString==null}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
-	<c:if test="${albumBean.keyString!='None'}"><input type="hidden" name="<%=CSParamType.ITEM.toString()%>" value="${albumBean.keyString}"></input></c:if>
-	Album info<br></br>
-	name:<input type="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName" value="${albumBean.name}"><br></br>
-	description:<br></br>
-	<input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="createAlbumDescription" value="${albumBean.description}"><br></br>
-	<input type="submit" title="Create a new Album" value="Create" id="createAlbumSubmitButton"> 
+	<c:if test="${albumBean.keyString!='None'}"><input type="hidden" name="<%=CSParamType.ALBUM.toString()%>" value="${albumBean.keyString}"></input></c:if>
+	<table>
+		<tr><td class="pageTitle" colspan="2"><c:choose><c:when test="${albumBean.keyString==null}">Create a new album</c:when><c:otherwise>Edit album</c:otherwise></c:choose></td></tr>
+		<tr>
+			<td>name:</td>
+			<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName" value="${albumBean.name}"></td>		
+		</tr>
+		<tr><td>description</td></tr>	
+		<!--<tr><td colspan="2"><input type="text" name="<%=CSParamType.DESCRIPTION.toString()%>" id="createAlbumDescription" value="${albumBean.description}"></td></tr> -->
+		<tr><td colspan="2"><textarea rows="4" cols="30" name="<%=CSParamType.DESCRIPTION.toString()%>" id="albumDescription">${albumBean.description}</textarea></td></tr>	
+		<tr>
+			<td><a href="<%=ApplicationManager.getHomeURL()%>">cancel</a></td>
+			<td><c:choose>
+					<c:when test="${albumBean.keyString==null}">
+					<input type="submit" title="Create a new Album" value="Create" id="albumSubmitButton">
+					</c:when>
+					<c:otherwise>
+					<input type="submit" title="Save album information" value="Save" id="albumSubmitButton">
+					</c:otherwise>
+					</c:choose>
+			</td>
+		</tr>
+	</table>	 
 	</form>
-	<a href="<%=ApplicationManager.getHomeURL()%>">cancel</a>
 	</div>
 </div>
 

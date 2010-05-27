@@ -129,7 +129,6 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	public List<ImageData> getImageDataByImageFile(Key imageFileKey,PersistenceManager pm) {
 		Query query = pm.newQuery(ImageData.class);
-		//TODO do not show thumbnail
 		query.setFilter("imageFileKey == imageKeyParam");
 		query.declareParameters("com.google.appengine.api.datastore.Key imageKeyParam");
 		List<ImageData> imageData = (List<ImageData>) query.execute(imageFileKey);
@@ -200,10 +199,6 @@ public class ModelManagerImpl implements ModelManager {
 		}
 		return imageFile;
 	}
-
-	
-	
-	
 	
 	@Override
 	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException {
@@ -220,7 +215,6 @@ public class ModelManagerImpl implements ModelManager {
         }
 	}
 
-
 	@Override
 	public void deleteImageFile(Key key, PersistenceManager pm) throws PersistanceManagerException {
 		ImageFile imageFile = getImageFile(key, pm);
@@ -236,4 +230,19 @@ public class ModelManagerImpl implements ModelManager {
         }
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	public ImageData getImageDataByProperties(int width,int height,boolean isEnhanced, Key imageFileKey, PersistenceManager pm){
+		Query query = pm.newQuery(ImageData.class);
+		query.setFilter("imageFileKey == imageKeyParam && " +
+						"width == "+ width + " && " +
+						"height == "+ height +" && " +
+						"enhanced == isEnhancedParam");
+		query.declareParameters("com.google.appengine.api.datastore.Key imageKeyParam, boolean isEnhancedParam");
+		List<ImageData> imageDataList = (List<ImageData>) query.execute(imageFileKey,isEnhanced);
+		if(imageDataList.size()==0)
+			return null;
+		else
+			return imageDataList.get(0);
+	}
 }

@@ -23,6 +23,7 @@ public class ApplicationManager {
 	public static final String JSP_MAIN_PAGE_URL = "/ois/mainPage.jsp";
 	public static final String JSP_ALBUM_EDIT_URL = "/ois/albumEdit.jsp";
 	public static final String JSP_IMAGE_CREATE_URL = "/ois/imageCreate.jsp";
+	public static final String JSP_IMAGE_EDIT_URL = "/ois/imageEdit.jsp";
 	public static final String JSP_IMAGE_REVISIONS_URL = "/ois/imageRevisions.jsp";
 	public static final String JSP_CREATE_REVISION_URL = "/ois/revisionCreate.jsp";
 

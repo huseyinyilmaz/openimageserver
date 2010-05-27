@@ -32,3 +32,8 @@ div.exception{
 	background-color: yellow;  
 	color: red; 
 }
+
+td.pageTitle{
+	font-family: serif;
+	font-size: 15pt;
+}

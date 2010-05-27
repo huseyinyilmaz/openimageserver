@@ -32,8 +32,8 @@ public class DataBean {
 	}
 	public String getViewLink(){
 		return ApplicationManager.MAIN_PAGE + "?"
-		+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
-		+ "&" + CSParamType.ITEM.toString() + "=" + imageKeyString
+		+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_REVISIONS.toString()
+		+ "&" + CSParamType.IMAGE.toString() + "=" + imageKeyString
 		+ "&" + CSParamType.REVISION.toString() + "=" + keyString;
 	}
 	

@@ -35,16 +35,22 @@ public class ImageBean {
 		return thumbnail;
 	}
 	
+	public String getRevisionsLink(){
+		return ApplicationManager.MAIN_PAGE + "?"
+				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_REVISIONS.toString()
+			+ "&" + CSParamType.IMAGE.toString() + "=" + keyString;
+	}
+
 	public String getEditLink(){
 		return ApplicationManager.MAIN_PAGE + "?"
 				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_EDIT.toString()
-			+ "&" + CSParamType.ITEM.toString() + "=" + keyString;
+			+ "&" + CSParamType.IMAGE.toString() + "=" + keyString;
 	}
-	
+
 	public String getRevisionCreateLink(){
 		return ApplicationManager.MAIN_PAGE + "?"
 		+ CSParamType.PAGE.toString() + "=" + CSPageType.REVISION_CREATE.toString()
-	+ "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	+ "&" + CSParamType.IMAGE.toString() + "=" + keyString;
 	}
 	
 	public DataBean getCurrentDataBean(){

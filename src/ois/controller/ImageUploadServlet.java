@@ -66,7 +66,7 @@ public class ImageUploadServlet extends HttpServlet {
 						img.setName(fieldValue);
 					else if(item.getFieldName().equals(CSParamType.DESCRIPTION.toString()) )
 						img.setDescription(fieldValue);
-					else if(item.getFieldName().equals(CSParamType.ITEM.toString()) )//ITEM field holds album id
+					else if(item.getFieldName().equals(CSParamType.ALBUM.toString()) )//ITEM field holds album id
 						img.setAlbum(fieldValue);
 				} else {
 					byte[] byteArray = IOUtils.toByteArray(stream);
@@ -80,7 +80,7 @@ public class ImageUploadServlet extends HttpServlet {
 			}
 			//create Image
 			ApplicationManager.getControllerManager().createImage(img);
-			res.sendRedirect("/main?page=main&item="+img.getAlbum());
+			res.sendRedirect(new AlbumBean(img.getAlbum()).getViewLink());
 		}catch (InvalidNameException e){
 			log.warning("InvalidNameException caught :" + e.getMessage());
 			//add request parameters that will be used in jsp

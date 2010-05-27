@@ -26,10 +26,10 @@
 	<%@ include file="modules/moduleException.jsp" %>
 	<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_REVISION.toString()%>"></input>
-		<input type="hidden" name="<%=CSParamType.ITEM%>" value="${imageBean.keyString}"></input>
+		<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${imageBean.keyString}"></input>
 	<table>
 	<tr>
-		<th>Revision Info</th>
+		<td class="pageTitle" colspan="2">Create a new image revision</td>
 	</tr>
 	<tr>
 		<td>width:</td>
@@ -44,12 +44,12 @@
 		<td><input type="checkbox" name="<%=CSParamType.ENHANCED.toString()%>" id="<%=CSParamType.ENHANCED.toString()%>" <c:if test="${imageBean.currentDataBean.enhanced}">checked</c:if> ></td>
 	</tr>
 	<tr>
-		<td></td>
-		<td><input type="submit" title="Create new image" value="Create" id="imageSubmitButton"> </td>
+		<td><a href="${imageBean.revisionsLink}">cancel</a></td>
+		<td><input type="submit" title="Create new image revision" value="Create" id="revisionSubmitButton"> </td>
 	</tr>	
 	</table>
 	</form>
-	<a href="${imageBean.editLink}">cancel</a>
+	
 	</div>
 </div>
 </body>

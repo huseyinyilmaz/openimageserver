@@ -16,7 +16,9 @@
 				<div>
 					<img src="${imageBean.thumbnail.link}"></img>
 					<div>
+						<a href="${imageBean.revisionsLink}">revisions</a> |
 						<a href="${imageBean.editLink}">edit</a> | 
+						
 						<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 							<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_IMAGE.toString()%>">
 							<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${imageBean.keyString}">

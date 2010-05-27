@@ -47,5 +47,8 @@ public interface ControllerManager {
 	public abstract String createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException, ImageDataTooBigException;
 
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+
+	void saveImage(Image image) throws PersistanceManagerException,
+			InvalidNameException;
 }
 

@@ -215,7 +215,25 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 
 	}
+	
+	@Override
+	public void saveImage(Image image) throws PersistanceManagerException, InvalidNameException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ImageFile imageFile = modelManager.getImageFile(KeyFactory.stringToKey(image.getKeyString()), pm);
+		try{
+			ApplicationManager.checkName(image.getName());
+			ImageFile duplicatedNamedImage = modelManager.getImageFileByName(image.getName(),imageFile.getAlbumFileKey(),pm);
+			if(duplicatedNamedImage!= null && duplicatedNamedImage.getKey() != imageFile.getKey())
+				throw new InvalidNameException("An image with name '" + image.getName() + "' is already exist");
+			imageFile.setName(image.getName());
+			imageFile.setDescription(image.getDescription());
+			modelManager.saveImageFile(imageFile, pm);
+		}finally{
+			pm.close();
+		}
+	}
 
+	@Override
 	public List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<ImageBean> imageBeanList = new ArrayList<ImageBean>();
@@ -322,7 +340,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	public void initImageCreate(HttpServlet servlet,HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
 		if(req.getAttribute("exception")== null){
 			//clean state
-			String albumKeyString = req.getParameter(CSParamType.ITEM.toString());
+			String albumKeyString = req.getParameter(CSParamType.ALBUM.toString());
 			AlbumBean albumBean = new AlbumBean();
 			albumBean.setKeyString(albumKeyString);
 			req.setAttribute("albumBean",albumBean);
@@ -334,7 +352,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	public String createImageData(String imageFileKeyString, Data infoData) throws PersistanceManagerException, ImageDataTooBigException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Key imageFileKey = KeyFactory.stringToKey(imageFileKeyString);
-		//ImageFile imageFile = modelManager.getImageFile(imageFileKey, pm);
+		
 		ImageData originalData = modelManager.getOriginal(imageFileKey,pm);
 		Data data = new Data();
 		data.setData(originalData.getData().getBytes());
@@ -343,6 +361,12 @@ public class ControllerManagerImpl implements ControllerManager{
 		else
 			data = ApplicationManager.getManipulator().resize(data, infoData.getWidth(), infoData.getHeight());
 		
+		ImageData duplicatedImageData = modelManager.getImageDataByProperties(data.getWidth(), data.getHeight(), data.isEnhanced(), imageFileKey, pm);
+		//if revision with given properties is exist return already exited
+		//revision. Do not create new one.
+		if (duplicatedImageData != null)
+			return KeyFactory.keyToString(duplicatedImageData.getKey());
+
 		ImageData imageData = toImageData(data);
 		imageData.setType(originalData.getType());
 		imageData.setImageFileKey(imageFileKey);

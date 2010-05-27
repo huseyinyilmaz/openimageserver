@@ -23,29 +23,27 @@
 <%@ include file="modules/moduleHeader.jsp"%>
 <div class="body">
 	<%@ include file="modules/moduleException.jsp"%>
-	<form action="<%=ApplicationManager.IMAGE_UPLOAD_PAGE%>" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.CREATE_IMAGE.toString()%>"></input>
+	<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
+		<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.EDIT_IMAGE.toString()%>"></input>
 		<input type="hidden" name="<%=CSParamType.ALBUM.toString()%>" value="${albumBean.keyString}"></input>
+		<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${albumBean.currentImageBean.keyString}"></input>
 	<table>
 	<tr>
-		<td class="pageTitle" colspan="2">Create a new image</td>
+		<td class="pageTitle" colspan="2">Edit image</th>
 	</tr>
 	<tr>
 		<td>name:</td>
-		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="<%=CSParamType.NAME.toString()%>" <c:if test="${albumBean.currentImageBean!=null}"> value="${albumBean.currentImageBean.name}"</c:if> ></td>
+		<td><input type="text" name="<%=CSParamType.NAME.toString()%>" id="<%=CSParamType.NAME.toString()%>" value="${albumBean.currentImageBean.name}"></td>
 	</tr>
 	<tr>
 		<td>description:</td>
 	</tr>
 	<tr>
-		<td colspan="2"><textarea rows="4" cols="30" name="<%=CSParamType.DESCRIPTION.toString()%>" id="<%=CSParamType.DESCRIPTION.toString()%>"><c:if test="${albumBean.currentImageBean!=null}">${albumBean.currentImageBean.description}</c:if></textarea></td>
-	</tr>
-	<tr>
-		<td colspan="2"><input type="file" name="<%=CSParamType.FILE.toString()%>" id="<%=CSParamType.FILE.toString()%>"></td>
+		<td colspan="2"><textarea rows="4" cols="30" name="<%=CSParamType.DESCRIPTION.toString()%>" id="<%=CSParamType.DESCRIPTION.toString()%>">${albumBean.currentImageBean.description}</textarea></td>
 	</tr>
 	<tr>
 		<td><a href="${albumBean.viewLink}">cancel</a></td>
-		<td><input type="submit" title="Create new image" value="Create" id="imageSubmitButton"> </td>
+		<td><input type="submit" title="Save image" value="Save" id="imageSubmitButton"> </td>
 	</tr>	
 	</table>
 	</form>

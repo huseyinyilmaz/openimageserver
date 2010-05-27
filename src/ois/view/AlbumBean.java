@@ -31,19 +31,19 @@ public class AlbumBean {
 	public String getEditLink(){
 		return ApplicationManager.MAIN_PAGE + "?" 
 			 		+ CSParamType.PAGE.toString() + "=" + CSPageType.ALBUM_EDIT.toString()
-			 + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+			 + "&" + CSParamType.ALBUM.toString() + "=" + keyString;
 	}
 	
 	public String getViewLink(){
 		return ApplicationManager.MAIN_PAGE + "?"
 		 	 		+ CSParamType.PAGE.toString() + "=" + CSPageType.MAIN.toString()
-		 	 + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+		 	 + "&" + CSParamType.ALBUM.toString() + "=" + keyString;
 	}
 	
 	public String getCreateImageLink(){
 		return ApplicationManager.MAIN_PAGE + "?" 
 				+ CSParamType.PAGE.toString() + "=" + CSPageType.IMAGE_CREATE.toString()
-	 	  + "&" + CSParamType.ITEM.toString() + "=" + keyString;
+	 	  + "&" + CSParamType.ALBUM.toString() + "=" + keyString;
 	}
 	
 	
