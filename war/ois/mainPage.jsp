@@ -11,7 +11,22 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Image Administration Page</title>
-	<link rel="stylesheet" type="text/css" href="/ois/css/images.css"> 
+	<link rel="stylesheet" type="text/css" href="/ois/css/images.css">
+	<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("button").button({
+            icons: {
+                primary: 'ui-icon-locked'
+            },
+            text: false
+        })
+		
+	});
+	</script>
+
 </head>
 <body>
 <div class="main">
