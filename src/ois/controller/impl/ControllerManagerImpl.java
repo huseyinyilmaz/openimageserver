@@ -204,7 +204,9 @@ public class ControllerManagerImpl implements ControllerManager{
 		try{
 			ApplicationManager.checkName(album.getName());
 			//check if the name is unique
-			if(!KeyFactory.keyToString(modelManager.getAlbumFileByName(album.getName(),pm).getKey()).equals(album.getKeyString()))
+			AlbumFile duplicatedNameAlbumFile = modelManager.getAlbumFileByName(album.getName(),pm);
+			if(duplicatedNameAlbumFile != null
+			&& !KeyFactory.keyToString(duplicatedNameAlbumFile.getKey()).equals(album.getKeyString()))
 				throw new InvalidNameException("An album with name '" + album.getName() + "' is already exists.");
 			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKeyString()),pm);
 			albumFile.setName(album.getName());

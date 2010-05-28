@@ -51,7 +51,12 @@ public class ControllerServlet extends HttpServlet {
     	for(AlbumBean albumBean:albumBeanList){
     		if (albumBean.getKeyString().equals(currentAlbumKeyString)){
     			albumBean.setImageBeanList(imageBeanList);
-    			break;
+    		}
+    		if(albumBean.getName().length()>14){
+    			albumBean.setName(albumBean.getName().substring(0, 14)+"..");
+    			log.info("------------------------------------------------");
+    			log.info(albumBean.getName());
+    			
     		}
     	}
 		albumBeanList.add(0, new AlbumBean(ApplicationManager.NONE,"None"));
@@ -333,7 +338,7 @@ public class ControllerServlet extends HttpServlet {
 		album.setName(name);
 		album.setDescription(description);
 		try{
-		ApplicationManager.getControllerManager().saveAlbum(album);
+			ApplicationManager.getControllerManager().saveAlbum(album);
 		} catch(InvalidNameException e) {
 			log.warning("InvalidNameException occured: " + e.getMessage());
 			req.setAttribute("exception", e);
