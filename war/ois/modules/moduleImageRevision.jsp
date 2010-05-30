@@ -12,9 +12,13 @@
 			<table>
 			<tr>
 				<td>
-				<div>
-					<img src="${albumBean.currentImageBean.currentDataBean.link}"></img>
+				<div id="imageThumbnailDiv">
+					<%--<img src="${albumBean.currentImageBean.currentDataBean.link}"></img> --%>
+					<img src="${albumBean.currentImageBean.thumbnail.link}"></img>
+					<br></br>
+					<a class="small" href="#">(click on image to see full sized revision)</a>
 				</div>	
+				<br></br>
 				</td>
 			</tr>
 			<tr>
@@ -36,14 +40,16 @@
 			</td>
 			</tr>
 			</table>
+			<%--
 			<br></br>
 			<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post">
 				<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_REVISION.toString()%>">
 				<input type="hidden" name="<%=CSParamType.REVISION.toString()%>" value="${albumBean.currentImageBean.currentDataBeanKeyString}">
 				<input type="hidden" name="<%=CSParamType.IMAGE.toString()%>" value="${albumBean.currentImageBean.keyString}">
 				<input type="submit" title="Delete this Revision" value="Delete" id="deleteRevisionSubmitButton">
-			</form>
-			
+			</form> --%>
+			<%--Original revision dialog. It is shown when user clicks thumbnail --%>
+			<div id="originalRevisionDialog"><img src="${albumBean.currentImageBean.currentDataBean.link}"></img></div>
 		</c:otherwise>
   </c:choose>
 </div>

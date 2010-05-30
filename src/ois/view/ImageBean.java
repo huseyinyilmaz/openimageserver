@@ -34,6 +34,18 @@ public class ImageBean {
 		}
 		return thumbnail;
 	}
+
+	public DataBean getOriginal(){
+		DataBean original = null;
+		for(DataBean dataBean:dataBeanList){
+			if(dataBean.isOriginal()==true){
+				original = dataBean;
+				break;
+			}
+		}
+		return original;
+	}
+
 	
 	public String getRevisionsLink(){
 		return ApplicationManager.MAIN_PAGE + "?"

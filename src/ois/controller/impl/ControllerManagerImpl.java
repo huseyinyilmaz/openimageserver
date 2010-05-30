@@ -18,6 +18,7 @@ import ois.controller.Album;
 import ois.controller.ControllerManager;
 import ois.controller.Data;
 import ois.controller.Image;
+import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.EmptyImageDataException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
@@ -163,7 +164,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		}
 	}
 
-	public void deleteImageData(String key) throws PersistanceManagerException{
+	public void deleteImageData(String key) throws PersistanceManagerException, DeleteSystemRevisionException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
 			Key imageDataKey = KeyFactory.stringToKey(key);

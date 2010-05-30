@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.EmptyImageDataException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
@@ -41,7 +42,7 @@ public interface ControllerManager {
 	public abstract Data getImageData(String keyString) throws PersistanceManagerException;
 	
 	public abstract void deleteImageFile(String key) throws PersistanceManagerException;
-	public abstract void deleteImageData(String key) throws PersistanceManagerException;	
+	public abstract void deleteImageData(String key) throws PersistanceManagerException, DeleteSystemRevisionException;	
 	public abstract Image getImage(String keyString) throws PersistanceManagerException;
 	public abstract AlbumBean getImageBean(String keyString) throws PersistanceManagerException;
 	public abstract String createImageData(String imageFileKeyString, Data data) throws PersistanceManagerException, ImageDataTooBigException;

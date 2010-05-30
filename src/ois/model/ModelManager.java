@@ -6,6 +6,7 @@ import javax.jdo.PersistenceManager;
 
 import com.google.appengine.api.datastore.Key;
 
+import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.PersistanceManagerException;
 
@@ -39,7 +40,7 @@ public interface ModelManager {
 	public abstract void deleteAlbumFile(Key key,PersistenceManager pm)throws PersistanceManagerException;
 	public abstract void deleteImageFile(Key key, PersistenceManager pm) throws PersistanceManagerException;
 	public abstract void deleteImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException;
-	public abstract void deleteImageData(Key key,PersistenceManager pm)throws PersistanceManagerException;
+	public abstract void deleteImageData(Key key,PersistenceManager pm)throws PersistanceManagerException, DeleteSystemRevisionException;
 	public abstract void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException;
 
 	public abstract AlbumFile getAlbumFileByName(String name, PersistenceManager pm);

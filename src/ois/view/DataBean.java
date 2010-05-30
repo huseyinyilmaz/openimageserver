@@ -41,8 +41,15 @@ public class DataBean {
 		String name;
 		if(keyString.equals(ApplicationManager.NONE))
 			name = "None";
-		else
+		else{
 			name = width + "x" + height;
+			if(isOriginal())
+				name += "<span class=\"revisionTypeText\">(Original)<span>";
+			else if(isThumbnail())
+				name += "<span class=\"revisionTypeText\">(Thumbnail)<span>";
+			else if(isEnhanced())
+				name += "<span class=\"revisionTypeText\">(Enhanced)<span>";
+		}
 		return name;
 	}
 	

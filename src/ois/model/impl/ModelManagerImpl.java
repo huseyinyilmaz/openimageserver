@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
@@ -201,8 +202,10 @@ public class ModelManagerImpl implements ModelManager {
 	}
 	
 	@Override
-	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException {
+	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException, DeleteSystemRevisionException {
 		ImageData imageData = getImageData(key, pm);
+		if(imageData.isOriginal()||imageData.isThumbnail())
+			throw new DeleteSystemRevisionException("Cannot delete Original revision or thumbnail revision");
 		deleteImageData(imageData, pm);
 	}
 	@Override

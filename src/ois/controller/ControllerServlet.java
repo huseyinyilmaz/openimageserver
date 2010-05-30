@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.PersistanceManagerException;
@@ -406,7 +407,7 @@ public class ControllerServlet extends HttpServlet {
 		return new AlbumBean(albumKeyString).getViewLink();
 	}
 
-	private String deleteRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException{
+	private String deleteRevision(HttpServletRequest req, HttpServletResponse res) throws PersistanceManagerException, DeleteSystemRevisionException{
 		String keyString = req.getParameter(CSParamType.REVISION.toString());
 		String imageKeyString = req.getParameter(CSParamType.IMAGE.toString());
 		ApplicationManager.getControllerManager().deleteImageData(keyString);
