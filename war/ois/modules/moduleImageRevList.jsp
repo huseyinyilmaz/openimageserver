@@ -28,7 +28,7 @@
 </table>
 </div>
 </c:forEach>
-<br></br>
+<br>
 <button class="createRevisionButton">Create new revision</button>
 <%--<a href="${albumBean.currentImageBean.revisionCreateLink}" title="Create a new revision">Create a new revision</a> --%>
 </div>

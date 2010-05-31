@@ -85,8 +85,16 @@ public class AlbumBean {
 	 * @return the name
 	 */
 	public String getName() {
+		if(name.length()>=16)
+			return name.substring(0, 14) + "..";
+		else
+			return name;
+	}
+
+	public String getOriginalName() {
 		return name;
 	}
+
 	/**
 	 * @param name the name to set
 	 */

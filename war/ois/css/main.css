@@ -1,12 +1,27 @@
 @CHARSET "UTF-8";
 <!-- General attributes -->
 <!----------------------------->
-body{
+*{
 	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
-	font-size: 15px;
+	font-size: 20px;
+	font-style: normal;
+	color: graytext;
+}
+.text{
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 20px;
+	font-style: normal;
+	color: graytext;
+}
+.title{
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 23px;
+	color:	#EC8E0C;
+	font-weight: normal;
 	font-style: normal;
 }
 .topLeft{
+	
 	text-align: left;
 	vertical-align: top;
 }
@@ -19,6 +34,9 @@ body{
 	font-size: 10px;
 }
 
+table.formTable{
+	margin: 10px;
+}
 .revisionTypeText{
 	font-size: 60%;
 	font-style: italic;
@@ -29,11 +47,11 @@ div.title{
 	margin: 5px;
 	width: 100%;
 	text-align: center;
-	color: gray;
-	font-size: 20px;
+	color: graytext;
+	font-size: 30px;
 	border-bottom-color: #1C94C4;
 	border-bottom-style: solid;
-	border-bottom-width: 2
+	border-bottom-width: 2;
 }
 
 a{
@@ -47,6 +65,7 @@ a:hover{
 
 <!-- General page attributes -->
 <!----------------------------->
+	
 table.mainBodyTable{
 	width: 100%;
 }
@@ -73,17 +92,12 @@ div.exception{
 	background-color: yellow;  
 	color: red; 
 }
-
 td.pageTitle{
-	font-family: serif;
 	font-size: 15pt;
 }
-
 button.iconButton{
-	font-family: serif;
 	font-size: 5pt;
 }
-
 td.viewButtonCell{
 	width:	200px;
 }

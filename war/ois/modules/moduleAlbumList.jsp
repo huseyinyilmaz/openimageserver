@@ -21,7 +21,7 @@
 <td> 	
 <c:if test="${albumBean.keyString!='none'}">
 <button id="editAlbumButton-${albumBean.keyString}" class="editAlbumButton iconButton">Edit Album</button>
-<br></br>
+<br>
 <form action="<%=ApplicationManager.MAIN_PAGE%>" method="post" id="deleteAlbumForm-${albumBean.keyString}">
 <input type="hidden" name="<%=CSParamType.ACTION.toString()%>" value="<%=CSActionType.DELETE_ALBUM.toString()%>">
 <input type="hidden" name="<%=CSParamType.ALBUM.toString()%>" value="${albumBean.keyString}">
@@ -33,6 +33,6 @@
 </table>
 </div>
 </c:forEach>
-<br></br>
+<br>
 <button id="createAlbumButton" class="createAlbum">Create a new album</button>
 </div>

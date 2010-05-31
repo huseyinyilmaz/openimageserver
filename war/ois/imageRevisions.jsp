@@ -13,6 +13,8 @@
 	<title>Image Revisions Page</title>
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
+	<link rel="stylesheet" type="text/css" href="/ois/css/imageRevision.css">
+	
 	<script type="text/javascript" src="/ois/js/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="/ois/js/jquery-ui-1.8.1.custom.min.js"></script>
 	<script type="text/javascript" src="/ois/js/main.js"></script>

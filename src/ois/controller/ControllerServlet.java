@@ -53,12 +53,6 @@ public class ControllerServlet extends HttpServlet {
     		if (albumBean.getKeyString().equals(currentAlbumKeyString)){
     			albumBean.setImageBeanList(imageBeanList);
     		}
-    		if(albumBean.getName().length()>14){
-    			albumBean.setName(albumBean.getName().substring(0, 14)+"..");
-    			log.info("------------------------------------------------");
-    			log.info(albumBean.getName());
-    			
-    		}
     	}
 		albumBeanList.add(0, new AlbumBean(ApplicationManager.NONE,"None"));
 		mainPageBean.setAlbumBeanList(albumBeanList);
@@ -265,7 +259,7 @@ public class ControllerServlet extends HttpServlet {
 			initAlbumEdit(req, res);
 		} catch(Exception e){
 			log.warning("Unexpected exception occured: " + e.getMessage());
-			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br>"+e.getMessage()));
 			initAlbumEdit(req, res);
 		}
 		log.info("Album '" + name + "' was created");
@@ -310,7 +304,7 @@ public class ControllerServlet extends HttpServlet {
 			initRevisionCreate(req, res);
 		} catch(Exception e){
 			log.warning("Unexpected exception occured: " + e);
-			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br>"+e.getMessage()));
 			initRevisionCreate(req, res);
 		}
 		
@@ -346,7 +340,7 @@ public class ControllerServlet extends HttpServlet {
 			initAlbumEdit(req, res);
 		} catch(Exception e){
 			log.warning("Unexpected exception occured: " + e.getMessage());
-			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br>"+e.getMessage()));
 			initAlbumEdit(req, res);
 		}
 
@@ -371,7 +365,7 @@ public class ControllerServlet extends HttpServlet {
 			initImageEdit(req, res);
 		} catch(Exception e){
 			log.warning("Unexpected exception occured: " + e.getMessage());
-			req.setAttribute("exception",new Exception("Unexpected exception occured:<br></br>"+e.getMessage()));
+			req.setAttribute("exception",new Exception("Unexpected exception occured:<br>"+e.getMessage()));
 			initImageEdit(req, res);
 		}
 

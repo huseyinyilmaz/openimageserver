@@ -4,16 +4,17 @@
 <%@page import="ois.view.CSPageType"%>
 <div>
 <c:choose>
-
 <%--There is no current row --%>
 <%----------------------------%>
 <c:when test="${mainPageBean.currentAlbumKeyString=='none'}">
-Please choose an album to see images inside
+<span class="text">	Please choose an album to see images inside</span>
 </c:when>
 
 <%--There is a current row --%>
 <%---------------------------%>
 <c:otherwise>
+<span class="title">	${mainPageBean.currentAlbumBean.originalName}</span>
+<br>
 <button class="createImageButton">Upload a new Image</button>
 <%--colNum Holds column value of images it used to
 calculate image number in every row--%>
@@ -26,7 +27,7 @@ calculate image number in every row--%>
 
 <div class="imageDiv" id="imageDiv-${imageBean.keyString}">
 <div class="innerImageDiv" id="innerImageDiv-${imageBean.keyString}">
-${imageBean.name}<br></br>
+${imageBean.name}<br>
 <img src="${imageBean.thumbnail.link}" id="imageThumbnail-${imageBean.keyString}"></img>
 </div>
 <div><%--<a href="${imageBean.revisionsLink}">revisions</a> | <a href="${imageBean.editLink}">edit</a> | --%>
@@ -51,10 +52,11 @@ ${imageBean.name}<br></br>
 </c:forEach>
 </tr>
 </table>
-<br></br>
+<br>
 
 <c:if test="${!empty mainPageBean.currentAlbumBean.imageBeanList}">
 <button class="createImageButton">Upload a new Image</button>
 </c:if>
 </c:otherwise>
-</c:choose></div>
+</c:choose>
+</div>

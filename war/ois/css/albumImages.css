@@ -11,11 +11,7 @@ div.imageDiv{
 	font-style: normal;
 }
 
-div.innerImageDiv_1{
-	border: thin;
-	border-style: solid;
-	border-color: gray;
-}
+
 
 tr.imageRow{
 	height: 130px;

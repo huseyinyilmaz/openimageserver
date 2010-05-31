@@ -28,9 +28,9 @@ public class PersistanceManagerException extends Exception {
 	 */
 	@Override
 	public String getMessage() {
-		return "Datastore Exception: <br></br>" 
-			  + super.getMessage() + "<br></br>"
-			  +"Technical Explanation:<br></br>"
+		return "Datastore Exception: <br>" 
+			  + super.getMessage() + "<br>"
+			  +"Technical Explanation:<br>"
 			  + super.getCause().getMessage();
 	}
 	
