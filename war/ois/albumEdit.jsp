@@ -22,21 +22,45 @@
 	<script type="text/javascript" src="/ois/js/main.js"></script>
 	<script type="text/javascript">
 	$(function(){
+		//hide highlight div
+		$("#highlightDiv").hide();
 		//initialize buttons
 		$("#cancelButton").button({icons: {primary: 'ui-icon-cancel'},text: true}).click(function(){
 			top.location="<%=ApplicationManager.getHomeURL()%>";
 			});
-		$("#submitButton").button({icons: {primary: 'ui-icon-check'},text: true}).click(function(){
-			$("#albumForm").submit();
+		$("#submitButton").button({icons: {primary: 'ui-icon-check'},text: true<c:if test="${albumBean.keyString==null}">,disabled: true</c:if>}).click(function(){
+				$("#albumForm").submit();
+		});
+		$("#name").keyup(function(){
+			name = $("#name").val();
+			if(!name){
+				$("#submitButton").button( "option", "disabled", true );
+				$("#highlightTitle").html('Null name : ' ).next('span').html('Album name cannot be empty' );
+				$("#highlightDiv").slideDown("fast");//show();
+			}else if(!validateName(name)){
+				$("#submitButton").button( "option", "disabled", true );
+				$("#highlightTitle").html('Invalid name : ' ).next('span').html('Album name "' + name +'" is invalid. Name should consist of letters, numbers and _ character' );
+				$("#highlightDiv").slideDown("fast");//show();
+			}else{
+				$("#submitButton").button( "option", "disabled", false );
+				$("#highlightDiv").slideUp("fast");//hide();
+			}
 			});
 		});
-	</script>
+		</script>
 </head>
 <body>
 <div class="main">
 <%@ include file="modules/moduleHeader.jsp" %>
 <div class="body">
 	<%@ include file="modules/moduleException.jsp" %>
+	<!--highlight secion: this is used to give client side error messages -->
+	<div class="ui-widget" id="highlightDiv"> 
+		<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+			<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span> 
+			<strong id="highlightTitle"></strong> <span id="highlightMessage"></span></p> 
+		</div> 
+	</div> 	
 	<form action="<%=ApplicationManager.MAIN_PAGE%>" method="post" id="albumForm">
 	<input type="hidden" name="<%=CSParamType.ACTION.toString()%>" 
 value="<c:choose><c:when test="${albumBean.keyString==null}"><%=CSActionType.CREATE_ALBUM.toString()%></c:when><c:otherwise><%=CSActionType.EDIT_ALBUM.toString()%></c:otherwise></c:choose>">
@@ -45,7 +69,7 @@ value="<c:choose><c:when test="${albumBean.keyString==null}"><%=CSActionType.CRE
 		<tr><td class="title" colspan="2"><c:choose><c:when test="${albumBean.keyString==null}">Create a new album</c:when><c:otherwise>Edit album</c:otherwise></c:choose></td></tr>
 		<tr>
 			<td class="title">Name:</td>
-			<td><input type="text" class="text" name="<%=CSParamType.NAME.toString()%>" id="createAlbumName" value="${albumBean.originalName}" size="20" maxlength="15"></td>		
+			<td><input type="text" class="text" name="<%=CSParamType.NAME.toString()%>" id="name" value="${albumBean.originalName}" size="20" maxlength="15" autocomplete="off"></td>		
 		</tr>
 		<tr><td class="title" colspan="2">Description</td></tr>	
 		<tr><td colspan="2" class="text"><textarea rows="4" cols="100" name="<%=CSParamType.DESCRIPTION.toString()%>" id="albumDescription" class="text">${albumBean.description}</textarea></td></tr>	
