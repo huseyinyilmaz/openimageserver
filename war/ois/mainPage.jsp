@@ -10,7 +10,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Image Administration Page</title>
+	<title>OIS<c:if test="${mainPageBean.currentAlbumKeyString!='none'}">-${mainPageBean.currentAlbumBean.name}</c:if></title>
 	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/ois/css/albumImages.css">

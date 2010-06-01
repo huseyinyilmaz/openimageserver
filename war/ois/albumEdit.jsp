@@ -14,7 +14,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Image Administration Page</title>
+	<title>OIS-<c:choose><c:when test="${albumBean.keyString==null}">Create Album</c:when><c:otherwise>Edit Album</c:otherwise></c:choose></title>
 	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<script type="text/javascript" src="/ois/js/jquery-1.4.2.min.js"></script>
