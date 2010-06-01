@@ -4,10 +4,6 @@ xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<servlet>
-		<servlet-name>OpenImageServer</servlet-name>
-		<servlet-class>ois.OpenImageServerServlet</servlet-class>
-	</servlet>
 
 	<servlet>
 		<servlet-name>ImageUpload</servlet-name>
@@ -26,17 +22,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet-mapping>
 		<servlet-name>ControllerServlet</servlet-name>
-		<url-pattern>/main</url-pattern>
+		<url-pattern>/ois/main</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>OpenImageServer</servlet-name>
-		<url-pattern>/openimageserver</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
 		<servlet-name>ImageUpload</servlet-name>
-		<url-pattern>/imageupload</url-pattern>
+		<url-pattern>/ois/imageupload</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>	
@@ -44,6 +35,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/ois/images/*</url-pattern>
 	</servlet-mapping>
 	
+  <security-constraint>
+  	<web-resource-collection>
+    	<url-pattern>/ois/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+    	<role-name>admin</role-name>
+    </auth-constraint>
+	</security-constraint>
+
 	<welcome-file-list>
 		<welcome-file>ois/index.html</welcome-file>
 	</welcome-file-list>
