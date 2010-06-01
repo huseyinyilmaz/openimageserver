@@ -14,6 +14,7 @@
 <%---------------------------%>
 <c:otherwise>
 <span class="title">	${mainPageBean.currentAlbumBean.originalName}</span>
+<p class="text">${mainPageBean.currentAlbumBean.description}</p>
 <br>
 <button class="createImageButton">Upload a new Image</button>
 <%--colNum Holds column value of images it used to
