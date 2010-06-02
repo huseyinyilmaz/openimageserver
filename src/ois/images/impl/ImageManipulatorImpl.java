@@ -87,8 +87,6 @@ public class ImageManipulatorImpl implements ImageManipulator {
         com.google.appengine.api.images.Image image = ImagesServiceFactory.makeImage(imageData.getData());
         imageData.setWidth(image.getWidth());
         imageData.setHeight(image.getHeight());
-        String type = image.getFormat().toString();
-        type = toContentType(type);
         imageData.setType(toContentType(image.getFormat().toString()));
 	}
 	
