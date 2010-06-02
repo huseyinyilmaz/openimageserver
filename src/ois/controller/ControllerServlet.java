@@ -2,6 +2,8 @@ package ois.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,7 +55,17 @@ public class ControllerServlet extends HttpServlet {
     		if (albumBean.getKeyString().equals(currentAlbumKeyString)){
     			albumBean.setImageBeanList(imageBeanList);
     		}
+    		//Sort Images by creation Date
+        	Collections.sort(imageBeanList, new Comparator<ImageBean>(){
+																		@Override
+																		public int compare(ImageBean o1, ImageBean o2) {return o1.getCreationDate().compareTo(o2.getCreationDate());}
+																		});
     	}
+    	//sort Albums by name
+    	Collections.sort(albumBeanList, new Comparator<AlbumBean>(){
+    		@Override
+    		public int compare(AlbumBean o1, AlbumBean o2) {return o1.getName().compareToIgnoreCase(o2.getName());}
+    	});
 		albumBeanList.add(0, new AlbumBean(ApplicationManager.NONE,"None"));
 		mainPageBean.setAlbumBeanList(albumBeanList);
 		mainPageBean.setCurrentAlbumKeyString(currentAlbumKeyString);
@@ -173,6 +185,8 @@ public class ControllerServlet extends HttpServlet {
 			imageDataKey = ApplicationManager.NONE;
 		AlbumBean albumBean = ApplicationManager.getControllerManager().getImageBean(imageFileKey);
 		albumBean.getCurrentImageBean().setCurrentDataBeanKeyString(imageDataKey);
+		//sort revisions
+		Collections.sort(albumBean.getCurrentImageBean().getDataBeanList(),new RevisionComparetor());
 		
 		albumBean.getCurrentImageBean().getDataBeanList().add(0,new DataBean(ApplicationManager.NONE,imageFileKey));
 		req.setAttribute("albumBean",albumBean);

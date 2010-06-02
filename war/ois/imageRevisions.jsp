@@ -10,7 +10,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>OIS-Revisions of ${albumBean.currentImageBean.name} </title>
+	<title>Image Revisions Page</title>
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
 	<link rel="stylesheet" type="text/css" href="/ois/css/imageRevision.css">

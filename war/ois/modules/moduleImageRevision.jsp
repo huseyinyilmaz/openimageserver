@@ -29,7 +29,7 @@
 			<tr>
 				<td>
 				<div id="imageThumbnailDiv">
-					<img src="${albumBean.currentImageBean.thumbnail.link}">
+					<img src="${albumBean.currentImageBean.thumbnail.link}"></img>
 					<br>
 					<a class="small" href="#">(click on image to see full sized revision)</a>
 				</div>	
@@ -40,7 +40,7 @@
 				<td>
 						<table>
 							<tr>
-								<td><span class="imageRevisionTitle">Revision name:</span></td>
+								<td><span class="imageRevisionTitle">Image name:</span></td>
 								<td>${albumBean.currentImageBean.currentDataBean.name}</td>
 							</tr>
 							<tr>
@@ -60,7 +60,7 @@
 								<td>${albumBean.currentImageBean.currentDataBean.height}</td>
 							</tr>
 							<tr>
-								<td><span class="imageRevisionTitle">Enhanced:</span></td>
+								<td><span class="imageRevisionTitle">Height:</span></td>
 								<td>${albumBean.currentImageBean.currentDataBean.enhanced}</td>
 							</tr>
 						</table>
@@ -71,7 +71,7 @@
 			<tr><td>${albumBean.currentImageBean.currentDataBean.fullLink}</td></tr>
 			</table>
 			<%--Original revision dialog. It is shown when user clicks thumbnail --%>
-			<div id="originalRevisionDialog"><img src="${albumBean.currentImageBean.currentDataBean.link}"></div>
+			<div id="originalRevisionDialog"><img src="${albumBean.currentImageBean.currentDataBean.link}"></img></div>
 		</c:otherwise>
   </c:choose>
 </div>

@@ -29,7 +29,7 @@ calculate image number in every row--%>
 <div class="imageDiv" id="imageDiv-${imageBean.keyString}">
 <div class="innerImageDiv" id="innerImageDiv-${imageBean.keyString}">
 ${imageBean.name}<br>
-<img src="${imageBean.thumbnail.link}" id="imageThumbnail-${imageBean.keyString}">
+<img src="${imageBean.thumbnail.link}" id="imageThumbnail-${imageBean.keyString}"></img>
 </div>
 <div><%--<a href="${imageBean.revisionsLink}">revisions</a> | <a href="${imageBean.editLink}">edit</a> | --%>
 <button id="viewImageButton-${imageBean.keyString}" class="viewImageButton iconButton">Show revisions of ${imageBean.name}</button>
