@@ -19,6 +19,11 @@
 	<script type="text/javascript" src="/ois/js/jquery-ui-1.8.1.custom.min.js"></script>
 	<script type="text/javascript" src="/ois/js/main.js"></script>
 <script type="text/javascript">
+function deleteRevision(imageName,revisionName,formId){
+	window.deleteFormId = formId;
+	$("#deleteDialog").html("Are you sure you want to delete revision '" + revisionName + "' of image '" + imageName +"' ?")
+	$("#deleteDialog").dialog('open');
+	}
 $(function(){
 	//initialize buttons
 	$("button.currentImageRevisionButton").button({icons: {primary: 'ui-icon-image'},disabled: true});
@@ -36,7 +41,8 @@ $(function(){
 	});
 	//delete Revision button
 	$("#deleteRevisionButton-${dataBean.keyString}").click(function(){
-		$("#deleteRevisionForm-${dataBean.keyString}").submit();
+		//$("#deleteRevisionForm-${dataBean.keyString}").submit();
+		deleteRevision("${albumBean.currentImageBean.name}",'${dataBean.name}',"#deleteRevisionForm-${dataBean.keyString}");
 	});
 </c:forEach>
 	$("div.imageWrapperDiv").hover(function(){
@@ -63,6 +69,22 @@ $(function(){
 		$("#originalRevisionDialog").dialog('open');
 		
 	});
+	//initialize delete confirmation dialog
+	$("#deleteDialog").dialog({
+		resizable: false,
+		height:200,
+		width: 600,
+		modal: true,
+		autoOpen: false,
+		buttons: {
+			'Delete': function() {
+				$(window.deleteFormId).submit();
+			},
+			'Cancel': function() {
+				$(this).dialog('close');
+			}
+		}
+	});
 });
 </script>
 </head>
@@ -79,5 +101,8 @@ $(function(){
 </table>
 </div>
 </div>
+<!-- Delete confirmation dialog -->
+<div id="deleteDialog" title="Delete Confirmation Dialog"></div>
 </body>
+
 </html>

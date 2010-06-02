@@ -83,8 +83,9 @@ public class AlbumBean {
 	}
 	/**
 	 * @return the name
+	 * @throws Exception 
 	 */
-	public String getName() {
+	public String getName(){
 		if(name.length()>=16)
 			return name.substring(0, 14) + "..";
 		else

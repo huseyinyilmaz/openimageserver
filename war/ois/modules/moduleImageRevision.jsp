@@ -29,7 +29,7 @@
 			<tr>
 				<td>
 				<div id="imageThumbnailDiv">
-					<img src="${albumBean.currentImageBean.thumbnail.link}"></img>
+					<img src="${albumBean.currentImageBean.thumbnail.link}">
 					<br>
 					<a class="small" href="#">(click on image to see full sized revision)</a>
 				</div>	
@@ -71,7 +71,7 @@
 			<tr><td>${albumBean.currentImageBean.currentDataBean.fullLink}</td></tr>
 			</table>
 			<%--Original revision dialog. It is shown when user clicks thumbnail --%>
-			<div id="originalRevisionDialog"><img src="${albumBean.currentImageBean.currentDataBean.link}"></img></div>
+			<div id="originalRevisionDialog"><img src="${albumBean.currentImageBean.currentDataBean.link}"></div>
 		</c:otherwise>
   </c:choose>
 </div>

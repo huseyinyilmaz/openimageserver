@@ -34,6 +34,5 @@
 </div>
 </c:forEach>
 <br>
-<button id="createAlbumButton" class="createAlbum">Create a new album</button>
-<div id="deleteDialog"></div>
+<button class="createAlbum">Create a new album</button>
 </div>

@@ -7,7 +7,8 @@
 <%--There is no current row --%>
 <%----------------------------%>
 <c:when test="${mainPageBean.currentAlbumKeyString=='none'}">
-<span class="text">	Please choose an album to see images inside</span>
+<p class="text">	Please choose an album to see images inside</p>
+<button class="createAlbum">Create a new album</button>
 </c:when>
 
 <%--There is a current row --%>
@@ -29,7 +30,7 @@ calculate image number in every row--%>
 <div class="imageDiv" id="imageDiv-${imageBean.keyString}">
 <div class="innerImageDiv" id="innerImageDiv-${imageBean.keyString}">
 ${imageBean.name}<br>
-<img src="${imageBean.thumbnail.link}" id="imageThumbnail-${imageBean.keyString}"></img>
+<img src="${imageBean.thumbnail.link}" id="imageThumbnail-${imageBean.keyString}">
 </div>
 <div><%--<a href="${imageBean.revisionsLink}">revisions</a> | <a href="${imageBean.editLink}">edit</a> | --%>
 <button id="viewImageButton-${imageBean.keyString}" class="viewImageButton iconButton">Show revisions of ${imageBean.name}</button>

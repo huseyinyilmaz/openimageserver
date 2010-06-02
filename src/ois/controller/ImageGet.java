@@ -1,5 +1,6 @@
 package ois.controller;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -18,14 +19,14 @@ public class ImageGet extends HttpServlet {
       throws ServletException {
 	  try {
     	String uri = req.getRequestURI();
-    	//TODO pictures has to be browser cached
-    	/*
-    	res.addHeader("Cache-Control", "max-age=30515108");
-    	res.addDateHeader("Last-Modified", new Date("Thu, 01 Jan 2009 00:00:00 GMT").getTime() );
-    	res.addDateHeader("Expires",  new Date("Sat, 26 Feb 2011 02:10:10 GMT").getTime() );
-    	res.addDateHeader("Date",  new Date("Tue, 09 Mar 2010 22:09:48 GMT").getTime() );
-    	*/
-    	
+    	long modificationDate = req.getDateHeader("if-modified-since");
+    	if(modificationDate != -1){
+    		//return 304 not modified
+    		log.info("Image is modified at " + new Date(modificationDate) +
+    				". Returning status code 304. URI = " + uri);
+    		res.setStatus(304);
+    		return;
+    	}
     	//TODO Image_uri_prefix i degistirdin dogru degistirilip degistirilmaediginden emin ol.
     	if ( uri.startsWith(ApplicationManager.IMAGE_URI_PREFIX) )
     		uri = uri.substring(ApplicationManager.IMAGE_URI_PREFIX.length());
@@ -46,9 +47,14 @@ public class ImageGet extends HttpServlet {
     	 */
     	Data data = ApplicationManager.getControllerManager().getImageData(uri);
     	if(data != null){
+    		log.info("Returning image data. URI = " + uri);
+    		//set data
     		res.setContentType(data.getType());
     		res.getOutputStream().write(data.getData());
+        	res.addHeader("Cache-Control", "max-age=0");
+        	res.addDateHeader("Last-Modified", data.getCreationDate().getTime());
     	}else{
+    		log.warning("Image not found. URI = " + uri);
     		res.setContentType("text/plain");
     		res.getWriter().println("no image found");
     	}

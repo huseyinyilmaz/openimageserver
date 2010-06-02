@@ -18,6 +18,18 @@
 	<script type="text/javascript" src="/ois/js/jquery-ui-1.8.1.custom.min.js"></script>
 	<script type="text/javascript" src="/ois/js/main.js"></script>
 	<script type="text/javascript">
+	//holds delete album link that will image will be redirected
+	function deleteAlbum(albumName,formId){
+		window.deleteFormId = formId;
+		$("#deleteDialog").html("Are you sure you want to delete album '" + albumName + "' ?")
+		$("#deleteDialog").dialog('open');
+		}
+	function deleteImage(imageName,formId){
+		window.deleteFormId = formId;
+		$("#deleteDialog").html("Are you sure you want to delete image '" + imageName + "' ?")
+		$("#deleteDialog").dialog('open');
+		}
+
 	$(function(){
 			//Initialize albums menu
 			//-----------------------------------------------
@@ -35,16 +47,17 @@
 					},function(){
 						$("td:eq(1)",this).fadeOut("slow");
 					}).find("td:eq(1)").hide();
-
+			var deleteAlbumFormId = null;
 			$("#editAlbumButton-${albumBean.keyString}").click(function(){
 				top.location="${albumBean.editLink}";
 				});
 			$("#deleteAlbumButton-${albumBean.keyString}").click(function(){
-					$("#deleteAlbumForm-${albumBean.keyString}").submit();
+					//$("#deleteAlbumForm-${albumBean.keyString}").submit();
+					deleteAlbum("${albumBean.name}","#deleteAlbumForm-${albumBean.keyString}");
 			});
 </c:forEach>			
 			//initialize album create button
-			$("#createAlbumButton").button({icons: {primary: 'ui-icon-plusthick'}}).click(function(){
+			$("button.createAlbum").button({icons: {primary: 'ui-icon-plusthick'}}).click(function(){
 				top.location="${mainPageBean.albumCreateLink}";
 			});
 			//initialize images menu
@@ -68,7 +81,8 @@
 			});
 
 			$("#deleteImageButton-${imageBean.keyString}").click(function(){
-				$("#deleteImageForm-${imageBean.keyString}").submit();
+				//$("#deleteImageForm-${imageBean.keyString}").submit();
+				deleteImage("${imageBean.name}","#deleteImageForm-${imageBean.keyString}");
 			});
 
 			$("#imageDiv-${imageBean.keyString}").hover(function(){
@@ -81,9 +95,24 @@
 				top.location="${imageBean.revisionsLink}";
 			});
 			
-</c:forEach>			
+</c:forEach>
+			//initialize delete confirmation dialog
+			$("#deleteDialog").dialog({
+				resizable: false,
+				height:200,
+				width: 600,
+				modal: true,
+				autoOpen: false,
+				buttons: {
+					'Delete': function() {
+						$(window.deleteFormId).submit();
+					},
+					'Cancel': function() {
+						$(this).dialog('close');
+					}
+				}
 			});
-
+	});
 
 	
 	</script>
@@ -101,8 +130,9 @@
 <td class="full topLeft"><%@ include file="modules/moduleAlbumImages.jsp" %></td>
 </tr>
 </table>
-
 </div> 
 </div>
+<!-- Delete confirmation dialog -->
+<div id="deleteDialog" title="Delete Confirmation Dialog"></div>
 </body>
 </html>
