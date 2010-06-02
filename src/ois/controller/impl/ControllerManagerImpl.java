@@ -371,7 +371,6 @@ public class ControllerManagerImpl implements ControllerManager{
 			return KeyFactory.keyToString(duplicatedImageData.getKey());
 
 		ImageData imageData = toImageData(data);
-		imageData.setType(originalData.getType());
 		imageData.setImageFileKey(imageFileKey);
 		imageData.setCreationDate(new Date());
 		try{

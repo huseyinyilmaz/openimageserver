@@ -34,8 +34,7 @@ public class ImageManipulatorImpl implements ImageManipulator {
         	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)");
         }
         Data newImageData = new Data(oldImageData,newImage.getImageData());
-        newImageData.setHeight(newImage.getHeight());
-        newImageData.setWidth(newImage.getWidth());
+        setImageProperties(newImageData);
         return newImageData;
 	}
 
