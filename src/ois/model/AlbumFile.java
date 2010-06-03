@@ -9,6 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class AlbumFile {
@@ -21,6 +22,8 @@ public class AlbumFile {
     private String description;
 	@Persistent
 	private Date creationDate;
+	@Persistent
+	private User owner;
 
 	public AlbumFile(){}
 
@@ -31,6 +34,15 @@ public class AlbumFile {
 
 	
 	//-------------Getters and setters--------------------------
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+
 	/**
 	 * @return the creationDate
 	 */

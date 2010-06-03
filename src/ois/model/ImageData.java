@@ -46,7 +46,14 @@ public class ImageData{
     private boolean original;
     @Persistent
     private boolean thumbnail;
-
+    @Persistent
+    private boolean isGlobal;
+	public boolean isGlobal() {
+		return isGlobal;
+	}
+	public void setGlobal(boolean isGlobal) {
+		this.isGlobal = isGlobal;
+	}
 	public ImageData(){}//to make image data serializable
     public ImageData (Blob data,ImageType type){
     	//this.imageFile = imageFile;
