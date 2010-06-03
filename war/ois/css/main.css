@@ -87,11 +87,7 @@ div.sideMenu{
 td.listCell{
 	width: 100%;
 }
-div.exception{
-	width: 100%;
-	background-color: yellow;  
-	color: red; 
-}
+
 button.iconButton{
 	font-size: 5pt;
 }

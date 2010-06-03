@@ -22,22 +22,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet-mapping>
 		<servlet-name>ControllerServlet</servlet-name>
-		<url-pattern>/ois/main</url-pattern>
+		<url-pattern>/ois/admin/main</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>ImageUpload</servlet-name>
-		<url-pattern>/ois/imageupload</url-pattern>
+		<url-pattern>/ois/admin/imageupload</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>	
 		<servlet-name>ImageGet</servlet-name>
 		<url-pattern>/ois/images/*</url-pattern>
 	</servlet-mapping>
-	
+
   <security-constraint>
   	<web-resource-collection>
-    	<url-pattern>/ois/*</url-pattern>
+    	<url-pattern>/ois/admin/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
     	<role-name>admin</role-name>

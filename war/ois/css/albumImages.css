@@ -10,10 +10,7 @@ div.imageDiv{
 	font-weight: bold;
 	font-style: normal;
 }
-
-
-
 tr.imageRow{
-	height: 130px;
+	height: 210px;
 	vertical-align: top;
 }

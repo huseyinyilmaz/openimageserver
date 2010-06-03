@@ -79,7 +79,7 @@ public class ControllerManagerImpl implements ControllerManager{
 			}
 			
 			//create new thumbnail
-			Data thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 100, 100);
+			Data thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 200, 200);
 			thumbnailRawData.setThumbnail(true);
 			thumbnailRawData.setOriginal(false);//this object is created from original one
 			ImageData thumbnailData = toImageData(thumbnailRawData);

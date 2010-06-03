@@ -16,9 +16,9 @@ public class ApplicationManager {
 	
 	public static final String NONE = "none";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
-	public static final String MAIN_PAGE = "/ois/main";
-	public static final String IMAGE_UPLOAD_PAGE = "/ois/imageupload";
-	
+	public static final String MAIN_PAGE = "/ois/admin/main";
+	public static final String IMAGE_UPLOAD_PAGE = "/ois/admin/imageupload";
+	public static final String NUMBER_OF_IMAGES_PER_ROW = "3";
 	//JSP URLS
 	public static final String JSP_MAIN_PAGE_URL = "/ois/mainPage.jsp";
 	public static final String JSP_ALBUM_EDIT_URL = "/ois/albumEdit.jsp";
