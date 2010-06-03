@@ -46,6 +46,8 @@ public class ImageData{
     private boolean original;
     @Persistent
     private boolean thumbnail;
+	@Persistent
+	private boolean showCaseObject = true ;
 
 	public ImageData(){}//to make image data serializable
     public ImageData (Blob data,ImageType type){
@@ -55,6 +57,12 @@ public class ImageData{
     }
 	
 	//-------------Getters and setters--------------------------
+	/**
+	 * @return the showCaseObject
+	 */
+	public boolean isShowCaseObject() {
+		return showCaseObject;
+	}
 	/**
 	 * @return the thumbnail
 	 */

@@ -21,6 +21,8 @@ public class AlbumFile {
     private String description;
 	@Persistent
 	private Date creationDate;
+	@Persistent
+	private boolean showCaseObject = true ;
 
 	public AlbumFile(){}
 
@@ -31,6 +33,13 @@ public class AlbumFile {
 
 	
 	//-------------Getters and setters--------------------------
+	/**
+	 * @return the showCaseObject
+	 */
+	public boolean isShowCaseObject() {
+		return showCaseObject;
+	}
+
 	/**
 	 * @return the creationDate
 	 */

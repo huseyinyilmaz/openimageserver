@@ -23,29 +23,33 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException{
-		try {
-            pm.makePersistent(imageFile);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save image file. Name = " + imageFile.getName() , e);
-        	log.warning("new PersistanceManagerException was thrown");
-        	throw pme;
-        }
-        log.info("new image file was successfully saved. name = " + imageFile.getName() +
-        		", description = " + imageFile.getDescription());
+		if(true||!imageFile.isShowCaseObject()){
+			try {
+				pm.makePersistent(imageFile);
+			}catch(Exception e){
+				PersistanceManagerException pme = new PersistanceManagerException("Cannot save image file. Name = " + imageFile.getName() , e);
+				log.warning("new PersistanceManagerException was thrown");
+				throw pme;
+			}
+			log.info("new image file was successfully saved. name = " + imageFile.getName() +
+					", description = " + imageFile.getDescription());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImageData(ImageData imageData, PersistenceManager pm) throws ImageDataTooBigException{
-		try {
-            pm.makePersistent(imageData);
-		}catch(Exception e){
-        	ImageDataTooBigException exception = new ImageDataTooBigException("File is too large for datastore. (Limit is 1 MB)", e);
-        	log.warning("new DatastoreFailureException was caught = " + e);
-        	throw exception;
-        }
-        log.info("new Image data was successfully saved.");
+		if(true||!imageData.isShowCaseObject()){
+			try {
+				pm.makePersistent(imageData);
+			}catch(Exception e){
+				ImageDataTooBigException exception = new ImageDataTooBigException("File is too large for datastore. (Limit is 1 MB)", e);
+				log.warning("new DatastoreFailureException was caught = " + e);
+				throw exception;
+			}
+			log.info("new Image data was successfully saved.");
+		}
 	}
 
 	
@@ -61,6 +65,7 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveAlbum(ois.model.AlbumFile)
 	 */
 	public void saveAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException{
+		if(true||!album.isShowCaseObject()){
 		try {
 			pm.makePersistent(album);
         }catch(Exception e){
@@ -69,7 +74,8 @@ public class ModelManagerImpl implements ModelManager {
         }
         log.info("new album was successfully saved. name = " + album.getName() +
         		", location = " + album.getDescription());
-	}
+		}
+		}
 
 	/* (non-Javadoc)
 	 * @see ois.model.ModelManager#getAlbum(long)
@@ -96,13 +102,15 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.ModelManager#deleteAlbum(ois.model.AlbumFile)
 	 */
 	public void deleteAlbumFile(Key key,PersistenceManager pm) throws PersistanceManagerException {
-        AlbumFile albumFile = getAlbumFile(key, pm);
-		try {
-        	pm.deletePersistent(albumFile);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Album [" + albumFile.getName() + "] could not be deleted",e);
-        	throw pme;
-        }
+		AlbumFile albumFile = getAlbumFile(key, pm);
+		if(!albumFile.isShowCaseObject()){
+			try {
+				pm.deletePersistent(albumFile);
+			}catch(Exception e){
+				PersistanceManagerException pme = new PersistanceManagerException("Album [" + albumFile.getName() + "] could not be deleted",e);
+				throw pme;
+			}
+		}
 	}
 	
 
@@ -204,18 +212,22 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	public void deleteImageData(Key key, PersistenceManager pm) throws PersistanceManagerException, DeleteSystemRevisionException {
 		ImageData imageData = getImageData(key, pm);
-		if(imageData.isOriginal()||imageData.isThumbnail())
-			throw new DeleteSystemRevisionException("Cannot delete Original revision or thumbnail revision");
-		deleteImageData(imageData, pm);
+		if(!imageData.isShowCaseObject()){
+			if(imageData.isOriginal()||imageData.isThumbnail())
+				throw new DeleteSystemRevisionException("Cannot delete Original revision or thumbnail revision");
+			deleteImageData(imageData, pm);
+		}
 	}
 	@Override
 	public void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException {
-        try {
-        	pm.deletePersistent(imageData);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Image data [" + imageData.getKey() + "] could not be deleted",e);
-        	throw pme;
-        }
+		if(!imageData.isShowCaseObject()){
+			try {
+				pm.deletePersistent(imageData);
+			}catch(Exception e){
+				PersistanceManagerException pme = new PersistanceManagerException("Image data [" + imageData.getKey() + "] could not be deleted",e);
+				throw pme;
+			}
+		}
 	}
 
 	@Override
@@ -225,12 +237,15 @@ public class ModelManagerImpl implements ModelManager {
 	}
 	@Override
 	public void deleteImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException {
-		try {
-        	pm.deletePersistent(imageFile);
-        }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Album [" + imageFile.getName() + "] could not be deleted",e);
-        	throw pme;
-        }
+		if(!imageFile.isShowCaseObject()){
+			try {
+				pm.deletePersistent(imageFile);
+			}catch(Exception e){
+				PersistanceManagerException pme = new PersistanceManagerException("Album [" + imageFile.getName() + "] could not be deleted",e);
+				throw pme;
+			}
+		}
+		
 	}
 	
 	@Override

@@ -27,12 +27,20 @@ public class ImageFile {
     private String description;
 	@Persistent
 	private ImageType type;
+	@Persistent
+	private boolean showCaseObject = true ;
 	
 
 	//Creates an empty Image File
 	public ImageFile(){}//to make ImageFile serializable
 
 	//-------------Getters and setters--------------------------
+	/**
+	 * @return the showCaseObject
+	 */
+	public boolean isShowCaseObject() {
+		return showCaseObject;
+	}
 
 	public Key getAlbumFileKey() {
 		return albumFileKey;
