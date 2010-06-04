@@ -103,7 +103,7 @@ public class ModelManagerImpl implements ModelManager {
 			album.setOwner(user);
 		}else if(album.getOwner() == null && !userService.isUserAdmin()){
 			//trying to change admin object with normal user. return
-			pm.detachCopy(album);
+			pm.makeNontransactional(album);
 			return;}
 		try {
 			pm.makePersistent(album);
