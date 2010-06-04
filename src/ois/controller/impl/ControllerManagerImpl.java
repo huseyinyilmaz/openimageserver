@@ -37,6 +37,8 @@ import ois.view.ImageBean;
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class ControllerManagerImpl implements ControllerManager{
 	private static final Logger log = Logger.getLogger(ControllerManagerImpl.class.getName());
@@ -210,13 +212,18 @@ public class ControllerManagerImpl implements ControllerManager{
 			&& !KeyFactory.keyToString(duplicatedNameAlbumFile.getKey()).equals(album.getKeyString()))
 				throw new InvalidNameException("An album with name '" + album.getName() + "' is already exists.");
 			AlbumFile albumFile = modelManager.getAlbumFile(KeyFactory.stringToKey(album.getKeyString()),pm);
-			albumFile.setName(album.getName());
-			albumFile.setDescription(album.getDescription());
+			
+			UserService userService = UserServiceFactory.getUserService();
+			if(albumFile.getOwner() == null && !userService.isUserAdmin()){
+				//null
+			}else{
+				albumFile.setName(album.getName());
+				albumFile.setDescription(album.getDescription());
+			}
 			modelManager.saveAlbum(albumFile,pm);
 		}finally{
 			pm.close();
 		}
-
 	}
 	
 	@Override
@@ -228,8 +235,13 @@ public class ControllerManagerImpl implements ControllerManager{
 			ImageFile duplicatedNamedImage = modelManager.getImageFileByName(image.getName(),imageFile.getAlbumFileKey(),pm);
 			if(duplicatedNamedImage!= null && duplicatedNamedImage.getKey() != imageFile.getKey())
 				throw new InvalidNameException("An image with name '" + image.getName() + "' is already exist");
-			imageFile.setName(image.getName());
-			imageFile.setDescription(image.getDescription());
+			UserService userService = UserServiceFactory.getUserService(); 
+			if(imageFile.isGlobal() && !userService.isUserAdmin()){
+				 //null
+			 }else{
+				 imageFile.setName(image.getName());
+				 imageFile.setDescription(image.getDescription());
+			 }
 			modelManager.saveImageFile(imageFile, pm);
 		}finally{
 			pm.close();

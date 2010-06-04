@@ -31,10 +31,11 @@ public class ModelManagerImpl implements ModelManager {
 		if(imageFile.getKey() == null){
 			//admin creating an image
 			imageFile.setGlobal(userService.isUserAdmin());
-		}else if(imageFile.isGlobal() && !userService.isUserAdmin())
+		}else if(imageFile.isGlobal() && !userService.isUserAdmin()){
 			//trying to change admin object with normal user. return
+			pm.makeNontransactional(imageFile);
 			return;
-
+		}
 		try {
             pm.makePersistent(imageFile);
         }catch(Exception e){
@@ -51,14 +52,11 @@ public class ModelManagerImpl implements ModelManager {
 	 */
 	public void saveImageData(ImageData imageData, PersistenceManager pm) throws ImageDataTooBigException{
 		UserService userService = UserServiceFactory.getUserService();
-		//create album
+		//create album. edit album is handled in controller manager
 		if(imageData.getKey() == null){
 			//admin creating an album
 			imageData.setGlobal(userService.isUserAdmin());
-		}else if(imageData.isGlobal() && !userService.isUserAdmin())
-			//trying to change admin object with normal user. return
-			return;
-
+		}
 		try {
             pm.makePersistent(imageData);
 		}catch(Exception e){
@@ -92,27 +90,25 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveAlbum(ois.model.AlbumFile)
 	 */
-	public void saveAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException{
+	public void saveAlbum(AlbumFile albumFile,PersistenceManager pm) throws PersistanceManagerException{
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		//create album
-		if(album.getKey() == null){
+		//create album. edit album is handled in controller manager
+		if(albumFile.getKey() == null){
 			//admin creating an album
 			if(userService.isUserAdmin())
 				user = null;
-			album.setOwner(user);
-		}else if(album.getOwner() == null && !userService.isUserAdmin()){
-			//trying to change admin object with normal user. return
-			pm.makeNontransactional(album);
-			return;}
+			albumFile.setOwner(user);
+		}
+		
 		try {
-			pm.makePersistent(album);
+			pm.makePersistent(albumFile);
         }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + albumFile.getName() , e);
         	throw pme;
         }
-        log.info("new album was successfully saved. name = " + album.getName() +
-        		", location = " + album.getDescription());
+        log.info("new album was successfully saved. name = " + albumFile.getName() +
+        		", location = " + albumFile.getDescription());
 	}
 
 	/* (non-Javadoc)
@@ -219,10 +215,18 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public AlbumFile getAlbumFileByName(String name,PersistenceManager pm){
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		String filter = "name == nameParam";
+		if(!userService.isUserAdmin()){
+			//for regular users
+			filter += " && (owner==ownerParam || owner==null)";
+		}
+
 		Query query = pm.newQuery(AlbumFile.class);
-		query.setFilter("name == nameParam");
-		query.declareParameters("String nameParam");
-		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(name);
+		query.setFilter(filter);
+		query.declareParameters("String nameParam, com.google.appengine.api.users.User ownerParam");
+		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(name, user);
 		AlbumFile albumFile = null;
 		if (albumFileList.size()>0)
 			albumFile = albumFileList.get(0);
