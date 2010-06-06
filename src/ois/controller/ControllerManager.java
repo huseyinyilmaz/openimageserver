@@ -12,6 +12,7 @@ import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.EmptyImageDataException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
+import ois.exceptions.NoImageFoundException;
 import ois.exceptions.PersistanceManagerException;
 import ois.view.AlbumBean;
 import ois.view.DataBean;
@@ -39,7 +40,7 @@ public interface ControllerManager {
 
 	public abstract List<ImageBean> getImageBeanList(String albumKeyString) throws PersistanceManagerException;
 	
-	public abstract Data getImageData(String keyString) throws PersistanceManagerException;
+	public abstract Data getImageData(String keyString) throws PersistanceManagerException, NoImageFoundException;
 	
 	public abstract void deleteImageFile(String key) throws PersistanceManagerException;
 	public abstract void deleteImageData(String key) throws PersistanceManagerException, DeleteSystemRevisionException;	

@@ -22,6 +22,7 @@ import ois.exceptions.DeleteSystemRevisionException;
 import ois.exceptions.EmptyImageDataException;
 import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
+import ois.exceptions.NoImageFoundException;
 import ois.exceptions.PersistanceManagerException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
@@ -267,11 +268,20 @@ public class ControllerManagerImpl implements ControllerManager{
 		return imageBeanList;
 	}		
 	
-	public Data getImageData(String keyString) throws PersistanceManagerException{
+	public Data getImageData(String keyString) throws PersistanceManagerException, NoImageFoundException{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Data data;
 		try{
-			ImageData imageData = modelManager.getImageData(KeyFactory.stringToKey(keyString), pm);
+			Key key;
+			try{
+				key = KeyFactory.stringToKey(keyString);
+			}catch(IllegalArgumentException e){
+				throw new NoImageFoundException("Invalid URL");
+			}
+			ImageData imageData = modelManager.getImageData(key, pm);
+			if(imageData == null)
+				throw new NoImageFoundException("Image does not exist in datastore");
+
 			data = toData(imageData);
 		}finally{
 			pm.close();
