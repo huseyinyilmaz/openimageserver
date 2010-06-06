@@ -9,76 +9,73 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ois.ApplicationManager;
+import ois.exceptions.NoImageFoundException;
 import ois.exceptions.PersistanceManagerException;
 
 @SuppressWarnings("serial")
 public class ImageGet extends HttpServlet {
   private static final Logger log =
       Logger.getLogger(ImageGet.class.getName());
-  public long getLastModified(HttpServletRequest req)
+  /* (non-Javadoc)
+ * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
+ */
+public long getLastModified(HttpServletRequest req)
   {
 	  long modificationDate = req.getDateHeader("If-Modified-Since");
 	  if(modificationDate>=0)
 		  return modificationDate;
-	  String uri = req.getRequestURI();
-  	if ( uri.startsWith(ApplicationManager.IMAGE_URI_PREFIX) )
-	  uri = uri.substring(ApplicationManager.IMAGE_URI_PREFIX.length());
-	else{
-		log.warning("URI is in wrong format.");
-		return -1;
-	}
-  	Data data;
-  	try {
-  		data = ApplicationManager.getControllerManager().getImageData(uri);
-  		modificationDate = data.getCreationDate().getTime();
-  	} catch (PersistanceManagerException e) {
-  		log.warning("Error while trying to get data from server. Will not return last modified date" );
-  		e.printStackTrace();
-  		modificationDate = -1;
-  	}
-  return modificationDate;
+	  else
+		  return new Date().getTime();
 }
-  public void doGet(HttpServletRequest req, HttpServletResponse res)
-  throws ServletException {
-	  try {
-		  String uri = req.getRequestURI();
-		  long modificationDate = req.getDateHeader("If-Modified-Since");
-		  if(modificationDate != -1){
-			  //return 304 not modified
-			  log.info("Image is modified at " + new Date(modificationDate) +
-					  ". Returning status code 304. URI = " + uri);
-			  //res.addHeader("Cache-Control", "max-age=5184000");
-			  //res.addDateHeader("Last-Modified", modificationDate);
-			  //res.addDateHeader("Expires", Long.MAX_VALUE);
-			  res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			  return;
-		  }
-		  if ( uri.startsWith(ApplicationManager.IMAGE_URI_PREFIX) )
-			  uri = uri.substring(ApplicationManager.IMAGE_URI_PREFIX.length());
-		  else{
-			  //TODO throw an exception
-		  }
+  /* (non-Javadoc)
+ * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+ */
+public void doGet(HttpServletRequest req, HttpServletResponse res)
+throws ServletException {
+	try {
+		String uri = req.getRequestURI();
+		long modificationDate = req.getDateHeader("If-Modified-Since");
+		//image has last modified date which means it is catched. return not modified.
+		if(modificationDate != -1){
+			//return 304 not modified
+			log.info("Image has last modified date " + new Date(modificationDate) +
+					". Returning status code 304. URI = " + uri);
+			res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+			return;
+		}
+		//remove prefix from uri which will leave only key string of image data.
+		uri = uri.substring(ApplicationManager.IMAGE_URI_PREFIX.length());
 
-		  Data data = ApplicationManager.getControllerManager().getImageData(uri);
-		  if(data != null){
-			  log.info("Returning image data. URI = " + uri + " Last-Modified = " + data.getCreationDate());
-			  //set data
-			  res.setContentType(data.getType());
-			  res.getOutputStream().write(data.getData());
-			  //res.addHeader("Cache-Control", "max-age=5184000");
-			  //res.addDateHeader("Last-Modified", data.getCreationDate().getTime());
-			  //res.addDateHeader("Expires", Long.MAX_VALUE);
-			  res.setStatus(HttpServletResponse.SC_OK);
-		  }else{
-			  log.warning("Image not found. URI = " + uri);
-			  res.setContentType("text/plain");
-			  res.getWriter().println("no image found");
-		  }
+		Data data;
+		try {
+			log.info("Get Image Data:Query for current Image. URI = " + uri);
+			data = ApplicationManager.getControllerManager().getImageData(uri);
+		} catch (PersistanceManagerException e) {
+			log.warning("Error while trying to get data from server. Will not return last modified date" );
+			e.printStackTrace();
+			data = null;
+		}catch(NoImageFoundException e){
+			log.warning("Error while trying to get data from server. " + e.getMessage());
+			e.printStackTrace();
+			data = null;
+		}
 
-		  //res.sendRedirect("/images/upload.jsp");
-	  } catch (Exception ex) {
-		  log.warning("An exception was caught. Exception = " + ex.getMessage());
-		  throw new ServletException(ex);
-	  }
-  }
+		if(data != null){
+			log.info("Returning image data. URI = " + uri + " Last-Modified = " + data.getCreationDate());
+			//set data
+			res.setContentType(data.getType());
+			res.getOutputStream().write(data.getData());
+			res.setStatus(HttpServletResponse.SC_OK);
+		}else{
+			log.warning("Image not found. URI = " + uri);
+			res.setContentType("text/plain");
+			res.getWriter().println("no image found");
+			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+
+	} catch (Exception ex) {
+		log.warning("An exception was caught. Exception = " + ex.getMessage());
+		throw new ServletException(ex);
+	}
+}
 }
