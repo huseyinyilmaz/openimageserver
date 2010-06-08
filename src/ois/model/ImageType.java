@@ -7,7 +7,7 @@ public enum ImageType {
 	//-----------------------------------------------
 	JPEG("image/jpeg",	"jpg",	"JPEG"		,"JPEG"),
 	PNG("image/png",	"png",	"PNG"		,"PNG"),
-	GIF("image/gif",	"gif",	"BMP"		,"PNG"),
+	BMP("image/bmp",	"bmp",	"BMP"		,"PNG"),
 	TIFF("image/tiff",	"tiff",	"TIFF"		,"PNG"),
 	ICO("image/vnd.microsoft.icon","ico","ICO","PNG");
 	
