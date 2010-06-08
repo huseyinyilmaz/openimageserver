@@ -1,37 +1,30 @@
 package ois.images.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ois.controller.Data;
 import ois.exceptions.ImageDataTooBigException;
 import ois.images.ImageManipulator;
+import ois.model.ImageType;
 
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.Transform;
 
 public class ImageManipulatorImpl implements ImageManipulator {
-	private Map<String,String> contentTypes;
-	public ImageManipulatorImpl(){
-		contentTypes = new HashMap<String,String>();
-		contentTypes.put("GIF", "image/gif");
-		contentTypes.put("PNG", "image/png");
-		contentTypes.put("JPEG", "image/jpeg");
-	}
 	
 	@Override
 	public Data resize(Data oldImageData, int width, int height) throws ImageDataTooBigException {
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
+        ImageType imageType =  ImageType.fromContentType(oldImageData.getType());
 
         com.google.appengine.api.images.Image oldImage = ImagesServiceFactory.makeImage(oldImageData.getData());
         Transform resize = ImagesServiceFactory.makeResize(width, height);
-
+        
         com.google.appengine.api.images.Image newImage;
         try{
-        	newImage= imagesService.applyTransform(resize, oldImage);
+        	//newImage= imagesService.applyTransform(resize, oldImage);
+        	newImage= imagesService.applyTransform(resize, oldImage, ImagesService.OutputEncoding.valueOf(imageType.getImageManipulatorReturnType()));
         }catch(Exception e){
-        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)");
+        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)",e);
         }
         Data newImageData = new Data(oldImageData,newImage.getImageData());
         setImageProperties(newImageData);
@@ -41,15 +34,16 @@ public class ImageManipulatorImpl implements ImageManipulator {
 	@Override
 	public Data enhance(Data oldImageData) throws ImageDataTooBigException {
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
+        ImageType imageType =  ImageType.fromContentType(oldImageData.getType());
 
         com.google.appengine.api.images.Image oldImage = ImagesServiceFactory.makeImage(oldImageData.getData());
         Transform enhance = ImagesServiceFactory.makeImFeelingLucky();
 
         com.google.appengine.api.images.Image newImage;
         try{        
-        	newImage = imagesService.applyTransform(enhance, oldImage);
+        	newImage = imagesService.applyTransform(enhance, oldImage, ImagesService.OutputEncoding.valueOf(imageType.getImageManipulatorReturnType()));
         }catch(Exception e){
-        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)");
+        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)",e);
         }
 
         Data newImageData = new Data(oldImageData,newImage.getImageData());
@@ -62,7 +56,9 @@ public class ImageManipulatorImpl implements ImageManipulator {
 	@Override
 	public Data resizeAndEnhance(Data oldImageData, int width, int height) throws ImageDataTooBigException {
 		ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        com.google.appengine.api.images.Image oldImage = ImagesServiceFactory.makeImage(oldImageData.getData());
+		ImageType imageType =  ImageType.fromContentType(oldImageData.getType());
+		
+		com.google.appengine.api.images.Image oldImage = ImagesServiceFactory.makeImage(oldImageData.getData());
         if(oldImage.getHeight()==height && oldImage.getWidth()==width)
         	return enhance(oldImageData);
         Transform resize = ImagesServiceFactory.makeResize(width, height);
@@ -70,10 +66,10 @@ public class ImageManipulatorImpl implements ImageManipulator {
 
         com.google.appengine.api.images.Image newImage; 
         try{
-        	newImage = imagesService.applyTransform(resize, oldImage);
-        	newImage = imagesService.applyTransform(enhance, newImage);
+        	newImage = imagesService.applyTransform(resize, oldImage, ImagesService.OutputEncoding.valueOf(imageType.getImageManipulatorReturnType()));
+        	newImage = imagesService.applyTransform(enhance, newImage, ImagesService.OutputEncoding.valueOf(imageType.getImageManipulatorReturnType()));
         }catch(Exception e){
-        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)");
+        	throw new ImageDataTooBigException("Transformed image is too big(Limit 1MB)",e);
         }
         Data newImageData = new Data(oldImageData,newImage.getImageData());
         setImageProperties(newImageData);
@@ -86,10 +82,6 @@ public class ImageManipulatorImpl implements ImageManipulator {
         com.google.appengine.api.images.Image image = ImagesServiceFactory.makeImage(imageData.getData());
         imageData.setWidth(image.getWidth());
         imageData.setHeight(image.getHeight());
-        imageData.setType(toContentType(image.getFormat().toString()));
-	}
-	
-	private String toContentType(String imageFormat){
-		return contentTypes.get(imageFormat);
+        imageData.setType(ImageType.fromImageType(image.getFormat().toString()).getContentType());
 	}
 }

@@ -60,6 +60,15 @@
 		
 	}
 	$(function(){
+		<c:choose>
+		<c:when test="${exception.message!=null}">
+				window.isExceptionOccured = true;
+				window.isNameValid = true;
+		</c:when>
+		<c:otherwise>
+				window.isExceptionOccured = false;
+		</c:otherwise>
+		</c:choose>
 		//hide highlight div
 		//$("#highlightDiv").hide();
 		
@@ -139,6 +148,15 @@
 		<td class="title">File to upload </td>
 		<td class="full"><input type="file" name="<%=CSParamType.FILE.toString()%>" class="text" id="file"></td>
 	</tr>
+	<tr>		
+		<td class="text description" colspan="2">
+		<ul>
+			<li>JPEG, PNG, BMP, TIFF, ICO file formats are supported.</li>
+			<li>Only upload images that are less than 1MB in space</li> 
+		</ul>
+		</td>
+	</tr>
+	
 	</table>
 	</form>
 	<table>

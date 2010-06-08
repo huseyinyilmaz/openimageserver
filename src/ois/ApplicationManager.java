@@ -14,6 +14,8 @@ import ois.view.CSParamType;
 
 public class ApplicationManager {
 	
+	public static final String VERSION = "v0.4.129 beta";
+	
 	public static final String NONE = "none";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
 	public static final String MAIN_PAGE = "/ois/admin/main";

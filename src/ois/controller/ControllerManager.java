@@ -14,13 +14,14 @@ import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.NoImageFoundException;
 import ois.exceptions.PersistanceManagerException;
+import ois.exceptions.UnsupportedImageFormatException;
 import ois.view.AlbumBean;
 import ois.view.DataBean;
 import ois.view.ImageBean;
 
 public interface ControllerManager {
 	public abstract void createImage(Image img)
-			throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException;
+			throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException, UnsupportedImageFormatException;
 
 	public abstract List<AlbumBean> getAlbumBeanList();
 
