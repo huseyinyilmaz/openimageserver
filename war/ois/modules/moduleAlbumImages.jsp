@@ -7,13 +7,14 @@
 <%--There is no current row --%>
 <%----------------------------%>
 <c:when test="${mainPageBean.currentAlbumKeyString=='none'}">
-<p class="text">	Please choose an album to see images inside</p>
-<button class="createAlbum">Create a new album</button>
+<p class="text">	This is main page of OIS. You can see the sample albums on left navigation panel. your own albums can be created by pressing "Create New Album" button locating under album buttons.
+ In order to edit or delete your album, just hover your mouse cursor over the album and modification buttons will be visible for that album. Now please choose an album to see images inside
+  or press <button class="createAlbum">Create a new album</button> button to create a new album.</p>
 </c:when>
-
 <%--There is a current row --%>
 <%---------------------------%>
 <c:otherwise>
+<p class="text">This is the list of images in selected album. Hover over images to see options on images.(Clicking on images takes you to image revisions page)</p>
 <span class="title">	${mainPageBean.currentAlbumBean.originalName}</span>
 <p class="text">${mainPageBean.currentAlbumBean.description}</p>
 <button class="createImageButton">Upload a new Image</button>
