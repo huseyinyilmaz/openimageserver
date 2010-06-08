@@ -24,6 +24,7 @@ import ois.exceptions.ImageDataTooBigException;
 import ois.exceptions.InvalidNameException;
 import ois.exceptions.NoImageFoundException;
 import ois.exceptions.PersistanceManagerException;
+import ois.exceptions.UnsupportedImageFormatException;
 import ois.model.AlbumFile;
 import ois.model.ImageData;
 import ois.model.ImageFile;
@@ -47,12 +48,14 @@ public class ControllerManagerImpl implements ControllerManager{
 		this.modelManager = modelManager;
 	}
 	
-	public void createImage(Image img) throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException{
+	public void createImage(Image img) throws PersistanceManagerException, InvalidNameException, EmptyImageDataException, ImageDataTooBigException, UnsupportedImageFormatException{
 		//check type from image service.
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try{
 			//create new ImageFile from given Image object
 			ImageFile imageFile = toImageFile(img);
+			if(imageFile.getType() == null)
+				throw new UnsupportedImageFormatException("Image format \"" + img.getType() + "\" is not supported by OIS.");
 			imageFile.setCreationDate(new Date());
 			ApplicationManager.checkName(img.getName());
 			if(modelManager.getImageFileByName(img.getName(),imageFile.getAlbumFileKey(),pm)!=null)
@@ -78,15 +81,22 @@ public class ControllerManagerImpl implements ControllerManager{
 				deleteImageFile(KeyFactory.keyToString(imageFile.getKey()));
 				throw e;
 			}
-			
 			//create new thumbnail
-			Data thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 200, 200);
-			thumbnailRawData.setThumbnail(true);
-			thumbnailRawData.setOriginal(false);//this object is created from original one
-			ImageData thumbnailData = toImageData(thumbnailRawData);
-			thumbnailData.setImageFileKey(imageFile.getKey());
-			thumbnailData.setCreationDate(new Date());
-			modelManager.saveImageData(thumbnailData, pm);
+			Data thumbnailRawData;
+			try{
+				thumbnailRawData = ApplicationManager.getManipulator().resizeAndEnhance(data, 200, 200);
+				thumbnailRawData.setThumbnail(true);
+				thumbnailRawData.setOriginal(false);//this object is created from original one
+				ImageData thumbnailData = toImageData(thumbnailRawData);
+				thumbnailData.setImageFileKey(imageFile.getKey());
+				thumbnailData.setCreationDate(new Date());
+				modelManager.saveImageData(thumbnailData, pm);
+			}catch(ImageDataTooBigException e){
+				deleteImageFile(KeyFactory.keyToString(imageFile.getKey()));
+				//deleleteImageData function cannot delete system revisions
+				modelManager.deleteImageData(imageData, pm);
+				throw e;
+			}
 		}finally{
 			pm.close();
 		}
@@ -394,7 +404,7 @@ public class ControllerManagerImpl implements ControllerManager{
 	private Data toData(ImageData imageData){
 		Data data = new Data();
 		data.setData(imageData.getData().getBytes());
-		data.setType(imageData.getType().toString());
+		data.setType(imageData.getType().getContentType());
 		data.setCreationDate(imageData.getCreationDate());
 		data.setOriginal(imageData.isOriginal());
 		data.setEnhanced(imageData.isEnhanced());
@@ -407,7 +417,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		ImageData imageData = new ImageData();
 		if(data.getData() != null)
 			imageData.setData(new Blob(data.getData()));
-		imageData.setType(ImageType.fromString(data.getType()));
+		imageData.setType(ImageType.fromContentType(data.getType()));
 		imageData.setCreationDate(data.getCreationDate());
 		imageData.setOriginal(data.isOriginal());
 		imageData.setThumbnail(data.isThumbnail());
@@ -422,9 +432,9 @@ public class ControllerManagerImpl implements ControllerManager{
 		imageFile.setCreationDate(image.getCreationDate());
 		imageFile.setName(image.getName());
 		imageFile.setDescription(image.getDescription());
+		imageFile.setType(ImageType.fromContentType(image.getType()));
 		if(image.getKeyString() != null)
 			imageFile.setKey(KeyFactory.stringToKey(image.getKeyString()));
-		imageFile.setType(ImageType.fromString(image.getType()));
 		if(image.getAlbum() != null)
 			imageFile.setAlbumFileKey(KeyFactory.stringToKey(image.getAlbum()));
 		return imageFile;
@@ -436,7 +446,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		image.setName(imageFile.getName());
 		image.setDescription(imageFile.getDescription());
 		image.setAlbum(KeyFactory.keyToString(imageFile.getAlbumFileKey()));
-		image.setType(imageFile.getType().toString());
+		image.setType(imageFile.getType().getContentType());
 		image.setKeyString(KeyFactory.keyToString(imageFile.getKey()));
 		return image;
 	}
@@ -458,7 +468,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		dataBean.setThumbnail(imageData.isThumbnail());
 		dataBean.setHeight(imageData.getHeight());
 		dataBean.setWidth(imageData.getWidth());
-		dataBean.setTypeString(imageData.getType().toString());
+		dataBean.setTypeString(imageData.getType().getContentType());
 		return dataBean;
 	}
 	private AlbumBean toAlbumBean(AlbumFile albumFile){

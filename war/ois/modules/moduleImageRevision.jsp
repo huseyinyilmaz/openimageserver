@@ -60,7 +60,7 @@
 								<td>${albumBean.currentImageBean.currentDataBean.height}</td>
 							</tr>
 							<tr>
-								<td><span class="imageRevisionTitle">Height:</span></td>
+								<td><span class="imageRevisionTitle">Enhanced:</span></td>
 								<td>${albumBean.currentImageBean.currentDataBean.enhanced}</td>
 							</tr>
 						</table>

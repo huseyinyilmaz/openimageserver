@@ -13,6 +13,8 @@ import ois.view.CSPageType;
 import ois.view.CSParamType;
 
 public class ApplicationManager {
+
+	public static final String VERSION = "v0.4.129 beta";
 	
 	public static final String NONE = "none";
 	public static final String IMAGE_URI_PREFIX = "/ois/images/";
@@ -27,7 +29,6 @@ public class ApplicationManager {
 	public static final String JSP_IMAGE_REVISIONS_URL = "/ois/imageRevisions.jsp";
 	public static final String JSP_CREATE_REVISION_URL = "/ois/revisionCreate.jsp";
 
-	
 	private static ModelManager modelManager = new ModelManagerImpl();
 	private static ImageManipulator manipulator = new ImageManipulatorImpl();
 	private static ControllerManager controllerManager = new ControllerManagerImpl(modelManager);
