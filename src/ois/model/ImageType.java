@@ -9,8 +9,8 @@ public enum ImageType {
 	PNG("image/png",	"png",	"PNG"		,"PNG"),
 	BMP("image/bmp",	"bmp",	"BMP"		,"PNG"),
 	TIFF("image/tiff",	"tiff",	"TIFF"		,"PNG"),
-	ICO("image/vnd.microsoft.icon","ico","ICO","PNG");
-	
+	ICO("image/vnd.microsoft.icon","ico","ICO","PNG"),
+	ICO2("image/x-icon","ico","ICO","PNG");
 	private final String contentType;
 	private final String fileExtension;
 	//image type that image manipulation service is using
