@@ -46,9 +46,9 @@ $(function(){
 	});
 </c:forEach>
 	$("div.imageWrapperDiv").hover(function(){
-		$(this).find("td:eq(1)").fadeIn("slow");	
+		$(this).find("td:eq(1)").stop(true, true).fadeIn("slow");	
 	},function(){
-		$(this).find("td:eq(1)").fadeOut("slow");
+		$(this).find("td:eq(1)").stop(true, true).fadeOut("slow");
 	}).find("td:eq(1)").hide();
 	//initialize revision info
 	//-----------------------------------

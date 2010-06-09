@@ -43,9 +43,9 @@
 			$("#viewAlbumButton-${albumBean.keyString}").click(function(){
 				top.location="${albumBean.viewLink}";
 				}).parents("div:first").hover(function(){
-					$("td:eq(1)",this).fadeIn("slow");
+					$("td:eq(1)",this).stop(true, true).fadeIn("slow");
 					},function(){
-						$("td:eq(1)",this).fadeOut("slow");
+						$("td:eq(1)",this).stop(true, true).fadeOut("slow");
 					}).find("td:eq(1)").hide();
 			var deleteAlbumFormId = null;
 			$("#editAlbumButton-${albumBean.keyString}").click(function(){
@@ -86,9 +86,9 @@
 			});
 
 			$("#imageDiv-${imageBean.keyString}").hover(function(){
-				$(this).find("div:eq(1)").slideDown();
+				$(this).find("div:eq(1)").stop(true, true).slideDown();
 			},function(){
-				$(this).find("div:eq(1)").slideUp();
+				$(this).find("div:eq(1)").stop(true, true).slideUp();
 			}).find("div:eq(1)").hide();
 
 			$("#imageThumbnail-${imageBean.keyString}").click(function(){
