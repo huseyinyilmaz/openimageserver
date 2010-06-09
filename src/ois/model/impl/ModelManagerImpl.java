@@ -147,7 +147,7 @@ public class ModelManagerImpl implements ModelManager {
 		if (imageData.size()>0)
 			data = imageData.get(0);
 		else{
-			//TODO throw exception or log
+			log.severe("Image file " + imageFileKey + " does not have any thumbnail");
 		}
 		return data;
 	}

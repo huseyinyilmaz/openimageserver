@@ -379,6 +379,7 @@ public class ControllerManagerImpl implements ControllerManager{
 		ImageData originalData = modelManager.getOriginal(imageFileKey,pm);
 		Data data = new Data();
 		data.setData(originalData.getData().getBytes());
+		data.setType(originalData.getType().getContentType());
 		if(infoData.isEnhanced())
 			data = ApplicationManager.getManipulator().resizeAndEnhance(data, infoData.getWidth(), infoData.getHeight());
 		else
