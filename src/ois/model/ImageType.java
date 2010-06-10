@@ -64,6 +64,9 @@ public enum ImageType {
 				param = p;
 				break;
 			}
+		//convert microsofts type to regular one.
+		if(param == JPG2)
+			param = JPEG;
 		return param;
 	}
 	
