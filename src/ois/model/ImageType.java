@@ -6,6 +6,7 @@ public enum ImageType {
 	//				extension	type		return type
 	//-----------------------------------------------
 	JPEG("image/jpeg",	"jpg",	"JPEG"		,"JPEG"),
+	JPG2("image/pjpeg",	"jpg",	"JPEG"		,"JPEG"),//this is jpeg for IE :(
 	PNG("image/png",	"png",	"PNG"		,"PNG"),
 	BMP("image/bmp",	"bmp",	"BMP"		,"PNG"),
 	TIFF("image/tiff",	"tiff",	"TIFF"		,"PNG"),
@@ -63,6 +64,9 @@ public enum ImageType {
 				param = p;
 				break;
 			}
+		//convert microsoft's jpeg type to standard one.
+		if(param == JPG2)
+			param = JPEG;
 		return param;
 	}
 	
