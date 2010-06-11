@@ -1,0 +1,5 @@
+#Wed May 12 05:21:38 EEST 2010
+eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=/home/huseyin/workspace/OpenImageServer/lib/commons-fileupload-1.2.1/lib/commons-fileupload-1.2.1.jar|/home/huseyin/workspace/OpenImageServer/lib/commons-io-1.4/commons-io-1.4.jar|/home/huseyin/workspace/OpenImageServer/lib/jstl/jstl-api-1.2.jar|C\:/My Dropbox/eclipse/3_5/workspace/OpenImageServer/lib/commons-fileupload-1.2.1/lib/commons-fileupload-1.2.1.jar|C\:/My Dropbox/eclipse/3_5/workspace/OpenImageServer/lib/commons-io-1.4/commons-io-1.4.jar|C\:/My Dropbox/eclipse/3_5/workspace/OpenImageServer/lib/jstl/jstl-api-1.2.jar|/data/programming/workspace/OpenImageServer/lib/commons-fileupload-1.2.1/lib/commons-fileupload-1.2.1.jar|/data/programming/workspace/OpenImageServer/lib/commons-io-1.4/commons-io-1.4.jar|/data/programming/workspace/OpenImageServer/lib/jstl/jstl-api-1.2.jar
+warSrcDir=war
+warSrcDirIsOutput=true
