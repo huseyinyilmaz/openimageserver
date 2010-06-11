@@ -42,7 +42,7 @@
 				<td>
 						<table>
 							<tr>
-								<td><span class="imageRevisionTitle">Image name:</span></td>
+								<td><span class="imageRevisionTitle">Revision name:</span></td>
 								<td>${albumBean.currentImageBean.currentDataBean.name}</td>
 							</tr>
 							<tr>
