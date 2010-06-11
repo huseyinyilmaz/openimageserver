@@ -11,7 +11,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Create Image Page</title>
+	<title>OIS-Edit Image Page</title>
 	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<script type="text/javascript" src="/ois/js/jquery-1.4.2.min.js"></script>
