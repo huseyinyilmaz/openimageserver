@@ -11,11 +11,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OIS-Main Page</title>
-	<link type="text/css" href="/ois/css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />	
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/ois/css/albumImages.css">
-	<script type="text/javascript" src="/ois/js/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="/ois/js/jquery-ui-1.8.1.custom.min.js"></script>
+	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+	
 	<script type="text/javascript" src="/ois/js/main.js"></script>
 	<script type="text/javascript">
 	//holds delete album link that will image will be redirected
