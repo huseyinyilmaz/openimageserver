@@ -1,0 +1,16 @@
+table.albumImagesTable{
+	width: 100%;
+}
+
+div.imageDiv{
+	text-align: center;
+	color: graytext;
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 17.6px;
+	font-weight: bold;
+	font-style: normal;
+}
+tr.imageRow{
+	height: 250px;
+	vertical-align: top;
+}
