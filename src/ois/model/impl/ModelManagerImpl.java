@@ -15,6 +15,9 @@ import ois.model.ImageFile;
 import ois.model.ModelManager;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class ModelManagerImpl implements ModelManager {
 	private static final Logger log = Logger.getLogger(ModelManagerImpl.class.getName());
@@ -23,6 +26,16 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException{
+		UserService userService = UserServiceFactory.getUserService();
+		//create album
+		if(imageFile.getKey() == null){
+			//admin creating an image
+			imageFile.setGlobal(userService.isUserAdmin());
+		}else if(imageFile.isGlobal() && !userService.isUserAdmin()){
+			//trying to change admin object with normal user. return
+			pm.makeNontransactional(imageFile);
+			return;
+		}
 		try {
             pm.makePersistent(imageFile);
         }catch(Exception e){
@@ -38,6 +51,12 @@ public class ModelManagerImpl implements ModelManager {
 	 * @see ois.model.impl.ModelManager#saveImage(ois.model.ImageFile)
 	 */
 	public void saveImageData(ImageData imageData, PersistenceManager pm) throws ImageDataTooBigException{
+		UserService userService = UserServiceFactory.getUserService();
+		//create album. edit album is handled in controller manager
+		if(imageData.getKey() == null){
+			//admin creating an album
+			imageData.setGlobal(userService.isUserAdmin());
+		}
 		try {
             pm.makePersistent(imageData);
 		}catch(Exception e){
@@ -52,23 +71,44 @@ public class ModelManagerImpl implements ModelManager {
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#getAlbums()
 	 */
+	@SuppressWarnings("unchecked")
 	public Iterable<AlbumFile> getAlbums(PersistenceManager pm){
-		Iterable<AlbumFile> albums = pm.getExtent(AlbumFile.class);
-		return albums;
+		//Iterable<AlbumFile> albums = pm.getExtent(AlbumFile.class);
+		//return albums;
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		
+		Query query = pm.newQuery(AlbumFile.class);
+		if(!userService.isUserAdmin()){
+			query.setFilter("owner == ownerParam || owner == null");
+			query.declareParameters("com.google.appengine.api.users.User ownerParam, int isAdminParam");
+		}
+		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(user,userService.isUserAdmin()?1:0);
+		return albumFileList;
 	}
 	
 	/* (non-Javadoc)
 	 * @see ois.model.impl.ModelManager#saveAlbum(ois.model.AlbumFile)
 	 */
-	public void saveAlbum(AlbumFile album,PersistenceManager pm) throws PersistanceManagerException{
+	public void saveAlbum(AlbumFile albumFile,PersistenceManager pm) throws PersistanceManagerException{
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		//create album. edit album is handled in controller manager
+		if(albumFile.getKey() == null){
+			//admin creating an album
+			if(userService.isUserAdmin())
+				user = null;
+			albumFile.setOwner(user);
+		}
+		
 		try {
-			pm.makePersistent(album);
+			pm.makePersistent(albumFile);
         }catch(Exception e){
-        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + album.getName() , e);
+        	PersistanceManagerException pme = new PersistanceManagerException("Cannot save album. Name = " + albumFile.getName() , e);
         	throw pme;
         }
-        log.info("new album was successfully saved. name = " + album.getName() +
-        		", location = " + album.getDescription());
+        log.info("new album was successfully saved. name = " + albumFile.getName() +
+        		", location = " + albumFile.getDescription());
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +137,11 @@ public class ModelManagerImpl implements ModelManager {
 	 */
 	public void deleteAlbumFile(Key key,PersistenceManager pm) throws PersistanceManagerException {
         AlbumFile albumFile = getAlbumFile(key, pm);
-		try {
+		
+		if(albumFile.getOwner()==null && !UserServiceFactory.getUserService().isUserAdmin())
+			return;
+
+        try {
         	pm.deletePersistent(albumFile);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Album [" + albumFile.getName() + "] could not be deleted",e);
@@ -147,7 +191,7 @@ public class ModelManagerImpl implements ModelManager {
 		if (imageData.size()>0)
 			data = imageData.get(0);
 		else{
-			log.severe("Image file " + imageFileKey + " does not have any thumbnail");
+			//TODO throw exception or log
 		}
 		return data;
 	}
@@ -171,10 +215,18 @@ public class ModelManagerImpl implements ModelManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public AlbumFile getAlbumFileByName(String name,PersistenceManager pm){
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		String filter = "name == nameParam";
+		if(!userService.isUserAdmin()){
+			//for regular users
+			filter += " && (owner==ownerParam || owner==null)";
+		}
+
 		Query query = pm.newQuery(AlbumFile.class);
-		query.setFilter("name == nameParam");
-		query.declareParameters("String nameParam");
-		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(name);
+		query.setFilter(filter);
+		query.declareParameters("String nameParam, com.google.appengine.api.users.User ownerParam");
+		List<AlbumFile> albumFileList = (List<AlbumFile>) query.execute(name, user);
 		AlbumFile albumFile = null;
 		if (albumFileList.size()>0)
 			albumFile = albumFileList.get(0);
@@ -210,7 +262,11 @@ public class ModelManagerImpl implements ModelManager {
 	}
 	@Override
 	public void deleteImageData(ImageData imageData, PersistenceManager pm) throws PersistanceManagerException {
-        try {
+        
+		if(imageData.isGlobal() && !UserServiceFactory.getUserService().isUserAdmin())
+			return;
+
+		try {
         	pm.deletePersistent(imageData);
         }catch(Exception e){
         	PersistanceManagerException pme = new PersistanceManagerException("Image data [" + imageData.getKey() + "] could not be deleted",e);
@@ -225,6 +281,10 @@ public class ModelManagerImpl implements ModelManager {
 	}
 	@Override
 	public void deleteImageFile(ImageFile imageFile, PersistenceManager pm) throws PersistanceManagerException {
+		
+		if(imageFile.isGlobal() && !UserServiceFactory.getUserService().isUserAdmin())
+			return;
+		
 		try {
         	pm.deletePersistent(imageFile);
         }catch(Exception e){

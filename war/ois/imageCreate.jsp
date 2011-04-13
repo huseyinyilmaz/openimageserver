@@ -60,15 +60,15 @@
 		
 	}
 	$(function(){
-<c:choose>
-<c:when test="${exception.message!=null}">
-		window.isExceptionOccured = true;
-		window.isNameValid = true;
-</c:when>
-<c:otherwise>
-		window.isExceptionOccured = false;
-</c:otherwise>
-</c:choose>
+		<c:choose>
+		<c:when test="${exception.message!=null}">
+				window.isExceptionOccured = true;
+				window.isNameValid = true;
+		</c:when>
+		<c:otherwise>
+				window.isExceptionOccured = false;
+		</c:otherwise>
+		</c:choose>
 		//hide highlight div
 		//$("#highlightDiv").hide();
 		
@@ -147,6 +147,7 @@
 	<tr>
 		<td class="title">File to upload </td>
 		<td class="full"><input type="file" name="<%=CSParamType.FILE.toString()%>" class="text" id="file"></td>
+	</tr>
 	<tr>		
 		<td class="text description" colspan="2">
 		<ul>
@@ -155,7 +156,7 @@
 		</ul>
 		</td>
 	</tr>
-	</tr>
+	
 	</table>
 	</form>
 	<table>

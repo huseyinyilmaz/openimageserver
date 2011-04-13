@@ -27,6 +27,14 @@ public class ImageFile {
     private String description;
 	@Persistent
 	private ImageType type;
+    @Persistent
+    private boolean isGlobal;
+	public boolean isGlobal() {
+		return isGlobal;
+	}
+	public void setGlobal(boolean isGlobal) {
+		this.isGlobal = isGlobal;
+	}
 	
 
 	//Creates an empty Image File

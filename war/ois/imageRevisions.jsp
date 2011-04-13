@@ -10,7 +10,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>OIS-Revisions Page</title>
+	<title>OIS-Image Revisions</title>
 	<link rel="stylesheet" type="text/css" href="/ois/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/ois/css/imageRevision.css">
 	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	

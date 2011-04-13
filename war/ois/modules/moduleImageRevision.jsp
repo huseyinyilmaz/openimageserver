@@ -4,6 +4,8 @@
 <%@page import="ois.view.CSPageType"%>
 
 <div class="imageRevision">
+	<p class="text">This is revision page. Choose a revision from left panel to see its properties and get its url.
+	Hover over revision buttons to see modification options.</p>
 	<table>
 		<tr>
 			<td><span class="imageRevisionTitle">Image name:</span></td>
@@ -44,7 +46,7 @@
 								<td>${albumBean.currentImageBean.currentDataBean.name}</td>
 							</tr>
 							<tr>
-								<td><span class="imageRevisionTitle">MIME type:</span></td>
+								<td><span class="imageRevisionTitle">Image type:</span></td>
 								<td>${albumBean.currentImageBean.currentDataBean.typeString}</td>
 							</tr>
 							<tr>
@@ -67,7 +69,7 @@
 						<br>					
 				</td>
 			</tr>			
-			<tr><td><span class="imageRevisionTitle">Image url:</span></td></tr>
+			<tr><td><span class="imageRevisionTitle">Image url<span class="description">(Copy this url and use it in your page):</span></span></td></tr>
 			<tr><td>${albumBean.currentImageBean.currentDataBean.fullLink}</td></tr>
 			</table>
 			<%--Original revision dialog. It is shown when user clicks thumbnail --%>
